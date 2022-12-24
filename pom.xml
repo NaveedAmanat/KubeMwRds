@@ -146,6 +146,15 @@
             <version>1</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.olap4j/olap4j -->
+        <!-- https://mvnrepository.com/artifact/org.olap4j/olap4j -->
+        <dependency>
+            <groupId>org.olap4j</groupId>
+            <artifactId>olap4j</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+
         <!-- **** added -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -379,27 +388,21 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-data</artifactId>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.oracle.jdbc</groupId>-->
-        <!--            <artifactId>ojdbc8</artifactId>-->
-        <!--            <version>12.2.0.1</version>-->
-        <!--        </dependency>-->
-
+        <!-- more information at https://blogs.oracle.com/dev2dev/entry/how_to_get_oracle_jdbc -->
         <dependency>
             <groupId>com.oracle.database.jdbc</groupId>
             <artifactId>ojdbc8</artifactId>
             <version>12.2.0.1</version>
         </dependency>
-
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports</artifactId>
+            <version>6.18.0</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/net.sf.jasperreports/jasperreports-fonts -->
         <dependency>
             <groupId>net.sf.jasperreports</groupId>
             <artifactId>jasperreports-fonts</artifactId>
-            <version>4.0.0</version>
+            <version>6.18.0</version>
         </dependency>
 
         <dependency>
@@ -940,4 +943,3 @@
         </profile>
     </profiles>
 </project>
-
