@@ -3,6 +3,7 @@ pipeline{
     
     environment {
         IMAGE_TAG = "v${BUILD_NUMBER}"
+	JAVA_HOME='/usr/lib/jvm/java-1.8.0-openjdk-amd64/jre'
     }
     
     tools{
