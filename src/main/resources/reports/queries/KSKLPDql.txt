@@ -1,0 +1,11 @@
+select clnt.clnt_id,clnt.frst_nm, clnt.last_nm,clnt.spz_frst_nm||clnt.fthr_frst_nm,clnt.spz_last_nm||clnt.fthr_last_nm,  
+                          port.port_cd,port.port_nm,brnch.brnch_cd,brnch.brnch_nm, area.area_nm, reg.reg_nm , prd.prd_nm, prd.prd_id,app.rqstd_loan_amt,app.aprvd_loan_amt,emp.emp_nm bdo  
+                          from mw_loan_app app     join mw_clnt clnt on app.clnt_seq=clnt.clnt_seq and clnt.crnt_rec_flg=1  
+                          join mw_port port on port.port_seq=app.port_seq and port.crnt_rec_flg=1 
+                          join mw_port_emp_rel poer on poer.port_seq=port.port_seq and poer.crnt_rec_flg=1 
+                          join mw_emp emp on emp.emp_seq=poer.emp_seq  
+                          join mw_brnch brnch on brnch.brnch_seq=port.brnch_seq and brnch.crnt_rec_flg=1  
+                          join mw_area area on area.area_seq=brnch.area_seq and area.crnt_rec_flg=1  
+                          join mw_reg reg on reg.reg_seq=area.reg_seq and reg.crnt_rec_flg=1  
+                          join mw_prd prd on prd.prd_seq = app.prd_seq and prd.crnt_rec_flg=1  
+                          where app.crnt_rec_flg=1 and app.loan_app_seq =:loanAppSeq

@@ -1,0 +1,123 @@
+select distinct prdg.prd_grp_nm, 'Tagged Portfolio' emp_nm,         opn_clnt as opn_clnt ,
+                   opn_prn_amt as opn_prn_amt,         opn_svc_amt as opn_svc_amt,         dsbmt_cnt as dsbmt_cnt ,
+                   dsbmt_prn_amt as dsbmt_prn_amt ,       dsbmt_svc_amt as dsbmt_svc_amt , rcvrd_clnt as rcvrd_clnt, rcvrd_prn_amt as rcvrd_prn_amt,
+                   rcvrd_svc_amt as rcvrd_svc_amt,         0 as adj_clnt ,         0 as adj_prn_amt ,
+                   0 as adj_svc_amt ,         clsng_clnt as clsng_clnt ,         clsng_prn_amt as clsng_prn_amt ,
+                   clsng_svc_amt as clsng_svc_amt,         cmpltd_loans  as cmpltd_loans,
+                   0 as tg_clsng_clnt ,        0 as tg_clsng_prn_amt ,
+                   0 as tg_clsng_svc_amt
+                   from mw_brnch brnch
+            join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq            
+            join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+            join mw_prd_grp prdg on prdg.prd_grp_seq=prd.prd_grp_seq and prdg.crnt_rec_flg=1             
+            left outer join  (  
+            SELECT WRT.BRNCH_SEQ, wrt.PRD_GRP_SEQ, count(distinct wrt.LOAN_APP_SEQ) opn_clnt,
+                    sum(nvl(WRT.OUTSD_PPAL_AMT,0) -
+                    (        
+                    select nvl(sum(nvl(dtl.PYMT_AMT,0)),0)
+                    from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl
+                    where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                    and dtl.CHRG_TYP_KEY = -1
+                    and dtl.CRNT_REC_FLG = 1
+                    and trx.CRNT_REC_FLG = 1
+                    and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                    and trx.PYMT_DT <= to_date(:frmdt,'dd-MM-yyyy')-1
+                    and trx.CLNT_SEQ = wrt.CLNT_SEQ            
+                    )) opn_prn_amt, 
+                    sum(nvl(WRT.OUTSD_SRVC_CHRG_AMT,0) -
+                    (        
+                    select nvl(sum(nvl(dtl.PYMT_AMT,0)),0)
+                    from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl
+                    where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                    and dtl.CHRG_TYP_KEY = 50
+                    and dtl.CRNT_REC_FLG = 1
+                    and trx.CRNT_REC_FLG = 1
+                    and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                    and trx.PYMT_DT <= to_date(:frmdt,'dd-MM-yyyy')-1
+                    and trx.CLNT_SEQ = wrt.CLNT_SEQ            
+                    )) opn_svc_amt      
+                    FROM MW_WRT_OF_CLNT WRT, MW_WRT_OF_OTH_CHRG WRTC
+                    WHERE WRT.WRT_OF_CLNT_SEQ = WRTC.WRT_OF_CLNT_SEQ(+)
+                    AND (WRT.OUTSD_PPAL_AMT > 0 OR WRT.OUTSD_SRVC_CHRG_AMT > 0 OR WRTC.CHRG_AMT > 0)
+                    and to_date(WRT.CRTD_DT) <= to_date(:frmdt,'dd-MM-yyyy')-1
+                    and wrt.PRD_GRP_SEQ = :prdseq
+                    AND WRT.BRNCH_SEQ = :brnchseq
+                    group by WRT.BRNCH_SEQ, wrt.PRD_GRP_SEQ                  
+            ) ost on ost.BRNCH_SEQ=brnch.BRNCH_SEQ and ost.PRD_GRP_SEQ=prdg.PRD_GRP_SEQ             
+            left outer join  ( 
+                SELECT WRT.BRNCH_SEQ, wrt.PRD_GRP_SEQ, count(distinct wrt.LOAN_APP_SEQ) clsng_clnt,
+                    sum(nvl(WRT.OUTSD_PPAL_AMT,0) -
+                    (        
+                    select nvl(sum(nvl(dtl.PYMT_AMT,0)),0)
+                    from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl
+                    where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                    and dtl.CHRG_TYP_KEY = -1
+                    and dtl.CRNT_REC_FLG = 1
+                    and trx.CRNT_REC_FLG = 1
+                    and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                    and trx.PYMT_DT <= to_date(:todt,'dd-MM-yyyy')
+                    and trx.CLNT_SEQ = wrt.CLNT_SEQ            
+                    )) clsng_prn_amt, 
+                    sum(nvl(WRT.OUTSD_SRVC_CHRG_AMT,0) -
+                    (        
+                    select nvl(sum(nvl(dtl.PYMT_AMT,0)),0)
+                    from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl
+                    where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                    and dtl.CHRG_TYP_KEY = 50
+                    and dtl.CRNT_REC_FLG = 1
+                    and trx.CRNT_REC_FLG = 1
+                    and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                    and trx.PYMT_DT <= to_date(:todt,'dd-MM-yyyy')
+                    and trx.CLNT_SEQ = wrt.CLNT_SEQ            
+                    )) clsng_svc_amt      
+                    FROM MW_WRT_OF_CLNT WRT, MW_WRT_OF_OTH_CHRG WRTC
+                    WHERE WRT.WRT_OF_CLNT_SEQ = WRTC.WRT_OF_CLNT_SEQ(+)
+                    AND (WRT.OUTSD_PPAL_AMT > 0 OR WRT.OUTSD_SRVC_CHRG_AMT > 0 OR WRTC.CHRG_AMT > 0)
+                    and to_date(WRT.CRTD_DT) <= to_date(:todt,'dd-MM-yyyy')
+                    and wrt.PRD_GRP_SEQ = :prdseq
+                    AND WRT.BRNCH_SEQ = :brnchseq
+                    group by WRT.BRNCH_SEQ, wrt.PRD_GRP_SEQ 
+            ) clsng on clsng.BRNCH_SEQ=brnch.BRNCH_SEQ and clsng.PRD_GRP_SEQ=prdg.PRD_GRP_SEQ
+            left outer join  
+            (
+                select WRT.PRD_GRP_SEQ , WRT.BRNCH_SEQ, count(distinct wrt.LOAN_APP_SEQ) dsbmt_cnt,
+                sum(WRT.OUTSD_PPAL_AMT) dsbmt_prn_amt,  sum(WRT.OD_SRVC_CHRG_AMT) dsbmt_svc_amt           
+                FROM MW_WRT_OF_CLNT WRT
+                where to_date(WRT.CRTD_DT) between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+                and WRT.PRD_GRP_SEQ = :prdseq
+                and WRT.BRNCH_SEQ = :brnchseq
+                group by WRT.PRD_GRP_SEQ , WRT.BRNCH_SEQ   
+            ) 
+            achvd on achvd.BRNCH_SEQ=brnch.BRNCH_SEQ and achvd.PRD_GRP_SEQ=prdg.PRD_GRP_SEQ 
+            left outer join  
+            (select PRD_GRP_SEQ , BRNCH_SEQ, count(distinct rec.rcvrd_clnt) rcvrd_clnt,
+                sum(nvl(rec.rcvrd_prn_amt,0)) rcvrd_prn_amt, sum(nvl(rec.rcvrd_svc_amt,0)) rcvrd_svc_amt
+                from
+                (
+                select WRT.PRD_GRP_SEQ , WRT.BRNCH_SEQ, dtl.LOAN_APP_SEQ rcvrd_clnt,
+                case when dtl.CHRG_TYP_KEY = -1 then nvl(sum(nvl(dtl.PYMT_AMT,0)),0) end rcvrd_prn_amt,
+                case when dtl.CHRG_TYP_KEY = 50 then nvl(sum(nvl(dtl.PYMT_AMT,0)),0) end rcvrd_svc_amt
+                from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl, MW_WRT_OF_CLNT WRT
+                where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                and trx.CLNT_SEQ = WRT.CLNT_SEQ 
+                and dtl.CRNT_REC_FLG = 1
+                and trx.CRNT_REC_FLG = 1
+                and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                and trx.PYMT_DT between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+                and WRT.PRD_GRP_SEQ = :prdseq
+                and WRT.BRNCH_SEQ = :brnchseq
+                group by WRT.PRD_GRP_SEQ , WRT.BRNCH_SEQ, dtl.LOAN_APP_SEQ, dtl.CHRG_TYP_KEY
+                ) rec
+                group by PRD_GRP_SEQ , BRNCH_SEQ       
+                ) rcvd on rcvd.BRNCH_SEQ=brnch.BRNCH_SEQ and rcvd.PRD_GRP_SEQ=prdg.PRD_GRP_SEQ
+                left outer join (
+                 select WRT.PRD_GRP_SEQ , WRT.BRNCH_SEQ, count(distinct wrt.LOAN_APP_SEQ) cmpltd_loans
+                    FROM MW_WRT_OF_CLNT WRT
+                    where WRT.LOAN_APP_STS = 704
+                    and WRT.LAST_UPD_DT between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy') 
+                    and WRT.PRD_GRP_SEQ = :prdseq
+                    and WRT.BRNCH_SEQ = :brnchseq
+                    group by WRT.PRD_GRP_SEQ , WRT.BRNCH_SEQ       
+              ) cmpltd on cmpltd.BRNCH_SEQ=brnch.BRNCH_SEQ and cmpltd.PRD_GRP_SEQ=prdg.PRD_GRP_SEQ
+            where prd.prd_grp_seq=:prdseq  
+            and brnch.brnch_seq=:brnchseq

@@ -1,0 +1,47 @@
+select distinct pgrp.PRD_GRP_SEQ, pgrp.PRD_GRP_NM, mb.BRNCH_NM,
+        me.EMP_NM,
+        mc.CLNT_SEQ, mc.FRST_NM||' '||mc.LAST_NM clnt_nm, ap.APRVD_LOAN_AMT dsb_amt, to_date(dsb.DSBMT_DT) DSBMT_DT,
+        (case when rsch_loans.GRACE_PERD = 1 then 60 
+             when rsch_loans.GRACE_PERD = 1 then 90
+             else 30
+        end) GRACE_PERD, ap.LOAN_CYCL_NUM,
+        nvl(pap.OUTS_PRN_APR20,0) + nvl(pap.OUTS_sc_APR20,0) outs_apr20,
+        (
+        select sum(rcd.pymt_amt) from MW_PYMT_SCHED_HDR psh, MW_PYMT_SCHED_DTL PSD, MW_RCVRY_TRX rch, MW_RCVRY_DTL rcd 
+        left outer join mw_typs rtyp on rtyp.typ_seq=rcd.CHRG_TYP_KEY and rtyp.crnt_rec_flg=1 
+        WHERE rch.RCVRY_TRX_SEQ = rcd.RCVRY_TRX_SEQ and rch.CRNT_REC_FLG = 1 and rcd.CRNT_REC_FLG = 1
+        and PSD.PYMT_SCHED_HDR_SEQ = psh.PYMT_SCHED_HDR_SEQ and psh.CRNT_REC_FLG = 1 and PSD.CRNT_REC_FLG = 1
+        and rcd.PYMT_SCHED_DTL_SEQ = PSD.PYMT_SCHED_DTL_SEQ
+        and psh.LOAN_APP_SEQ = AP.LOAN_APP_SEQ
+        and (rcd.chrg_typ_key=-1 or rtyp.typ_id=17)
+        and to_date(rch.PYMT_DT) between to_date('30-apr-2020')+1 and to_date(:to_dt)
+        ) rec_cum,
+        loan_app_ost(ap.loan_app_Seq, to_date(:to_dt),'ps')  outs_crnt,
+        nvl(get_od_info(ap.loan_app_Seq, to_date(:to_dt),'ps'),0) od_amt_crnt, 
+        nvl(get_od_info(ap.loan_app_Seq, to_date(:to_dt),'d'),0) od_dys_crnt
+        --rsch_loans.GRACE_PERD, rsch_loans.RSCHD_MTHD_SEQ, rsch_loans.RSCHD_RSN_SEQ, AP.LAST_UPD_DT,   
+        from mw_loan_app ap,  Pre_Covid_Apr20_Outs_loan_apps pap, mw_port mp,mw_brnch  mb, mw_area  ma, mw_reg  mr,
+        mw_port_emp_rel mep, mw_emp me, 
+        mw_prd pprd, mw_prd_grp pgrp, MW_DSBMT_VCHR_HDR dsb, mw_clnt mc,
+        (
+        select app.PRNT_LOAN_APP_SEQ, lr.GRACE_PERD, lr.RSCHD_MTHD_SEQ, lr.RSCHD_RSN_SEQ
+            from MW_LOAN_RSCHD lr, mw_loan_app app 
+            where lr.LOAN_APP_SEQ = app.LOAN_APP_SEQ and app.CRNT_REC_FLG = 1
+            and lr.CRNT_REC_FLG = 1
+        ) rsch_loans 
+        where ap.LOAN_APP_SEQ = pap.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1
+        and ap.PORT_SEQ = mp.PORT_SEQ and mp.CRNT_REC_FLG = 1
+        and mp.BRNCH_SEQ = mb.BRNCH_SEQ and mb.CRNT_REC_FLG = 1
+        and mb.AREA_SEQ = ma.AREA_SEQ and ma.CRNT_REC_FLG = 1
+        and ma.REG_SEQ = mr.REG_SEQ and mr.CRNT_REC_FLG = 1
+        and mp.port_seq = mep.port_seq and mep.CRNT_REC_FLG = 1
+        and mep.emp_seq = me.emp_seq        
+        and ap.PRD_SEQ = pprd.PRD_SEQ and pprd.CRNT_REC_FLG = 1
+        and pprd.PRD_GRP_SEQ = pgrp.PRD_GRP_SEQ and pgrp.CRNT_REC_FLG = 1
+        and ap.LOAN_APP_SEQ = dsb.LOAN_APP_SEQ and dsb.CRNT_REC_FLG = 1
+        and ap.CLNT_SEQ = mc.CLNT_SEQ and mc.CRNT_REC_FLG = 1
+        and (dsb.DSBMT_DT) <= to_date('30-apr-2020')
+        and pprd.PRD_GRP_SEQ not in (8,2)
+        and mb.BRNCH_SEQ = :brn_seq
+        and ap.PRNT_LOAN_APP_SEQ = rsch_loans.PRNT_LOAN_APP_SEQ(+)
+        order by 1

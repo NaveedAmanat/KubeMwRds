@@ -1,0 +1,103 @@
+/* Formatted on 10/31/2022 12:33:44 PM (QP5 v5.326) */
+INSERT INTO MW_OD_CREDIT_REPORT_TBL
+    SELECT prt.PORT_NM,
+           emp.emp_nm,
+           clnt.clnt_id,
+           clnt.frst_nm || ' ' || clnt.last_nm
+               clnt_nm,
+              NVL (fthr_frst_nm, spz_frst_nm)
+           || ' '
+           || NVL (fthr_last_nm, spz_last_nm)
+               fs_nm,
+           clnt.ph_num,
+           get_clnt_addr (ap.loan_app_seq)
+               addr,
+           vhdr.dsbmt_dt
+               dsbmt_dt,
+           ap.aprvd_loan_amt
+               dsbmt_amt,
+           loan_app_ost (ap.loan_app_seq,
+                         TO_DATE ( :aDt, 'dd-MM-yyyy'),
+                         'ri')
+               ost_inst_num,
+           loan_app_ost (ap.loan_app_seq, TO_DATE ( :aDt, 'dd-MM-yyyy'), 'p')
+               ost_inst_prncp,
+           loan_app_ost (ap.loan_app_seq, TO_DATE ( :aDt, 'dd-MM-yyyy'), 's')
+               ost_inst_srvc,
+           get_od_info (ap.loan_app_seq, TO_DATE ( :aDt, 'dd-MM-yyyy'), 'i')
+               od_inst_num,
+           get_od_info (ap.loan_app_seq,
+                        TO_DATE ( :aDt, 'dd-MM-yyyy'),
+                        'psc')
+               od_amt,
+           get_od_info (ap.loan_app_seq, TO_DATE ( :aDt, 'dd-MM-yyyy'), 'd')
+               od_days,
+           trx.pymt_dt
+               cmp_dt,
+           chk.ref_cd_dscr
+               rsn,
+           chk.cmnt,
+           (SELECT prd_grp_nm
+              FROM mw_prd_grp mpg
+             WHERE mpg.prd_grp_seq = prd.prd_grp_seq AND mpg.crnt_rec_flg = 1)
+               prd_nm,
+           :P_TYPE 
+      FROM mw_loan_app        ap,
+           mw_clnt            clnt,
+           mw_port            prt,
+           mw_dsbmt_vchr_hdr  vhdr,
+           mw_ref_cd_val      lsts,
+           mw_prd             prd,
+           mw_port_emp_rel    erl,
+           mw_emp             emp,
+           mw_rcvry_trx       trx,
+           (SELECT chks.loan_app_seq, rsn.ref_cd_dscr, chks.cmnt
+              FROM MW_LOAN_APP_MNTRNG_CHKS  chks
+                   JOIN mw_ref_cd_val rsn
+                       ON     rsn.ref_cd_seq = chks.rsn
+                          AND rsn.crnt_rec_flg = 1
+                          AND rsn.REF_CD_GRP_KEY = 318
+             WHERE chks.crnt_rec_flg = 1) chk
+     WHERE     ap.clnt_seq = clnt.clnt_seq
+           AND ap.crnt_rec_flg = 1
+           AND clnt.crnt_rec_flg = 1
+           --and prt.port_seq=clnt.port_key and prt.crnt_rec_flg=1
+           AND ap.PORT_SEQ = prt.PORT_SEQ
+           AND prt.CRNT_REC_FLG = 1
+           AND ap.loan_app_seq = vhdr.loan_app_seq
+           AND vhdr.crnt_rec_flg = 1
+           AND lsts.ref_cd_seq = ap.loan_app_sts
+           AND lsts.crnt_rec_flg = 1
+           AND ap.PRD_SEQ = prd.PRD_SEQ
+           AND prd.crnt_rec_flg = 1
+           AND prt.PORT_SEQ = erl.PORT_SEQ
+           AND erl.crnt_rec_flg = 1
+           AND erl.EMP_SEQ = emp.EMP_SEQ
+           AND ap.loan_app_seq = chk.loan_app_seq(+)
+           AND TO_CHAR (ap.clnt_seq) = trx.pymt_ref
+           AND trx.crnt_rec_flg = 1
+           AND trx.RCVRY_TRX_SEQ =
+               (SELECT MAX (RCVRY_TRX_SEQ)
+                  FROM mw_rcvry_trx rch
+                 WHERE rch.pymt_ref = trx.pymt_ref AND rch.crnt_rec_flg = 1)
+           AND (   (    lsts.ref_cd = '0005'
+                    AND ap.loan_app_sts_dt <= TO_DATE ( :aDt, 'dd-MM-yyyy')
+                    AND ap.crnt_rec_flg = 1)
+                OR (    lsts.ref_cd = '0006'
+                    AND ap.loan_app_sts_dt > TO_DATE ( :aDt, 'dd-MM-yyyy')
+                    AND vhdr.dsbmt_dt <= TO_DATE ( :aDt, 'dd-MM-yyyy'))
+                OR (    lsts.ref_cd = '1245'
+                    AND ap.loan_app_sts_dt > TO_DATE ( :aDt, 'dd-MM-yyyy')))
+           AND NOT EXISTS
+                   (SELECT DISTINCT ctl.loan_app_seq
+                      FROM mw_clnt_tag_list ctl
+                     WHERE     ctl.loan_app_seq = ap.loan_app_seq
+                           AND ctl.eff_start_dt <=
+                               TO_DATE ( :aDt, 'dd-MM-yyyy')
+                           AND ctl.tags_seq = 4)
+           AND prd.PRD_GRP_SEQ =
+               DECODE ( :prdSeq, -1, prd.PRD_GRP_SEQ, :prdSeq)
+           AND prt.BRNCH_SEQ = :brnchSeq
+           AND (   :P_TYPE = 1
+                OR ( :P_TYPE = 2 AND ap.rs_filter_seq > 0)
+                OR ( :P_TYPE = 3 AND ap.rs_filter_seq = 0))

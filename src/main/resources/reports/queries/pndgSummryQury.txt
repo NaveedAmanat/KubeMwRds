@@ -1,0 +1,20 @@
+select       bdo_name,prd,    
+                     sum(case when dys between 1 and 7 then 1 else 0 end) days_1_7,    
+                     sum(case when dys between 8 and 15 then 1 else 0 end) days_8_15,    
+                     sum(case when dys between 16 and 30 then 1 else 0 end) days_16_30,    
+                     sum(case when dys between 31 and 60 then 1 else 0 end) days_31_60        from (         
+                     select get_port_bdo(la.port_seq) bdo_name,                       mpg.prd_grp_nm prd,   
+                            to_date(:asDt,'dd-MM-yyyy') - to_date(Loan_completion_date(la.CLNT_SEQ,la.LOAN_APP_SEQ,to_date(:asDt,'dd-MM-yyyy'))) dys          
+                       from mw_loan_app la         join MW_PORT MP on mp.port_seq=la.port_seq and mp.crnt_rec_flg=1    
+                       join mw_prd prd on prd.prd_seq=la.prd_seq and prd.crnt_rec_flg=1    
+                       join mw_prd_grp mpg on mpg.prd_grp_seq=prd.prd_grp_seq and mpg.crnt_rec_flg=1    
+                      WHERE MP.CRNT_REC_FLG = 1               AND BRNCH_SEQ = :branch          and not exists (   
+                                        SELECT *                            FROM MW_DSBMT_VCHR_HDR dvh, mw_loan_app ap   
+                                          WHERE ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ   
+                                                AND ap.CLNT_SEQ = la.CLNT_SEQ   
+                                                AND ap.CRNT_REC_FLG = 1   
+                                                AND dvh.crnt_rec_flg = 1   
+                                                AND TO_DATE (dvh.DSBMT_DT) > TO_DATE ( :asDt,'dd-MM-yyyy') - 60   
+                                        )          and mpg.CRNT_REC_FLG = 1                and la.LOAN_APP_STS = 704    
+                        AND TO_DATE(Loan_completion_date(la.CLNT_SEQ,la.LOAN_APP_SEQ,to_date(:asDt,'dd-MM-yyyy'))) BETWEEN TO_DATE(:asDt,'dd-MM-yyyy')-60 AND TO_DATE (to_date(:asDt,'dd-MM-yyyy'))    
+                     )        group by  bdo_name,prd        order by prd,bdo_name

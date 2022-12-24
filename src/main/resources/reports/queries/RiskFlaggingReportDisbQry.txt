@@ -1,0 +1,18 @@
+select   c.frst_nm ||' '||c.last_nm name,   c.clnt_id,   loan_cycl_num, 
+     grp.PRD_GRP_NM, app.aprvd_loan_amt,
+     app.aprvd_loan_amt-lst_loan_aprvd_amt(app.loan_app_seq) loan_jump,   emp.emp_nm, 
+     get_od_info(app.loan_app_seq, to_date(:todt,'dd-MM-yyyy'),'i') od_inst    
+     FROM mw_loan_app app  
+     join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1
+     JOIN mw_clnt c ON c.clnt_seq = app.clnt_seq AND c.crnt_rec_flg = 1
+     join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1  
+     join mw_prd_grp grp on grp.prd_grp_seq=prd.prd_grp_seq and grp.crnt_rec_flg=1
+     join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1  
+     join mw_emp emp on emp.emp_seq=per.emp_seq   
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq=:brnch_seq    
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+where app.crnt_rec_flg=1
+ and app.aprvd_loan_amt  > 80000
+ and trunc(dsbmt_dt) between TO_DATE(:frmdt,'dd-MM-yyyy') and TO_DATE(:todt,'dd-MM-yyyy') 
+ order by LOAN_JUMP desc, APP.APRVD_LOAN_AMT desc, OD_INST desc

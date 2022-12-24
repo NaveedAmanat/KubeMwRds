@@ -1,0 +1,16 @@
+
+select card.card_num,get_KZSB_maturity_dt(app.loan_app_seq) card_expiry_dt,clnt.clnt_id,clnt.frst_nm, 
+       clnt.last_nm,clnt.dob,clnt.fthr_frst_nm,clnt.fthr_last_nm, clnt.clnt_seq, clnt.cnic_num,port.port_nm, 
+       brnch.brnch_nm, plan.max_plcy_amt  , plan.PLAN_ID,
+       get_KZSB_maturity_dt(app.loan_app_seq) "DSBMT_DT+365" ,
+       to_CHAR(dvh.DSBMT_DT , 'yyyy')
+  from mw_loan_app app     
+  join mw_clnt clnt on app.clnt_seq=clnt.clnt_seq and clnt.crnt_rec_flg=1     
+  join mw_port port on port.port_seq=app.port_seq and port.crnt_rec_flg=1     
+  join mw_brnch brnch on brnch.brnch_seq=port.brnch_seq and brnch.crnt_rec_flg=1     
+  left outer join mw_clnt_hlth_insr_card card on card.loan_app_seq=app.loan_app_seq and card.crnt_rec_flg=1     
+  join mw_clnt_hlth_insr insr on insr.loan_app_seq=app.loan_app_seq and insr.crnt_rec_flg=1     
+  join mw_hlth_insr_plan plan on plan.hlth_insr_plan_seq=insr.hlth_insr_plan_seq and plan.crnt_rec_flg=1
+  join MW_DSBMT_VCHR_HDR dvh on dvh.LOAN_APP_SEQ=app.LOAN_APP_SEQ and dvh.CRNT_REC_FLG=1 
+  where app.crnt_rec_flg=1 
+  AND app.LOAN_APP_SEQ =:loanAppSeq

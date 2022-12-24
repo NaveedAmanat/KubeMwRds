@@ -1,0 +1,679 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="MCB_Remittance_Disbursement_funds_excel" pageWidth="1770" pageHeight="595" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="1770" leftMargin="0" rightMargin="0" topMargin="10"
+              bottomMargin="20" isIgnorePagination="true" uuid="6ed18ed8-16a7-4f11-9195-5bce791d2dd6">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NAVEED_DB"/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <queryString language="SQL">
+        <![CDATA[SELECT TO_CHAR(TO_DATE(SYSDATE),'dd-MON-YYYY') VDATE,
+        to_char(DH.LOAN_APP_SEQ) LOAN_APP_SEQ,
+        to_char(MC.CNIC_NUM) CNIC_NUM,
+        to_char(to_date(MC.CNIC_EXPRY_DT), 'dd-MON-YYYY') CNIC_EXPRY_DT,
+        to_char(MC.CLNT_id) CLNT_SEQ,
+        MC.FRST_NM||' '||MC.LAST_NM NAME,
+        'KASHF FOUNDATION '||B.BRNCH_NM brnch_nm,
+        dd.AMT DISB_AMOUNT,    
+        case when ty.TYP_ID = '0007' then 'MCB Bank' else null end BANK, 
+        BRR.IBAN BANK_CODE,    
+        BRR.BANK_BRNCH,
+        PRD.PRD_NM,
+        TY.TYP_STR
+        FROM MW_REG R,
+             MW_AREA A,
+             MW_BRNCH B,
+             MW_BRNCH_REMIT_REL BRR,        
+             MW_PORT P,
+             MW_LOAN_APP LA,
+             MW_DSBMT_VCHR_HDR DH,
+             MW_DSBMT_VCHR_DTL DD,
+             MW_PRD PRD,
+             MW_TYPS TY,
+             MW_CLNT MC
+       WHERE     R.REG_SEQ = A.REG_SEQ
+             AND A.AREA_SEQ = B.AREA_SEQ
+             AND B.BRNCH_SEQ = BRR.BRNCH_SEQ         
+             AND B.BRNCH_SEQ = P.BRNCH_SEQ
+             AND P.PORT_SEQ = LA.PORT_SEQ
+             AND LA.LOAN_APP_SEQ = DH.LOAN_APP_SEQ
+             AND DH.DSBMT_HDR_SEQ = DD.DSBMT_HDR_SEQ
+             AND LA.PRD_SEQ = PRD.PRD_SEQ                          
+             AND DD.PYMT_TYPS_SEQ = TY.TYP_SEQ
+             AND TY.TYP_SEQ in (select mt1.TYP_SEQ from mw_typs mt1 where mt1.CRNT_REC_FLG = 1 
+             AND mt1.TYP_CTGRY_KEY = 3 AND mt1.TYP_ID IN ('0007','0004') and mt1.BRNCH_SEQ = B.BRNCH_SEQ)      
+            -- AND B.BRNCH_SEQ = 116
+             AND B.CRNT_REC_FLG = 1
+             AND MC.CLNT_SEQ = LA.CLNT_SEQ
+             AND LA.PRD_SEQ not in (10,33,34)
+             --AND JH.ENTY_SEQ = 2058
+             AND TO_DATE(DH.DSBMT_DT) BETWEEN '10-Mar-2021' AND '10-Mar-2021'
+             AND B.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = BRR.CRNT_REC_FLG         
+             AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = P.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DH.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG                   
+    UNION ALL         
+    SELECT TO_CHAR(TO_DATE(SYSDATE),'dd-MON-YYYY') VDATE,  
+        to_char(LA.LOAN_APP_SEQ) LOAN_APP_SEQ,
+        to_char(MC.CNIC_NUM) CNIC_NUM,
+        to_char(to_date(MC.CNIC_EXPRY_DT), 'dd-MON-YYYY') CNIC_EXPRY_DT,
+        to_char(MC.CLNT_id) CLNT_SEQ,
+        MC.FRST_NM||' '||MC.LAST_NM NAME,
+        'KASHF FOUNDATION '||B.BRNCH_NM brnch_nm,
+        ME.EXPNS_AMT DISB_AMOUNT,    
+        case when ty.TYP_ID = '0007' then 'MCB Bank' else null end BANK,
+        BRR.IBAN BANK_CODE,    
+        BRR.BANK_BRNCH,
+        PRD.PRD_NM,
+        TY.TYP_STR
+        FROM MW_REG R,
+             MW_AREA A,
+             MW_BRNCH B,
+             MW_BRNCH_REMIT_REL BRR,        
+             MW_PORT P,
+             MW_LOAN_APP LA,      
+             MW_EXP ME,     
+             MW_PRD PRD,
+             MW_TYPS TY,
+             MW_CLNT MC
+       WHERE R.REG_SEQ = A.REG_SEQ
+             AND A.AREA_SEQ = B.AREA_SEQ
+             AND B.BRNCH_SEQ = BRR.BRNCH_SEQ        
+             AND B.BRNCH_SEQ = P.BRNCH_SEQ
+             AND P.PORT_SEQ = LA.PORT_SEQ
+             AND LA.PRD_SEQ = PRD.PRD_SEQ                      
+             AND ME.PYMT_TYP_SEQ = TY.TYP_SEQ
+             AND TY.TYP_SEQ in (select mt1.TYP_SEQ from mw_typs mt1 where mt1.CRNT_REC_FLG = 1 AND mt1.TYP_CTGRY_KEY = 3
+                    AND mt1.TYP_ID IN ('0007','0004') and mt1.BRNCH_SEQ = B.BRNCH_SEQ
+                    )
+             AND ME.EXP_REF = LA.LOAN_APP_SEQ
+             AND ME.POST_FLG = 1
+             AND ME.EXPNS_TYP_SEQ = 12595
+             AND B.CRNT_REC_FLG = 1
+             AND ME.CRNT_REC_FLG = 1
+             AND ME.DEL_FLG = 0
+             AND MC.CLNT_SEQ = LA.CLNT_SEQ
+             AND LA.PRD_SEQ = 10
+             AND LA.LOAN_APP_STS in (1305,703)
+             AND LA.CRNT_REC_FLG = 1
+             AND TO_DATE(ME.EFF_START_DT)  BETWEEN '10-Mar-2021' AND '10-Mar-2021'
+             AND B.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = BRR.CRNT_REC_FLG         
+             AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = P.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = ME.CRNT_REC_FLG             
+             AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG
+union all
+SELECT TO_CHAR(TO_DATE(SYSDATE),'dd-MON-YYYY') VDATE,  
+        to_char(DH.LOAN_APP_SEQ) LOAN_APP_SEQ,
+        to_char(MC.CNIC_NUM) CNIC_NUM,
+         to_char(to_date(MC.CNIC_EXPRY_DT), 'dd-MON-YYYY') CNIC_EXPRY_DT,
+        to_char(MC.CLNT_id) CLNT_SEQ,
+        MC.FRST_NM||' '||MC.LAST_NM NAME,
+        'KASHF FOUNDATION '||B.BRNCH_NM brnch_nm,
+        (select mjd.amt from mw_jv_hdr mjh, mw_jv_dtl mjd
+        where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ and mjh.ENTY_SEQ = dd.DSBMT_HDR_SEQ 
+        and UPPER(mjh.ENTY_TYP) = 'DISBURSEMENT'
+        AND mjd.CRDT_DBT_FLG = 0 AND mjd.GL_ACCT_NUM = TY.GL_ACCT_NUM
+        ) DISB_AMOUNT,    
+        case when ty.TYP_ID = '0007' then 'MCB Bank' else null end BANK, 
+        BRR.IBAN BANK_CODE,    
+        BRR.BANK_BRNCH,
+        PRD.PRD_NM,
+        TY.TYP_STR
+        FROM MW_REG R,
+             MW_AREA A,
+             MW_BRNCH B,
+             MW_BRNCH_REMIT_REL BRR,        
+             MW_PORT P,
+             MW_LOAN_APP LA,
+             MW_DSBMT_VCHR_HDR DH,
+             MW_DSBMT_VCHR_DTL DD,
+             MW_PRD PRD,
+             MW_TYPS TY,
+             MW_CLNT MC
+       WHERE     R.REG_SEQ = A.REG_SEQ
+             AND A.AREA_SEQ = B.AREA_SEQ
+             AND B.BRNCH_SEQ = BRR.BRNCH_SEQ         
+             AND B.BRNCH_SEQ = P.BRNCH_SEQ
+             AND P.PORT_SEQ = LA.PORT_SEQ
+             AND LA.LOAN_APP_SEQ = DH.LOAN_APP_SEQ
+             AND DH.DSBMT_HDR_SEQ = DD.DSBMT_HDR_SEQ
+             AND LA.PRD_SEQ = PRD.PRD_SEQ                          
+             AND DD.PYMT_TYPS_SEQ = TY.TYP_SEQ
+             AND TY.TYP_SEQ in (select mt1.TYP_SEQ from mw_typs mt1 where mt1.CRNT_REC_FLG = 1 
+             AND mt1.TYP_CTGRY_KEY = 3 AND mt1.TYP_ID IN ('0007','0004') and mt1.BRNCH_SEQ = B.BRNCH_SEQ)      
+            -- AND B.BRNCH_SEQ = 116
+             AND B.CRNT_REC_FLG = 1
+             AND MC.CLNT_SEQ = LA.CLNT_SEQ
+             AND LA.PRD_SEQ in (33,34)
+             AND (select mjd.amt from mw_jv_hdr mjh, mw_jv_dtl mjd
+                where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ and mjh.ENTY_SEQ = dd.DSBMT_HDR_SEQ 
+                and UPPER(mjh.ENTY_TYP) = 'DISBURSEMENT'
+                AND mjd.CRDT_DBT_FLG = 0 AND mjd.GL_ACCT_NUM = TY.GL_ACCT_NUM
+                ) > 0
+             --AND JH.ENTY_SEQ = 2058
+             and BRR.IBAN is not null
+             AND TO_DATE(DH.DSBMT_DT) BETWEEN '10-Mar-2021' AND '10-Mar-2021'
+             AND B.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = BRR.CRNT_REC_FLG         
+             AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = P.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DH.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG             
+         ORDER BY 7]]>
+    </queryString>
+    <field name="VDATE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="VDATE"/>
+    </field>
+    <field name="LOAN_APP_SEQ" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="LOAN_APP_SEQ"/>
+    </field>
+    <field name="CNIC_NUM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CNIC_NUM"/>
+    </field>
+    <field name="CNIC_EXPRY_DT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CNIC_EXPRY_DT"/>
+    </field>
+    <field name="CLNT_SEQ" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_SEQ"/>
+    </field>
+    <field name="NAME" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="NAME"/>
+    </field>
+    <field name="BRNCH_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="BRNCH_NM"/>
+    </field>
+    <field name="DISB_AMOUNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DISB_AMOUNT"/>
+    </field>
+    <field name="BANK" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="BANK"/>
+    </field>
+    <field name="BANK_CODE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="BANK_CODE"/>
+    </field>
+    <field name="BANK_BRNCH" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="BANK_BRNCH"/>
+    </field>
+    <field name="PRD_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PRD_NM"/>
+    </field>
+    <field name="TYP_STR" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TYP_STR"/>
+    </field>
+    <variable name="DISB_AMOUNT1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DISB_AMOUNT}]]></variableExpression>
+    </variable>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <columnHeader>
+        <band height="30" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <staticText>
+                <reportElement x="0" y="0" width="50" height="30" uuid="8f55dcec-6f9e-44e6-ac17-7556e053c01a">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Sr#]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="50" y="0" width="110" height="30" uuid="68b431c0-9c26-4b90-995f-5a0f042c174c">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Transaction Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="160" y="0" width="100" height="30" uuid="a58e0e87-75a7-4bc1-8b69-6f6d58a3db3f">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Remitters Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="390" y="0" width="110" height="30" uuid="342b780b-e03e-430a-a090-1eda324147d2">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[XPINCODE]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="500" y="0" width="109" height="30" uuid="f2e2be83-bd59-43b8-99d8-09016742613f">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[CNIC # ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="610" y="0" width="110" height="30" uuid="079e58a2-9992-42c3-8965-f59a4bb8b233">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Client ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="1380" y="0" width="130" height="30" uuid="2f941fc0-7105-4d37-be82-44c25397c99e">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Benficiarys Branch Code]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="0" width="130" height="30" uuid="9741d7c0-c707-4f2b-8d92-34746e7bcf83">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Unique Reference #]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="720" y="0" width="160" height="30" uuid="d01eac3e-bcf4-4e70-a2e8-c3b38843bd61">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Beneficiarys Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="880" y="0" width="270" height="30" uuid="d9d8dc37-f13a-4cb9-8853-821f7d2eff26">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Branch Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="1150" y="0" width="110" height="30" uuid="358a0384-4786-4e66-b758-03dc1cffac72">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="1260" y="0" width="120" height="30" uuid="25e20aa4-3517-4347-9059-61974c17d18f">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Beneficiarys Bank]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="1510" y="0" width="260" height="30" uuid="87a3cc35-65e9-4e2e-86eb-9a622c575e4f">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Benficiarys Branch Name]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="20" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="0" y="0" width="50" height="20"
+                               uuid="c1940725-dda7-48f6-a0fb-9a11f353d932">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="50" y="0" width="110" height="20"
+                               uuid="82dc89b5-5b6a-48fb-addb-5d0ae44bfe76">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="6a73b5c3-1dd2-4c84-8051-46f3dfef9478"/>
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{VDATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="160" y="0" width="100" height="20"
+                               uuid="fad84ec6-0642-45cb-9579-f29a0746a285">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d9ef5bbf-5a80-4cc1-bf0c-7404d0fed3c6"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="1" rightIndent="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Kashf"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="260" y="0" width="130" height="20"
+                               uuid="c6ac5528-bbcd-4113-8f23-da3710214bec">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="93e4b378-e2ce-4cb0-9b8e-414f15992947"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{LOAN_APP_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="390" y="0" width="110" height="20"
+                               uuid="1cb2b27b-9266-4495-ad68-398e9f92d3b7">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8c29160d-9d4c-4f18-80a4-4a000a80ba43"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{LOAN_APP_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="500" y="0" width="109" height="20"
+                               uuid="38b92e48-c3c7-4982-b0c0-842342ba6ce6">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="c1b41a33-fbbc-454d-b4b6-105154c6633b"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CNIC_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="1260" y="0" width="120" height="20"
+                               uuid="3d84fb2a-4660-4503-8124-7f54e56ccf05">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="1" rightIndent="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{BANK}]]></textFieldExpression>
+            </textField>
+            <textField isBlankWhenNull="true">
+                <reportElement stretchType="ElementGroupHeight" x="1380" y="0" width="130" height="20"
+                               uuid="0336d749-9621-4e78-98e6-48f2f6fb74df">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{BANK_CODE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="1150" y="0" width="110" height="20"
+                               uuid="c1985994-f1a1-4466-aa70-aaa434892df5">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{DISB_AMOUNT} != null ? new java.text.DecimalFormat("#,##0").format($F{DISB_AMOUNT})  : 0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="880" y="0" width="270" height="20"
+                               uuid="903d41cb-e7b4-4150-a8fe-5963776c63b9">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="1" rightIndent="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{BRNCH_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="720" y="0" width="160" height="20"
+                               uuid="71ddf137-240c-47ef-8142-683a1a7aac3f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="1" rightIndent="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement stretchType="ElementGroupHeight" x="610" y="0" width="110" height="20"
+                               uuid="55521d4e-2204-4248-bd96-5697313708cb">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true" isBlankWhenNull="true">
+                <reportElement x="1510" y="0" width="260" height="20" uuid="98cb0e5d-8288-45bc-be3a-541ecf56783e">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10"/>
+                    <paragraph leftIndent="1" rightIndent="0"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{BANK_BRNCH}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <summary>
+        <band height="20">
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="0" y="0" width="160" height="20"
+                               uuid="b2b12036-08bd-4b24-91f6-0bcc0fdb7e72">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <textField isStretchWithOverflow="true">
+                <reportElement stretchType="ElementGroupHeight" x="1150" y="0" width="110" height="20"
+                               uuid="4bd2a55b-d1c4-4c31-a921-9af75bd5ca7b">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8000eff5-ef48-4dc8-8a3d-b69b25719f72"/>
+                    <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                    <paragraph leftIndent="0" rightIndent="1"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{DISB_AMOUNT1} != null ? new java.text.DecimalFormat("#,##0").format($V{DISB_AMOUNT1})  : 0]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="160" y="0" width="990" height="20"
+                               uuid="37633a57-dc65-47be-b7b3-1f980b3098c3"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="1260" y="0" width="510" height="20"
+                               uuid="c677d951-7fb2-4581-a9d1-b445fd87f5b5"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+        </band>
+    </summary>
+</jasperReport>

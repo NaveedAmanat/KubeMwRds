@@ -1,0 +1,1903 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="PORTFOLIO_SEG" pageWidth="842" pageHeight="595" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" uuid="fbf058ae-23aa-4702-a6ab-1714534eede5">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NAVEED_DB"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 1_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 1_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 1_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 1_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 2_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 2_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 2_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 2_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 3_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 3_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 3_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 3_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 4_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 4_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 4_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 4_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 5_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 5_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 5_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 5_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 7_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 7_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 7_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 7_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 6_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 6_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 6_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab 6_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <subDataset name="pdataset" uuid="d4523a23-d485-4690-b6af-e65d7683d6bd">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NAVEED_DB"/>
+        <parameter name="jumps" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+        <parameter name="reg_nm" class="java.lang.String"/>
+        <parameter name="area_nm" class="java.lang.String"/>
+        <parameter name="brnch_nm" class="java.lang.String"/>
+        <parameter name="curr_user" class="java.lang.String"/>
+        <parameter name="brnch_cd" class="java.lang.String"/>
+        <parameter name="as_dt" class="java.lang.String"/>
+        <parameter name="LOGO_IMG" class="java.lang.String"/>
+        <queryString language="SQL">
+            <![CDATA[select to_number(to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'RRRRMM')) par_ordr, to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'Mon-RRRR') par_month,
+    grp.PRD_GRP_NM,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))) and to_date(dvh.dsbmt_dt) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))) 
+    group by to_number(to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'RRRRMM')), to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'Mon-RRRR'), grp.PRD_GRP_NM     
+    union
+    select to_number(to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'Mon-RRRR') par_month,
+    grp.PRD_GRP_NM,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))) 
+    group by to_number(to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'RRRRMM')), to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'Mon-RRRR'), grp.PRD_GRP_NM
+    union
+     select to_number(to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'Mon-RRRR') par_month,
+    grp.PRD_GRP_NM,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'Mon-RRRR'), grp.PRD_GRP_NM
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    grp.PRD_GRP_NM,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+   count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'Mon-RRRR'), grp.PRD_GRP_NM
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    grp.PRD_GRP_NM,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR'), grp.PRD_GRP_NM
+    union    
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    grp.PRD_GRP_NM,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR'), grp.PRD_GRP_NM
+      ]]>
+        </queryString>
+        <field name="PAR_ORDR" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_ORDR"/>
+        </field>
+        <field name="PAR_MONTH" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_MONTH"/>
+        </field>
+        <field name="PRD_GRP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_GRP_NM"/>
+        </field>
+        <field name="TOT_CLNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="TOT_CLNT"/>
+        </field>
+        <field name="OST_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="OST_AMT"/>
+        </field>
+        <field name="PAR_OVER_30_DAY_CNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_DAY_CNT"/>
+        </field>
+        <field name="PAR_OVER_30_DAY_OD_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_DAY_OD_AMT"/>
+        </field>
+        <field name="PAR_OVER_30_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_AMT"/>
+        </field>
+        <field name="PAR_PERC" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_PERC"/>
+        </field>
+        <field name="PAR_OVER_1_DAY_CNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_DAY_CNT"/>
+        </field>
+        <field name="PAR_OVER_1_DAY_OD_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_DAY_OD_AMT"/>
+        </field>
+        <field name="PAR_OVER_1_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_AMT"/>
+        </field>
+        <field name="PAR_PERC1" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_PERC1"/>
+        </field>
+    </subDataset>
+    <subDataset name="bdataset" uuid="9d262c97-742b-4c90-a402-8960f0be1589">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NAVEED_DB"/>
+        <queryString language="SQL">
+            <![CDATA[select to_number(to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'RRRRMM')) par_ordr, to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'Mon-RRRR') par_month,
+    emp.emp_nm,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))) and to_date(dvh.dsbmt_dt) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))) 
+    group by to_number(to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'RRRRMM')), to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'Mon-RRRR'), emp.emp_nm
+    union
+    select to_number(to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'Mon-RRRR') par_month,
+    emp.emp_nm,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))) 
+    group by to_number(to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'RRRRMM')), to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'Mon-RRRR'), emp.emp_nm
+    union
+     select to_number(to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'Mon-RRRR') par_month,
+    emp.emp_nm,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'Mon-RRRR'), emp.emp_nm
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    emp.emp_nm,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+   count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'Mon-RRRR'), emp.emp_nm
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    emp.emp_nm,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR'), emp.emp_nm
+    union    
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    emp.emp_nm,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_prd prd on prd.PRD_SEQ = app.prd_seq and prd.CRNT_REC_FLG = 1
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR'), emp.emp_nm
+      ]]>
+        </queryString>
+        <field name="PAR_ORDR" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_ORDR"/>
+        </field>
+        <field name="PAR_MONTH" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_MONTH"/>
+        </field>
+        <field name="EMP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+        </field>
+        <field name="TOT_CLNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="TOT_CLNT"/>
+        </field>
+        <field name="OST_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="OST_AMT"/>
+        </field>
+        <field name="PAR_OVER_30_DAY_CNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_DAY_CNT"/>
+        </field>
+        <field name="PAR_OVER_30_DAY_OD_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_DAY_OD_AMT"/>
+        </field>
+        <field name="PAR_OVER_30_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_AMT"/>
+        </field>
+        <field name="PAR_PERC" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_PERC"/>
+        </field>
+        <field name="PAR_OVER_1_DAY_CNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_DAY_CNT"/>
+        </field>
+        <field name="PAR_OVER_1_DAY_OD_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_DAY_OD_AMT"/>
+        </field>
+        <field name="PAR_OVER_1_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_AMT"/>
+        </field>
+        <field name="PAR_PERC1" class="java.lang.Double">
+            <property name="com.jaspersoft.studio.field.label" value="PAR_PERC1"/>
+        </field>
+    </subDataset>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="as_dt" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="prds" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <parameter name="bdos" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <queryString>
+        <![CDATA[
+select to_number(to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'RRRRMM')) par_ordr, to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                 
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))) and to_date(dvh.dsbmt_dt) <= to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))))) 
+    group by to_number(to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'RRRRMM')), to_char(to_date(last_day(to_date('25-01-2021','dd-MM-yyyy'))),'Mon-RRRR')
+    union
+    select to_number(to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1))) 
+    group by to_number(to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'RRRRMM')), to_char(to_date(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1),'Mon-RRRR')
+    union
+     select to_number(to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1),'Mon-RRRR')
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1),'Mon-RRRR')
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR')
+    union    
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc,
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then app.loan_app_seq else null end) par_over_1_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_1_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') > 0 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc1
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = 98
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(to_date('25-01-2021','dd-MM-yyyy')),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR')
+      ]]>
+    </queryString>
+    <field name="PAR_ORDR" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_ORDR"/>
+    </field>
+    <field name="PAR_MONTH" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_MONTH"/>
+    </field>
+    <field name="TOT_CLNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TOT_CLNT"/>
+    </field>
+    <field name="OST_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OST_AMT"/>
+    </field>
+    <field name="PAR_OVER_30_DAY_CNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_DAY_CNT"/>
+    </field>
+    <field name="PAR_OVER_30_DAY_OD_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_DAY_OD_AMT"/>
+    </field>
+    <field name="PAR_OVER_30_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_30_AMT"/>
+    </field>
+    <field name="PAR_PERC" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_PERC"/>
+    </field>
+    <field name="PAR_OVER_1_DAY_CNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_DAY_CNT"/>
+    </field>
+    <field name="PAR_OVER_1_DAY_OD_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_DAY_OD_AMT"/>
+    </field>
+    <field name="PAR_OVER_1_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_OVER_1_AMT"/>
+    </field>
+    <field name="PAR_PERC1" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.label" value="PAR_PERC1"/>
+    </field>
+    <variable name="PAR_PERC_MAX" class="java.lang.Double" calculation="Highest">
+        <variableExpression><![CDATA[$F{PAR_PERC}]]></variableExpression>
+    </variable>
+    <variable name="PAR_PERC1_MAX" class="java.lang.Double" calculation="Highest">
+        <variableExpression><![CDATA[$F{PAR_PERC1}]]></variableExpression>
+    </variable>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="81" splitType="Stretch">
+            <image>
+                <reportElement x="0" y="0" width="40" height="50" uuid="f4704a2c-636d-4b01-98a4-fbace10f166c"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="43" y="0" width="127" height="20"
+                               uuid="735b2e46-8c88-4b55-90e2-2b1a272c2cda"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="280" y="16" width="300" height="20" uuid="47c0aed1-3775-4c0a-a7fd-af398d24a75f"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Portfolio at Risk TIme Series Report]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="366" y="60" width="92" height="12" uuid="c760bb67-552b-49dd-98ce-7afbd33c82f8"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="643" y="60" width="80" height="12" uuid="444aa219-e408-410e-96ee-abe2f10bacc8"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("MM-yyyy").format(new SimpleDateFormat("dd-MM-yyyy").parse($P{as_dt}))]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="469" y="60" width="70" height="12" uuid="e400d281-7e67-4700-a102-93f6e610d76c"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Code:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="299" y="60" width="67" height="12" uuid="463abfbf-b975-4fd8-9f77-4b4f06fdd5ab"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Name:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="179" y="60" width="30" height="12" uuid="df8f1c5f-8018-4003-baa9-2cb59fc5680a"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="89" y="60" width="80" height="12" uuid="f8038b03-16ca-402b-af25-e052b686ebeb"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="539" y="60" width="42" height="12" uuid="8f83def7-e35e-4e0e-9b07-06a140657544"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_cd}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="209" y="60" width="80" height="12" uuid="15a8a7e0-6759-489c-9341-5e81c893fcc2"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="590" y="60" width="52" height="12" uuid="7a236ab2-1ae8-4c5a-bc83-94ce9a75d77e"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[As Month:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="49" y="60" width="39" height="12" uuid="6c581be6-7f31-4225-b219-036526765908"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="648" y="8" width="36" height="12"
+                               uuid="83dbec98-9ff5-4284-b89b-a89263d2d78b"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[User:]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="708" y="20" width="90" height="12"
+                               uuid="69e89a8f-d18c-4249-9c6c-a4a3e3786339"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="708" y="8" width="90" height="12"
+                               uuid="8fafeae3-1757-4b21-bf98-d168b336e061"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="648" y="20" width="60" height="12"
+                               uuid="22b7ac96-c40e-4e60-a394-5abc4636b480"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date:]]></text>
+            </staticText>
+            <line>
+                <reportElement x="1" y="80" width="800" height="1" uuid="c4e5ffde-2ac0-43b4-95bb-f43fd2d9abde"/>
+            </line>
+        </band>
+    </title>
+    <summary>
+        <band height="440" splitType="Stretch">
+            <lineChart>
+                <chart isShowLegend="true" evaluationTime="Report">
+                    <reportElement positionType="Float" mode="Opaque" x="0" y="35" width="800" height="270"
+                                   backcolor="#FAFAFA" uuid="2ede4959-b99d-4220-94b5-966660e756b2">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    </reportElement>
+                    <chartTitle>
+                        <font size="8"/>
+                    </chartTitle>
+                    <chartSubtitle>
+                        <font size="8"/>
+                    </chartSubtitle>
+                    <chartLegend>
+                        <font size="8"/>
+                    </chartLegend>
+                </chart>
+                <categoryDataset>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["PAR 30 Day"]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{PAR_MONTH}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{PAR_PERC}]]></valueExpression>
+                        <labelExpression><![CDATA[$F{PAR_PERC}.toString()]]></labelExpression>
+                    </categorySeries>
+                    <categorySeries>
+                        <seriesExpression><![CDATA["PAR 1 Day"]]></seriesExpression>
+                        <categoryExpression><![CDATA[$F{PAR_MONTH}]]></categoryExpression>
+                        <valueExpression><![CDATA[$F{PAR_PERC1}]]></valueExpression>
+                        <labelExpression><![CDATA[$F{PAR_PERC1}.toString()]]></labelExpression>
+                    </categorySeries>
+                </categoryDataset>
+                <linePlot>
+                    <plot>
+                        <seriesColor seriesOrder="0" color="#96171F"/>
+                        <seriesColor seriesOrder="1" color="#F5EC89"/>
+                    </plot>
+                    <categoryAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+                            <labelFont>
+                                <font size="8"/>
+                            </labelFont>
+                            <tickLabelFont>
+                                <font size="8"/>
+                            </tickLabelFont>
+                        </axisFormat>
+                    </categoryAxisFormat>
+                    <valueAxisFormat>
+                        <axisFormat labelColor="#000000" tickLabelColor="#000000" axisLineColor="#000000">
+                            <labelFont>
+                                <font size="8"/>
+                            </labelFont>
+                            <tickLabelFont>
+                                <font size="8"/>
+                            </tickLabelFont>
+                        </axisFormat>
+                    </valueAxisFormat>
+                    <rangeAxisMaxValueExpression>
+                        <![CDATA[$V{PAR_PERC_MAX} > $V{PAR_PERC1_MAX}  ? (($V{PAR_PERC_MAX}) + 3.0) :  (($V{PAR_PERC1_MAX}) + 3.0)]]></rangeAxisMaxValueExpression>
+                </linePlot>
+            </lineChart>
+            <staticText>
+                <reportElement style="Crosstab_CH" positionType="Float" x="0" y="333" width="540" height="15"
+                               backcolor="#F0EBEB" uuid="806bcdf7-9ef4-4b45-b4a0-eb375f22d605">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[Product Wise PAR]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" mode="Opaque" x="0" y="394" width="540" height="15"
+                               backcolor="#F0EBEB" uuid="f23fe96f-0f85-493f-8ef9-2c1fc1de46fe">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                    <paragraph leftIndent="2"/>
+                </textElement>
+                <text><![CDATA[BDO Wise PAR]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="340" y="10" width="100" height="14" uuid="b97641bb-2179-4ec9-a6ab-191d6dbe77c6">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch PAR]]></text>
+            </staticText>
+            <crosstab>
+                <reportElement positionType="Float" x="0" y="348" width="802" height="30"
+                               uuid="e27545c2-3c93-462c-9754-c4fd85f8cf81">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab 7_CH"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab 7_CG"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab 7_CT"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab 7_CD"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <crosstabDataset>
+                    <dataset>
+                        <datasetRun subDataset="pdataset" uuid="601cd5e3-161b-4108-bdd0-95727bf477ae">
+                            <dataSourceExpression><![CDATA[$P{prds}]]></dataSourceExpression>
+                        </datasetRun>
+                    </dataset>
+                </crosstabDataset>
+                <crosstabHeaderCell>
+                    <cellContents>
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <staticText>
+                            <reportElement x="0" y="0" width="120" height="30"
+                                           uuid="2a9603d5-72eb-4d37-8c81-dbf19f6aa027">
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="7"/>
+                            </textElement>
+                            <text><![CDATA[]]></text>
+                        </staticText>
+                    </cellContents>
+                </crosstabHeaderCell>
+                <rowGroup name="PRD_GRP_NM" width="120" totalPosition="End">
+                    <bucket order="None" class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{PRD_GRP_NM}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab 7_CH">
+                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            <textField>
+                                <reportElement mode="Opaque" x="0" y="0" width="120" height="15"
+                                               uuid="2ee7f250-9401-4e0d-9b1d-cf6945c09638"/>
+                                <textElement verticalAlignment="Middle">
+                                    <font size="6"/>
+                                    <paragraph leftIndent="1"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{PRD_GRP_NM}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <property name="com.jaspersoft.studio.layout"
+                                      value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="120" height="15" backcolor="#FFFFFF"
+                                               uuid="c725b94c-4df4-413c-a62a-a00dfcdcf153">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Total:]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <columnGroup name="PAR_MONTH" height="30">
+                    <bucket order="None" class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{PAR_MONTH}]]></bucketExpression>
+                    </bucket>
+                    <crosstabColumnHeader>
+                        <cellContents mode="Opaque" style="Crosstab 7_CH">
+                            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            <property name="com.jaspersoft.studio.layout"
+                                      value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                            <textField>
+                                <reportElement mode="Opaque" x="0" y="0" width="70" height="15"
+                                               uuid="cfa025ed-4a0e-4212-99f1-0b94fcb21440">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{PAR_MONTH}]]></textFieldExpression>
+                            </textField>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="15" width="35" height="15"
+                                               uuid="4ed9c40a-1c4f-451b-9de9-44f98fe4d13b">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6"/>
+                                </textElement>
+                                <text><![CDATA[PAR 1 Day]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="35" y="15" width="35" height="15"
+                                               uuid="a925d97b-bf5b-461d-a68a-6d7cbc789a02">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6"/>
+                                </textElement>
+                                <text><![CDATA[PAR 30 Day]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabColumnHeader>
+                    <crosstabTotalColumnHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="afbfb616-8376-43f1-b083-bbd46fd28e40"/>
+                                <text><![CDATA[Total PAR_MONTH]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalColumnHeader>
+                </columnGroup>
+                <measure name="PAR_PERC_MEASURE" class="java.lang.Double">
+                    <measureExpression><![CDATA[$F{PAR_PERC}]]></measureExpression>
+                </measure>
+                <measure name="PAR_PERC1_MEASURE" class="java.lang.Double">
+                    <measureExpression><![CDATA[$F{PAR_PERC1}]]></measureExpression>
+                </measure>
+                <measure name="OST_AMT_SUM" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{OST_AMT}]]></measureExpression>
+                </measure>
+                <measure name="PAR_OVER_30_AMT_SUM" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{PAR_OVER_30_AMT}]]></measureExpression>
+                </measure>
+                <measure name="PAR_OVER_1_AMT_SUM" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{PAR_OVER_1_AMT}]]></measureExpression>
+                </measure>
+                <crosstabCell width="70" height="15">
+                    <cellContents mode="Opaque" style="Crosstab 7_CD">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <textField>
+                            <reportElement x="0" y="0" width="35" height="15"
+                                           uuid="fdab81eb-3666-45e9-8576-6b5eb4dfe7ee">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{PAR_PERC1_MEASURE} != null ? $V{PAR_PERC1_MEASURE} : 0.0]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="35" y="0" width="35" height="15"
+                                           uuid="669ca14c-ae55-4b6d-9b2e-d58ce589c3b9">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{PAR_PERC_MEASURE} != null ? $V{PAR_PERC_MEASURE} : 0.0]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" columnTotalGroup="PAR_MONTH">
+                    <cellContents mode="Opaque" style="Crosstab 7_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF"
+                                           uuid="f30d6154-2985-41ff-8376-082ff055cc09"/>
+                            <textFieldExpression><![CDATA[$V{PAR_PERC_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="70" height="15" rowTotalGroup="PRD_GRP_NM">
+                    <cellContents mode="Opaque" style="Crosstab 7_CT">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <textField>
+                            <reportElement mode="Opaque" x="35" y="0" width="35" height="15"
+                                           uuid="fd5bc999-3da5-4218-825c-eab98a5c944c">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{OST_AMT_SUM} != null ? new java.text.DecimalFormat("#,##0.00").format($V{PAR_OVER_30_AMT_SUM} / new Double($V{OST_AMT_SUM}) * 100  ) : 0.0]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="35" height="15"
+                                           uuid="fc3dc5fc-f60c-4919-8636-fc5971d662af">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{OST_AMT_SUM} != null ? new java.text.DecimalFormat("#,##0.00").format($V{PAR_OVER_1_AMT_SUM} / new Double($V{OST_AMT_SUM}) * 100  ) : 0.0]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="PRD_GRP_NM" columnTotalGroup="PAR_MONTH">
+                    <cellContents mode="Opaque" style="Crosstab 7_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF"
+                                           uuid="5a2b3bd2-b6c8-4adf-adf4-8b581ce9c5f2"/>
+                            <textFieldExpression><![CDATA[$V{PAR_PERC_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+            </crosstab>
+            <crosstab>
+                <reportElement positionType="Float" x="0" y="409" width="802" height="30"
+                               uuid="443e145c-bae8-4e97-b9b8-143696d3dbe4">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab 6_CH"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab 6_CG"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab 6_CT"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab 6_CD"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <crosstabDataset>
+                    <dataset>
+                        <datasetRun subDataset="bdataset" uuid="670d5c5b-2d92-4b08-bd72-32eef2aa1be9">
+                            <dataSourceExpression><![CDATA[$P{bdos}]]></dataSourceExpression>
+                        </datasetRun>
+                    </dataset>
+                </crosstabDataset>
+                <crosstabHeaderCell>
+                    <cellContents>
+                        <staticText>
+                            <reportElement x="0" y="0" width="120" height="30"
+                                           uuid="594cc931-56d6-4448-bf39-68b26e2ef4a9">
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="7"/>
+                            </textElement>
+                            <text><![CDATA[]]></text>
+                        </staticText>
+                    </cellContents>
+                </crosstabHeaderCell>
+                <rowGroup name="EMP_NM" width="120" totalPosition="End">
+                    <bucket order="None" class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{EMP_NM}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab 6_CH">
+                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            <textField>
+                                <reportElement mode="Opaque" x="0" y="0" width="120" height="15"
+                                               uuid="92f108ff-ed69-48ce-b70d-3987e9606708">
+                                    <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                                </reportElement>
+                                <textElement verticalAlignment="Middle">
+                                    <font size="7"/>
+                                    <paragraph leftIndent="2"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{EMP_NM}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="120" height="15" backcolor="#FFFFFF"
+                                               uuid="0142be0f-f408-4adc-a912-952bab2b4f31">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Total:]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <columnGroup name="PAR_MONTH" height="30">
+                    <bucket order="None" class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{PAR_MONTH}]]></bucketExpression>
+                    </bucket>
+                    <crosstabColumnHeader>
+                        <cellContents mode="Opaque" style="Crosstab 6_CH">
+                            <property name="com.jaspersoft.studio.layout"
+                                      value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                            <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            <textField>
+                                <reportElement mode="Opaque" x="0" y="0" width="70" height="15"
+                                               uuid="bd426b05-6c0e-4b6f-aceb-c8491d8c5ce3"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="7"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{PAR_MONTH}]]></textFieldExpression>
+                            </textField>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="15" width="35" height="15"
+                                               uuid="7b253672-38e4-4422-85c0-f6407338f0dd">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6"/>
+                                </textElement>
+                                <text><![CDATA[PAR 1 Day]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="35" y="15" width="35" height="15"
+                                               uuid="22dae49f-bc52-493a-ab04-cd898addaac1">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="6"/>
+                                </textElement>
+                                <text><![CDATA[PAR 30 Day]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabColumnHeader>
+                    <crosstabTotalColumnHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="cdef67e6-29ba-4c7d-8b2a-9ab81e2c33a7"/>
+                                <text><![CDATA[Total PAR_MONTH]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalColumnHeader>
+                </columnGroup>
+                <measure name="PAR_PERC_MEASURE" class="java.lang.Double">
+                    <measureExpression><![CDATA[$F{PAR_PERC}]]></measureExpression>
+                </measure>
+                <measure name="PAR_PERC1_MEASURE" class="java.lang.Double">
+                    <measureExpression><![CDATA[$F{PAR_PERC1}]]></measureExpression>
+                </measure>
+                <measure name="OST_AMT_SUM" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{OST_AMT}]]></measureExpression>
+                </measure>
+                <measure name="PAR_OVER_30_AMT_SUM" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{PAR_OVER_30_AMT}]]></measureExpression>
+                </measure>
+                <measure name="PAR_OVER_1_AMT_SUM" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{PAR_OVER_1_AMT}]]></measureExpression>
+                </measure>
+                <crosstabCell width="70" height="15">
+                    <cellContents mode="Opaque" style="Crosstab 6_CD">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <textField>
+                            <reportElement x="0" y="0" width="35" height="15"
+                                           uuid="17d47d7d-7d2f-41ad-80ed-99386ee35a6c">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{PAR_PERC1_MEASURE} != null ? $V{PAR_PERC1_MEASURE} : 0.0]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="35" y="0" width="35" height="15"
+                                           uuid="4c38e445-d3f4-44a5-916c-f8d9b2d4e030">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{PAR_PERC_MEASURE} != null ? $V{PAR_PERC_MEASURE} : 0.0]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" columnTotalGroup="PAR_MONTH">
+                    <cellContents mode="Opaque" style="Crosstab 6_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF"
+                                           uuid="21eba96d-69b2-490b-9cae-e39f7ecc16ed"/>
+                            <textFieldExpression><![CDATA[$V{PAR_PERC_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="70" height="15" rowTotalGroup="EMP_NM">
+                    <cellContents mode="Opaque" style="Crosstab 6_CT">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="35" height="15"
+                                           uuid="94334d99-1764-419b-9b9b-f6f056d316cc">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{OST_AMT_SUM} != null ? new java.text.DecimalFormat("#,##0.00").format($V{PAR_OVER_1_AMT_SUM} / new Double($V{OST_AMT_SUM}) * 100  ) : 0.0]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="35" y="0" width="35" height="15"
+                                           uuid="5bf2adad-3e7a-48cc-8c29-fec7aa24222e">
+                                <property name="com.jaspersoft.studio.unit.rightIndent" value="px"/>
+                            </reportElement>
+                            <box>
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right" verticalAlignment="Middle">
+                                <font size="6"/>
+                                <paragraph rightIndent="1"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{OST_AMT_SUM} != null ? new java.text.DecimalFormat("#,##0.00").format($V{PAR_OVER_30_AMT_SUM} / new Double($V{OST_AMT_SUM}) * 100  ) : 0.0]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="EMP_NM" columnTotalGroup="PAR_MONTH">
+                    <cellContents mode="Opaque" style="Crosstab 6_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20" forecolor="#FFFFFF"
+                                           uuid="02f2def2-e3ab-4b29-adf7-81d0bf250c92"/>
+                            <textFieldExpression><![CDATA[$V{PAR_PERC_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+            </crosstab>
+        </band>
+    </summary>
+</jasperReport>

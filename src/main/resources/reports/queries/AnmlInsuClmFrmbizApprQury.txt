@@ -1,0 +1,17 @@
+select ba.biz_aprsl_seq,ba.yrs_in_biz,ba.mnth_in_biz,biz.ref_cd_dscr biz,prsn.ref_cd_dscr prsn,sect.biz_sect_nm sect,acty.biz_acty_nm acty,   
+                         (case when ba.BIZ_ADDR_SAME_AS_HOME_FLG=1 then 'Same as Client Address' else 'H No '||ad.HSE_NUM ||' ,St No '|| ad.STRT||' ,'|| ad.oth_dtl ||' ,'||city.CITY_NM||','||dist.dist_nm||','||cntry.cntry_nm end) addr  
+                         from mw_biz_aprsl  ba  
+                         join mw_ref_cd_val biz on ba.biz_own=biz.ref_cd_seq and biz.crnt_rec_flg=1 and biz.del_flg=0  
+                         join mw_ref_cd_val prsn on ba.prsn_run_the_biz=prsn.ref_cd_seq and prsn.crnt_rec_flg=1 and prsn.del_flg=0  
+                         join mw_biz_acty acty on ba.acty_key=acty.biz_acty_seq and acty.crnt_rec_flg=1 and acty.del_flg=0  
+                         join mw_biz_sect sect on sect.BIZ_SECT_SEQ=acty.BIZ_SECT_SEQ and sect.crnt_rec_flg=1 and sect.del_flg=0  
+                         left outer join mw_addr_rel addrRel on addrrel.enty_key = ba.biz_aprsl_seq and addrRel.enty_typ='Business' and addrRel.crnt_rec_flg=1 and addrRel.del_flg=0  
+                         left outer join mw_addr ad on ad.addr_seq = addrRel.addr_seq and ad.crnt_rec_flg=1 and ad.del_flg=0  
+                         left outer join mw_city_uc_rel rel on rel.city_uc_rel_seq = ad.city_seq and rel.crnt_rec_flg=1 and rel.del_flg = 0  
+                         left outer join mw_uc uc on rel.uc_SEQ =uc.UC_SEQ  and uc.del_flg = 0 and uc.crnt_rec_flg = 1  
+                         left outer join mw_thsl thsl on uc.thsl_SEQ =thsl.thsl_SEQ and thsl.del_flg = 0 and thsl.crnt_rec_flg = 1  
+                         left outer join mw_dist dist on thsl.dist_SEQ =dist.dist_SEQ and dist.del_flg = 0 and dist.crnt_rec_flg = 1  
+                         left outer join mw_st st on dist.st_SEQ =st.st_SEQ and st.del_flg = 0  and st.crnt_rec_flg = 1  
+                         left outer join mw_cntry cntry on st.cntry_SEQ =cntry.cntry_SEQ and cntry.crnt_rec_flg = 1 and cntry.del_flg=0  
+                         left outer join mw_city city on city.city_seq = rel.city_seq  and city.del_flg = 0  and city.crnt_rec_flg = 1  
+                         where ba.loan_app_seq=:loanAppSeq and ba.crnt_rec_flg=1

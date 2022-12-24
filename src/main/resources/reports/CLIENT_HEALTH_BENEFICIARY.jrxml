@@ -1,0 +1,806 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="MONITORING" pageWidth="842" pageHeight="595" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" uuid="649c6d5f-b991-4b1c-a5fb-957bf3498abc">
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NEWMW"/>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[select distinct la.CLNT_SEQ,
+     initcap(c.FRST_NM||' '||c.LAST_NM) client_name,       (c.SPZ_FRST_NM||' '||c.SPZ_LAST_NM) husband_name, 
+     (c.FTHR_FRST_NM||' '||c.FTHR_LAST_NM) father_name,       c.CNIC_NUM, 
+     initcap(pln.PLAN_NM) plan,pln.ANL_PREM_AMT,la.CLNT_SEQ HLTH_INSR_MEMB_SEQ, 
+     initcap(c.FRST_NM||' '||c.LAST_NM) MEMBER_NM, 
+     trunc(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(c.DOB,'DDMMYYYY'),'DDMMYYYY'))/12)||' Years '||trunc(mod(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(c.DOB,'DDMMYYYY'),'DDMMYYYY')),12))||' Months '|| trunc(sysdate-add_months(TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'),trunc(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'))/12)*12+trunc(mod(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY')),12))))||' Days' Age_at_insurace_time, 
+     (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = c.MRTL_STS_KEY and val.CRNT_REC_FLG = 1 )marital_status, 
+     'Self' relation, 
+     (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = c.GNDR_KEY and val.CRNT_REC_FLG = 1 )Gender, 
+     trunc(to_date(ldm.EFF_START_DT))enrollment_date,       trunc(to_date(ldm.DSBMT_DT))insurance_date, 
+     trunc(to_date(ldm.DSBMT_DT)+365) maturity_date,       hl.CARD_NUM, 
+     (select dt_of_dth from mw_dth_rpt dr where dr.crnt_rec_flg=1 and dr.clnt_seq=c.clnt_seq) dth_dt   
+ from 
+ mw_loan_app la,mw_clnt c,   MW_CLNT_HLTH_INSR_CARD hl,MW_HLTH_INSR_PLAN pln, 
+ MW_CLNT_HLTH_INSR ins,MW_DSBMT_VCHR_HDR ldm,mw_port mp   where la.CLNT_SEQ = c.CLNT_SEQ and la.CRNT_REC_FLG = 1 
+ and la.LOAN_APP_STS = 703 and c.CRNT_REC_FLG = 1   and la.PORT_SEQ = mp.PORT_SEQ 
+ and la.LOAN_APP_SEQ = hl.LOAN_APP_SEQ   and hl.LOAN_APP_SEQ = ins.LOAN_APP_SEQ 
+ and ins.HLTH_INSR_PLAN_SEQ = pln.HLTH_INSR_PLAN_SEQ  and ins.CRNT_REC_FLG = 1  AND hl.CRNT_REC_FLG = 1  and ins.HLTH_INSR_PLAN_SEQ != 1223  and la.CLNT_SEQ = 900085198  and la.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ and mp.BRNCH_SEQ = :brnch_cd 
+ and to_date(ldm.DSBMT_DT) between to_date(:from_dt) and to_date(:to_dt)   
+UNION
+SELECT distinct la.CLNT_SEQ,initcap(c.FRST_NM||' '||c.LAST_NM) client_name,  --------- Husband info  (select distinct nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'') from mw_clnt_rel rel1 join mw_ref_cd_val val on rel1.rel_wth_clnt_key=val.ref_cd_seq and val.crnt_rec_flg=1 and ref_cd='0008' 
+        where rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1   )husband_name, 
+ (select nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'') from mw_clnt_rel rel1 join mw_ref_cd_val val on rel1.rel_wth_clnt_key=val.ref_cd_seq and val.crnt_rec_flg=1 and ref_cd='0001' 
+ where rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1   )father_name,   c.CNIC_NUM, 
+ initcap(pln.PLAN_NM) plan,pln.ANL_PREM_AMT,   ins.CLNT_HLTH_INSR_SEQ HLTH_INSR_MEMB_SEQ, 
+ initcap(rel.FRST_NM||' '||rel.LAST_NM) MEMBER_NM,  trunc(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(rel.DOB,'DDMMYYYY'),'DDMMYYYY'))/12)||' Years '||trunc(mod(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(rel.DOB,'DDMMYYYY'),'DDMMYYYY')),12))||' Months '|| trunc(sysdate-add_months(TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'),trunc(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'))/12)*12+trunc(mod(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY')),12))))||' Days' Age_at_insurace_time,  (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = c.MRTL_STS_KEY and val.CRNT_REC_FLG = 1 ) marital_status,  (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = rel.REL_WTH_CLNT_KEY and val.CRNT_REC_FLG = 1 )relation,  (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = rel.GNDR_KEY and val.CRNT_REC_FLG = 1 )Gender, 
+ trunc(to_date(ldm.EFF_START_DT))enrollment_date,   trunc(to_date(ldm.DSBMT_DT))insurance_date, 
+ trunc(to_date(ldm.DSBMT_DT)+365) maturity_date,   hl.CARD_NUM, 
+ (select dt_of_dth from mw_dth_rpt dr where dr.crnt_rec_flg=1 and dr.clnt_seq=c.clnt_seq) dth_dt   from 
+ mw_loan_app la,mw_clnt_rel rel,mw_clnt c,   MW_CLNT_HLTH_INSR_CARD hl,MW_HLTH_INSR_PLAN pln, 
+ MW_CLNT_HLTH_INSR ins,MW_DSBMT_VCHR_HDR ldm,mw_port mp  where la.LOAN_APP_SEQ = rel.loan_app_seq and la.CRNT_REC_FLG = 1  and la.CLNT_SEQ = c.CLNT_SEQ and c.CRNT_REC_FLG = 1 and rel.CRNT_REC_FLG = 1 
+ and rel.REL_WTH_CLNT_KEY in (421,584,440,545,567,17,966,188,556,1005,434)   and la.LOAN_APP_SEQ = hl.LOAN_APP_SEQ 
+ and la.LOAN_APP_SEQ = ins.LOAN_APP_SEQ and ins.CRNT_REC_FLG = 1   and la.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ 
+ and ins.HLTH_INSR_PLAN_SEQ = pln.HLTH_INSR_PLAN_SEQ and pln.CRNT_REC_FLG = 1   and la.PORT_SEQ = mp.PORT_SEQ
+ and ins.CRNT_REC_FLG = 1  and hl.CRNT_REC_FLG = 1  and rel.CNIC_NUM not in (select mem1.MEMBER_CNIC_NUM from MW_HLTH_INSR_MEMB mem1 where mem1.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ and mem1.MEMBER_CNIC_NUM is not null)  and la.CLNT_SEQ = 900085198 and ins.HLTH_INSR_PLAN_SEQ != 1223
+ and la.LOAN_APP_STS = 703   and mp.BRNCH_SEQ = :brnch_cd 
+ and to_date(ldm.DSBMT_DT) between to_date(:from_dt) and to_date(:to_dt)  UNION  Select distinct la.CLNT_SEQ,initcap(c.FRST_NM||' '||c.LAST_NM) client_name, ----- Dependents Info  (select nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'') from mw_clnt_rel rel1 where rel1.REL_WTH_CLNT_KEY IN (421,584,440,545,567,17,966,188,556,1005,434) 
+     and rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1 )husband_name, 
+ (select distinct nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'')    from mw_clnt_rel rel1 
+  join mw_ref_cd_val vl on vl.ref_cd_seq=rel1.rel_wth_clnt_key and vl.crnt_rec_flg=1 and vl.ref_cd='0001' 
+ where rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1   ) father_name,   
+ mem.MEMBER_CNIC_NUM, 
+ initcap(pln.PLAN_NM) plan,pln.ANL_PREM_AMT,   mem.HLTH_INSR_MEMB_SEQ,   initcap(mem.MEMBER_NM), 
+ trunc(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(mem.DOB,'DDMMYYYY'),'DDMMYYYY'))/12)||' Years '||trunc(mod(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(mem.DOB,'DDMMYYYY'),'DDMMYYYY')),12))||' Months '|| trunc(sysdate-add_months(TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'),trunc(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'))/12)*12+trunc(mod(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY')),12))))||' Days' Age_at_insurace_time, 
+ (select initcap(val.REF_CD_DSCR)   from MW_REF_CD_VAL val   where val.REF_CD_SEQ = mem.MRTL_STS_KEY 
+ and val.CRNT_REC_FLG = 1   )marital_status, 
+ (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = mem.REL_KEY and val.CRNT_REC_FLG = 1 )relation,
+  decode(mem.GNDR_KEY,435,'Male',436,'Female',434,'Male','Male') Gender,  --(select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = mem.GNDR_KEY and val.CRNT_REC_FLG = 1 )Gender, 
+ trunc(to_date(ldm.EFF_START_DT))enrollment_date,   trunc(to_date(ldm.DSBMT_DT))insurance_date, 
+ trunc(to_date(ldm.DSBMT_DT)+365) maturity_date,   hl.CARD_NUM, 
+ (select dt_of_dth from mw_dth_rpt dr where dr.crnt_rec_flg=1 and dr.clnt_seq=c.clnt_seq) dth_dt   from 
+ mw_loan_app la,   mw_clnt c,   MW_HLTH_INSR_MEMB mem, 
+ MW_CLNT_HLTH_INSR_CARD hl,MW_HLTH_INSR_PLAN pln,   MW_CLNT_HLTH_INSR ins,MW_DSBMT_VCHR_HDR ldm,mw_port mp 
+ where mem.LOAN_APP_SEQ = hl.LOAN_APP_SEQ   and hl.LOAN_APP_SEQ = ins.LOAN_APP_SEQ 
+ and la.LOAN_APP_SEQ = mem.LOAN_APP_SEQ  and ins.HLTH_INSR_PLAN_SEQ = pln.HLTH_INSR_PLAN_SEQ and pln.CRNT_REC_FLG = 1 
+ and la.CLNT_SEQ = c.CLNT_SEQ and c.CRNT_REC_FLG = 1   and la.LOAN_APP_STS = 703 and la.CRNT_REC_FLG = 1 
+ and ins.CRNT_REC_FLG = 1  and hl.CRNT_REC_FLG = 1  and la.CLNT_SEQ = 900085198 and ins.HLTH_INSR_PLAN_SEQ != 1223
+ and la.PORT_SEQ = mp.PORT_SEQ   and la.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ 
+ and mem.REL_KEY in (   582,423,467,435,1008,569,547,189,969,557,438 ----SON 
+ ,570,437,548,1105,466,422,558,436,190,1009,970 ---DAUGHTER 
+ ,421,584,440,545,567,17,966,188,556,1005,434)   and mp.BRNCH_SEQ = :brnch_cd 
+ and to_date(ldm.DSBMT_DT) between to_date(:from_dt) and to_date(:to_dt)]]>
+    </queryString>
+    <field name="CLNT_SEQ" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_SEQ"/>
+    </field>
+    <field name="CLIENT_NAME" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLIENT_NAME"/>
+    </field>
+    <field name="HUSBAND_NAME" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="HUSBAND_NAME"/>
+    </field>
+    <field name="FATHER_NAME" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="FATHER_NAME"/>
+    </field>
+    <field name="CNIC_NUM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CNIC_NUM"/>
+    </field>
+    <field name="PLAN" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PLAN"/>
+    </field>
+    <field name="ANL_PREM_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ANL_PREM_AMT"/>
+    </field>
+    <field name="HLTH_INSR_MEMB_SEQ" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="HLTH_INSR_MEMB_SEQ"/>
+    </field>
+    <field name="MEMBER_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="MEMBER_NM"/>
+    </field>
+    <field name="AGE_AT_INSURACE_TIME" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="AGE_AT_INSURACE_TIME"/>
+    </field>
+    <field name="MARITAL_STATUS" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="MARITAL_STATUS"/>
+    </field>
+    <field name="RELATION" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="RELATION"/>
+    </field>
+    <field name="GENDER" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="GENDER"/>
+    </field>
+    <field name="ENROLLMENT_DATE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="ENROLLMENT_DATE"/>
+    </field>
+    <field name="INSURANCE_DATE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="INSURANCE_DATE"/>
+    </field>
+    <field name="MATURITY_DATE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="MATURITY_DATE"/>
+    </field>
+    <field name="CARD_NUM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CARD_NUM"/>
+    </field>
+    <field name="DEATH_DATE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="DEATH_DATE"/>
+    </field>
+    <title>
+        <band height="79" splitType="Stretch">
+            <textField>
+                <reportElement x="170" y="60" width="80" height="12" uuid="231c9c97-16c7-4945-94c8-017144d21897"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="570" y="60" width="35" height="12" uuid="2af2a823-dac6-4820-ae0a-80415e5ba664"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[From :]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="60" width="67" height="12" uuid="067172ea-c225-4537-b742-ce07d4519d1e"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Name:]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="710" y="8" width="90" height="12"
+                               uuid="11efc0c3-1934-4f5f-a43d-c2c92115f990"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="650" y="20" width="60" height="12"
+                               uuid="54d2fb69-5b49-43ed-b832-7d847e3db6e7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="605" y="60" width="80" height="12" uuid="6ed8f031-d2d9-4048-be40-26e609d70222"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{from_dt}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="60" width="80" height="12" uuid="08be6132-8f23-4f00-b942-521d09d1c79f"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="710" y="20" width="90" height="12"
+                               uuid="c593c6f0-c119-419e-b21b-3dd4da6aba54"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="47" y="4" width="127" height="20"
+                               uuid="96f9ed64-fcdd-4350-b544-1646c21fc452"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <image>
+                <reportElement positionType="Float" x="5" y="4" width="40" height="50"
+                               uuid="c026861a-9fdb-4b52-99c1-4edff0d39590"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="327" y="60" width="92" height="12" uuid="c6e748d5-6e5a-4a56-b1d7-6f1e6e54da42"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="140" y="60" width="30" height="12" uuid="53ea5367-b722-48d3-86bf-4d20f3f56f5c"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="650" y="8" width="36" height="12"
+                               uuid="d02d7f2f-63cf-4a7c-9962-79a24d7f7bb7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[User:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="500" y="60" width="42" height="12" uuid="cbbbe55c-9ea0-4f3b-93a6-b78484207137"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_cd}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="430" y="60" width="70" height="12" uuid="19847a57-907f-4b59-9052-4722d3723449"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Code:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="10" y="60" width="39" height="12" uuid="ca144006-d062-48cd-b861-8ca5d50251f1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="180" y="24" width="420" height="24"
+                               uuid="27abb5b4-7844-4a9e-ab4f-8b6a2f06fbf4"/>
+                <textElement textAlignment="Center">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Client Health Beneficiaries Report]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="710" y="60" width="80" height="12" uuid="60812219-aad1-49f8-a1e0-8a359d4cf763"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{to_dt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="690" y="60" width="20" height="12" uuid="dc7621f8-9a5f-4f1b-9538-db180583fe0d"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[To :]]></text>
+            </staticText>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="34">
+            <staticText>
+                <reportElement x="4" y="4" width="35" height="30" uuid="2a5cc1b5-71f5-4c8d-8ffe-029fba3e6ac6"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="39" y="4" width="59" height="30" uuid="b1c24197-7fe9-41dc-9bea-1e87d9519213">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="3b7a3062-ed04-438a-82d6-3760bc6ff59f"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[NAME]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="98" y="4" width="49" height="30" uuid="ab44f211-cba6-40f4-a60b-98e99fdbe1ef">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="0d365618-50e3-45df-8877-cfa3038de116"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Husband Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="147" y="4" width="49" height="30" uuid="1bd72641-4c2d-47f9-b8b5-f905ebcf3254">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="4f722e46-a997-4914-90c8-d14756e8ca6e"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Father Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="196" y="4" width="59" height="30" uuid="37d25d3c-e2dd-4206-88a6-8fb6cfa4aae7">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="caf4e5c9-67b1-4336-841b-f3d164b23dc5"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[CNIC]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="255" y="4" width="39" height="30" uuid="793bc768-d16b-4c02-a149-c529f9238884">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="90327989-bb20-4521-9122-dfff65b46b17"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Plan]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="294" y="4" width="29" height="30" uuid="6aeed831-4865-45c6-9063-1b329b6fd6d8">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="7d6b60e5-3c84-4db6-af25-5972a53ca8e3"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Prem. Amt]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="323" y="4" width="43" height="30" uuid="8f653c01-e796-457c-97b2-fa0255bb1384">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="0b687f33-8cf3-4501-a402-4b45bad19a32"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Mem Seq]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="366" y="4" width="71" height="30" uuid="ad5ce40d-f3aa-449e-a784-5dd09ad75258">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="7dbc1510-9c37-4b1b-a98e-9f73cd2249c2"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relative Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="437" y="4" width="43" height="30" uuid="0d7b679b-5696-494f-9a99-229dfdb78c6f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="876152e1-23c9-460d-aa0f-79b588ef9a33"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Age at Insurance time]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="480" y="4" width="39" height="30" uuid="71213594-2cd9-415c-a8fa-0dc74cc96a14">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="ecbac7da-1257-4ad3-84eb-3e6a728b8644"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Marital Status]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="519" y="4" width="39" height="30" uuid="0780e751-9a30-4061-a81b-d5812affe88d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="91c5aeda-8568-470e-8811-427ac48c306b"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Relation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="558" y="4" width="39" height="30" uuid="eb14b91d-20c1-416b-8d6d-0e4b0c15e453">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="76f83eea-3268-4cb9-9244-c6c2bfc14f6b"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Gender]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="597" y="4" width="43" height="30" uuid="4692b384-7b33-468d-b98e-69ee1671203f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="948759cd-60a6-43e3-8341-c1f2c5397dfd"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Enrollment Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="640" y="4" width="40" height="30" uuid="24f569d4-10ec-4252-9aae-b146a214d457">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="78c519fd-7621-4c64-9640-f1f5cd839dbb"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Insurance Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="680" y="4" width="40" height="30" uuid="b074d502-199e-4cce-a7d0-9e367c07baf7">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="dbc12559-6a89-4212-9d01-73c9478b68b8"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Maturity Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="720" y="4" width="50" height="30" uuid="bee5b54d-ea6c-4552-a334-0f5a6e02c42e">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="c7492f28-fae6-489e-86ef-1d1278ca4159"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Health Card No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="770" y="4" width="40" height="30" uuid="28ab0057-354f-44d1-a8fa-4cabadd886a2">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="4232c0d7-8fed-4f23-8299-674e17d731ab"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Death Date]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="30" splitType="Stretch">
+            <textField>
+                <reportElement x="4" y="0" width="35" height="30" uuid="9447ff1c-ebb1-4b9b-ada4-321497fe11fe"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="39" y="0" width="59" height="30" uuid="4f57bc25-afdb-40b5-87f0-89c841430e33">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="3b7a3062-ed04-438a-82d6-3760bc6ff59f"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLIENT_NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="98" y="0" width="49" height="30" uuid="83242c4a-cd0c-4d63-8f05-953baf16c73c">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="0d365618-50e3-45df-8877-cfa3038de116"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{HUSBAND_NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="147" y="0" width="49" height="30" uuid="42577dcf-5a92-412d-877e-5507b798039c">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="4f722e46-a997-4914-90c8-d14756e8ca6e"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{FATHER_NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="196" y="0" width="59" height="30" uuid="b61ad8aa-c68e-4a35-83ec-7b5791accaba">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="caf4e5c9-67b1-4336-841b-f3d164b23dc5"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CNIC_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="255" y="0" width="39" height="30" uuid="c7e4bb3b-837d-4579-a84f-0953b0a58936">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="90327989-bb20-4521-9122-dfff65b46b17"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PLAN}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="294" y="0" width="29" height="30" uuid="23d5d0d0-fb60-41eb-be98-814b12fdab21">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="7d6b60e5-3c84-4db6-af25-5972a53ca8e3"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ANL_PREM_AMT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="323" y="0" width="43" height="30" uuid="c93ed366-e2d7-4884-8853-338a29469e2a">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="0b687f33-8cf3-4501-a402-4b45bad19a32"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{HLTH_INSR_MEMB_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="366" y="0" width="71" height="30" uuid="09a242d4-5af6-4529-940f-69e249d6be1b">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="7dbc1510-9c37-4b1b-a98e-9f73cd2249c2"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MEMBER_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="437" y="0" width="43" height="30" uuid="38fbfe70-d365-4ec9-a30d-5904e9345abc">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="876152e1-23c9-460d-aa0f-79b588ef9a33"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{AGE_AT_INSURACE_TIME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="480" y="0" width="39" height="30" uuid="485dbe04-5d6c-4668-80b8-eefc7ad979a9">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="ecbac7da-1257-4ad3-84eb-3e6a728b8644"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MARITAL_STATUS}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="519" y="0" width="39" height="30" uuid="47d45157-cf67-4fe4-a308-ae1ebe7d2826">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="91c5aeda-8568-470e-8811-427ac48c306b"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{RELATION}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="558" y="0" width="39" height="30" uuid="ce4e3345-5349-42b5-aa93-f39677e89e31">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="76f83eea-3268-4cb9-9244-c6c2bfc14f6b"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{GENDER}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="597" y="0" width="43" height="30" uuid="c2004a15-422d-4d6c-a160-e651f224b36b">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="948759cd-60a6-43e3-8341-c1f2c5397dfd"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ENROLLMENT_DATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="640" y="0" width="40" height="30" uuid="f2a5bc31-845a-4fdd-b0c4-8d0287236bbc">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="78c519fd-7621-4c64-9640-f1f5cd839dbb"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{INSURANCE_DATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="680" y="0" width="40" height="30" uuid="7440f1d1-06cf-4a8a-bfd8-26d146885a96">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="dbc12559-6a89-4212-9d01-73c9478b68b8"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MATURITY_DATE}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="720" y="0" width="50" height="30" uuid="4db9dab3-230e-4ef6-87d7-5fa8485a011e">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="c7492f28-fae6-489e-86ef-1d1278ca4159"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CARD_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="770" y="0" width="40" height="30" uuid="a853238f-8241-4f54-a894-ae95d6a29d95">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="4232c0d7-8fed-4f23-8299-674e17d731ab"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DEATH_DATE}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band/>
+    </pageFooter>
+    <summary>
+        <band height="298" splitType="Stretch">
+            <textField evaluationTime="Report">
+                <reportElement x="758" y="286" width="45" height="12" uuid="a9055b3c-fb9c-4599-b831-719608abc137"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="706" y="286" width="52" height="12" uuid="1522b74a-48e6-4467-ad63-be071965ac78"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

@@ -1,0 +1,29 @@
+select        c.frst_nm ||' '||c.last_nm name,       c.clnt_id,       c.ph_num, 
+                             loan_cycl_num,       prd.prd_cmnt,       app.aprvd_loan_amt dsbmt_amt, 
+                             app.aprvd_loan_amt-lst_loan_aprvd_amt(app.loan_app_seq) loan_jump,       
+                             case when :rpt_flg = 1 then emp.emp_nm when :rpt_flg = 2 then bm.emp_nm else am.emp_nm end bdo_nm, 
+                             get_od_info(app.loan_app_seq, to_date(:to_dt,'dd-mm-yyyy'),'d') od_age   
+                        FROM mw_loan_app app  
+                         join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+                         JOIN mw_clnt c ON c.clnt_seq = app.clnt_seq AND c.crnt_rec_flg = 1 
+                         JOIN mw_ref_cd_val val ON val.ref_cd_seq = app.loan_app_sts AND val.crnt_rec_flg = 1 AND val.del_flg = 0  
+                         join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1                                        
+                         join mw_addr_rel ar on ar.enty_key=c.clnt_seq and ar.crnt_rec_flg = 1 and ar.enty_typ='Client'  
+                         join mw_addr ad on ad.addr_seq = ar.addr_seq and ad.crnt_rec_flg = 1  
+                         join mw_city_uc_rel cur on cur.city_uc_rel_seq = ad.city_seq  
+                         join mw_city city on city.city_seq = cur.city_seq and city.crnt_rec_flg = 1  
+                          join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1
+                          join mw_port_emp_rel per on per.port_seq=prt.port_seq and per.crnt_rec_flg=1
+                           join mw_emp emp on emp.emp_seq=per.emp_seq 
+                          join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+                          join mw_brnch_emp_rel berl on berl.brnch_seq=brnch.brnch_seq and berl.crnt_rec_flg=1
+                          join mw_emp bm on bm.emp_seq=berl.emp_seq
+                          join mw_area_emp_rel aerl on aerl.area_seq=brnch.area_seq and aerl.crnt_rec_flg=1
+                          join mw_emp am on am.emp_seq=aerl.emp_seq      
+                          join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+                         WHERE app.crnt_rec_flg=1   
+                         and app.loan_app_sts=703 
+                        and brnch.brnch_seq=case when to_number(:brnchSeq)=0 then brnch.brnch_seq else to_number(:brnchSeq) end
+                        and ar.area_seq=case when to_number(:areaSeq)=0 then brnch.Area_seq else to_number(:areaSeq) end
+                        and ar.reg_seq=case when to_number(:regSeq)=0 then ar.reg_seq else to_number(:regSeq) end                                           
+                         and get_od_info(app.loan_app_seq, to_date(:to_dt,'dd-mm-yyyy'),'d')>20 and :rpt_flg=:rpt_flg   order by 9

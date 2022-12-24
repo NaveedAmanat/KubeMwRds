@@ -1,0 +1,19 @@
+select 
+(case when sum(nvl(target,0)) > 0 then
+round((sum(nvl(achievment,0)) / sum(nvl(target,0)))*100)
+else 0
+end) TARGET_REGION_GR1_,
+to_number(to_char(nph.PAR_DATE ,'MM')) FLAG_GR1_ , to_char(nph.PAR_DATE ,'Mon-RRRR') Month_gr1_
+FROM target_achievement@link_to_testmwc TA, new_par_history_trg@link_to_testmwc nph, mw_brnch B, mw_AREA A, mw_REG R, mw_prd_grp PD
+WHERE TA.BRANCH_CD = B.BRNCH_CD and B.CRNT_REC_FLG = 1
+AND B.AREA_SEQ = A.AREA_SEQ and A.CRNT_REC_FLG = 1
+and A.REG_SEQ = R.REG_SEQ and R.CRNT_REC_FLG = 1
+and TA.PRODUCT_CODE = PD.PRD_GRP_SEQ and PD.CRNT_REC_FLG = 1
+and  ta.PRODUCT_CODE <> 8
+and ta.PRODUCT_CODE = nph.PRODUCT_ID
+and ta.PERIOD = trim(to_number(to_char(nph.PAR_DATE,'MM')))
+and to_char(par_date,'YYYY') <> '2010'  
+and ta.year = nph.FLAG
+and ta.PERIOD between  (TO_NUMBER(TO_cHAR(TO_DATE(:asOfDate, 'dd-MM-yyyy'),'MM'))- 2) and trim(to_number(to_char(TO_DATE(:asOfDate, 'dd-MM-yyyy'),'MM')))
+group by nph.PAR_DATE
+ORDER BY to_number(to_char(nph.PAR_DATE ,'MM'))

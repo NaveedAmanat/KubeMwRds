@@ -1,0 +1,36 @@
+select GRP_NM,
+       DSCR,
+       COUNT(DISTINCT CLNT_SEQ) CLNT_CNT
+from 
+( 
+select emp.emp_nm grp_nm,
+ case when add_months(last_day(trunc(hdr.dsbmt_dt)),1) > to_date(sysdate) then 'Pending' else 'Missing' end DSCR,
+app.clnt_seq CLNT_seq 
+from mw_loan_app app  
+join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1  
+join mw_emp emp on emp.emp_seq=per.emp_seq 
+join mw_port prt on prt.port_seq = app.port_seq and prt.crnt_rec_flg = 1 
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq  
+join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=app.loan_app_seq and hdr.crnt_rec_flg=1 
+left outer join mw_ref_cd_val utl on utl.ref_cd_seq=app.LOAN_UTL_STS_SEQ and utl.crnt_rec_flg=1 
+where app.crnt_rec_flg=1 
+and trunc(hdr.dsbmt_dt) between to_date(:frm_dt, 'dd-MM-yyyy') and to_date(:to_dt, 'dd-MM-yyyy')
+and not exists (select null from mw_loan_app_mntrng_chks chk where chk.crnt_rec_flg=1 and chk_flg=1 and chk.loan_app_seq=app.loan_app_seq)
+union
+select emp.emp_nm grp_nm,
+act.ref_cd_dscr,
+app.clnt_seq 
+from mw_loan_app_mntrng_chks chk
+join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=chk.loan_app_seq and hdr.crnt_rec_flg=1 
+join mw_ref_cd_val act on act.ref_cd_seq=chk.actn_tkn and act.crnt_rec_flg=1
+join mw_loan_app app on app.loan_app_seq=chk.loan_app_seq and app.crnt_rec_flg=1  
+join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1  
+join mw_emp emp on emp.emp_seq=per.emp_seq 
+join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+join mw_port prt on prt.port_seq = app.port_seq and prt.crnt_rec_flg = 1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1  and brnch.brnch_seq = :brnchSeq 
+where chk.crnt_rec_flg=1
+and trunc(dsbmt_dt) between to_date(:frm_dt, 'dd-MM-yyyy') and to_date(:to_dt, 'dd-MM-yyyy')
+)
+group by grp_nm,dscr
+order by grp_nm

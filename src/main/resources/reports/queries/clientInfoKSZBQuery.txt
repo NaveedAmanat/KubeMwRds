@@ -1,0 +1,3 @@
+select hip.ANL_PREM_AMT chrg_val,hip.PLAN_NM typ_str    from mw_clnt_hlth_insr chi 
+                  join mw_hlth_insr_plan hip on hip.hlth_insr_plan_seq = chi.hlth_insr_plan_seq and hip.crnt_rec_flg=1 and hip.del_flg=0 
+                   where LOAN_APP_SEQ=:loanAppSeq and chi.CRNT_REC_FLG=1 and chi.del_flg=0

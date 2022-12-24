@@ -1,0 +1,11 @@
+select mr.REG_NM, ma.AREA_NM, mb.BRNCH_NM, to_date(me.CRTD_DT , 'dd-MM-yyyy') exp_date, 
+                        (select typ_str from mw_typs mt where mt.TYP_SEQ = me.EXPNS_TYP_SEQ and mt.TYP_CTGRY_KEY in (2,6)) exp_typ, 
+                        me.EXP_SEQ, me.EXP_REF, me.EXPNS_DSCR narration, me.INSTR_NUM,  
+                        (select typ_str from mw_typs mt where mt.TYP_SEQ = me.pymt_typ_seq and mt.TYP_CTGRY_KEY = 6) pymt_typ, 
+                        (case when me.PYMT_RCT_FLG = 2 then me.EXPNS_AMT end) recpt, 
+                        (case when me.PYMT_RCT_FLG = 1 then me.EXPNS_AMT end) pymt 
+                        from mw_exp me, mw_brnch mb, mw_area ma, mw_reg mr  where me.BRNCH_SEQ = mb.BRNCH_SEQ 
+                        and mb.AREA_SEQ = ma.AREA_SEQ  and ma.REG_SEQ = mr.REG_SEQ 
+                        and me.EXPNS_TYP_SEQ in (420,423,580,343)  and me.POST_FLG = 1  and me.CRNT_REC_FLG = 1 
+                        and mb.BRNCH_SEQ = :brnch 
+                        and to_date(me.CRTD_DT) between to_date(:frmdt , 'dd-MM-yyyy') and to_date(:todt, 'dd-MM-yyyy') 

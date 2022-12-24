@@ -1,0 +1,25 @@
+select 
+brnch.brnch_nm,ar.area_nm,clnt.frst_nm||' '||clnt.last_nm clnt_nm,clnt.clnt_id,
+clnt.ph_num clnt_cntct,
+prd.prd_nm,
+app.loan_cycl_num,
+app.aprvd_loan_amt,
+psd.inst_num,
+get_od_info(app.loan_app_seq,to_date(:todt,'dd-mm-yyyy'),'i') od_ins,
+loan_app_ost(app.loan_app_seq,to_date(:todt,'dd-mm-yyyy'),'psc') ost_amt
+from mw_pymt_sched_hdr psh
+join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1
+join mw_loan_app app on app.loan_app_seq=psh.loan_app_seq and app.crnt_rec_flg=1
+join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1
+join mw_clnt clnt on clnt.clnt_seq=app.clnt_seq and clnt.crnt_rec_flg=1
+join mw_rcvry_trx trx on trx.pymt_ref=app.clnt_seq and trx.crnt_rec_flg=1
+join mw_rcvry_dtl rd on rd.rcvry_trx_seq=trx.rcvry_trx_seq and rd.crnt_rec_flg=1 and rd.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rd.chrg_typ_key=-1
+join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user
+where psh.crnt_rec_flg=1
+and psd.pymt_sts_key in (947)
+and pymt_dt<psd.due_dt
+and app.loan_app_sts=703
+and to_date(trx.pymt_dt) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')

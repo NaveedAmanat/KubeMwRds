@@ -1,0 +1,30 @@
+select
+round(sum(nvl(par,0))/sum(nvl(outstanding,0))*100,2) Par, to_char(par_date,'dd-Mon-yyyy') PAR_DATE, product_id,
+min((
+    select min(round(sum(nvl(cph1.par,0))/sum(nvl(cph1.outstanding,0))*100,2))
+    from new_par_history@LINK_TO_TESTMWC.KASHF.ORG.PK cph1,
+    branch@LINK_TO_TESTMWC.KASHF.ORG.PK b1
+    where cph1.BRANCH_CD = b1.BRANCH_CD 
+    and b1.ACTIVE_STATUS = 1
+    and  trunc(cph1.par_date) between trunc(to_date(:asOfDate,'dd-Mon-yyyy'))-7 and trunc(to_date(:asOfDate,'dd-Mon-yyyy'))
+    and cph1.product_id = 1
+    group by to_char(cph1.par_date,'dd-Mon-yyyy')
+)) min_kkk,
+max((
+    select max(round(sum(nvl(cph1.par,0))/sum(nvl(cph1.outstanding,0))*100,2))
+    from new_par_history@LINK_TO_TESTMWC.KASHF.ORG.PK cph1,
+    branch@LINK_TO_TESTMWC.KASHF.ORG.PK b1
+    where cph1.BRANCH_CD = b1.BRANCH_CD 
+    and b1.ACTIVE_STATUS = 1
+    and  trunc(cph1.par_date) between trunc(to_date(:asOfDate,'dd-Mon-yyyy'))-7 and trunc(to_date(:asOfDate,'dd-Mon-yyyy'))
+    and cph1.product_id = 1
+    group by to_char(cph1.par_date,'dd-Mon-yyyy')
+)) max_kkk
+from new_par_history@LINK_TO_TESTMWC.KASHF.ORG.PK cph,
+branch@LINK_TO_TESTMWC.KASHF.ORG.PK b
+where cph.BRANCH_CD = b.BRANCH_CD 
+and b.ACTIVE_STATUS = 1
+and product_id = 1
+AND trunc(par_date) between trunc(to_date(:asOfDate,'dd-Mon-yyyy'))-7 and trunc(to_date(:asOfDate,'dd-Mon-yyyy'))
+group by to_char(par_date,'dd-Mon-yyyy'), FLAG, product_id
+order by FLAG, to_date(par_date,'dd-Mon-yyyy')

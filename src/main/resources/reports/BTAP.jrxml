@@ -1,0 +1,1587 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="BTAP" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" isSummaryWithPageHeaderAndFooter="true"
+              isFloatColumnFooter="true" uuid="e7a0dc9e-0d8f-47e1-bcd6-9eb3945786d9">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <subDataset name="PCSummary" uuid="ad354377-da6f-4f2b-b504-9f67c78e96af">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+        <queryString language="SQL">
+            <![CDATA[]]>
+        </queryString>
+        <field name="EMP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+        </field>
+        <field name="PRD_CMNT" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_CMNT"/>
+        </field>
+        <field name="DAYS1_7" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS1_7"/>
+        </field>
+        <field name="DAYS8_15" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS8_15"/>
+        </field>
+        <field name="DAYS16_30" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS16_30"/>
+        </field>
+        <field name="DAYS31_60" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS31_60"/>
+        </field>
+        <variable name="TTL_DAYS1_7" class="java.lang.Long" resetType="Group" resetGroup="PCSGrp" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS1_7}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DAYS8_15" class="java.lang.Long" resetType="Group" resetGroup="PCSGrp" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS8_15}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DAYS16_30" class="java.lang.Long" resetType="Group" resetGroup="PCSGrp" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS16_30}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DAYS31_60" class="java.lang.Long" resetType="Group" resetGroup="PCSGrp" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS31_60}]]></variableExpression>
+        </variable>
+        <variable name="BTAP_TTL" class="java.lang.Long" resetType="Group" resetGroup="PCSGrp" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS1_7}+$F{DAYS8_15}+$F{DAYS16_30}+$F{DAYS31_60}]]></variableExpression>
+        </variable>
+        <group name="PCSGrp">
+            <groupExpression><![CDATA[$F{PRD_CMNT}]]></groupExpression>
+        </group>
+    </subDataset>
+    <subDataset name="CLMP" uuid="dbb5c092-b692-4585-83da-306ea3c46c58">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="DataAdapter.xml"/>
+        <queryString language="SQL">
+            <![CDATA[]]>
+        </queryString>
+        <field name="EMP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+        </field>
+        <field name="PRD_CMNT" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_CMNT"/>
+        </field>
+        <field name="DAYS1_7" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS1_7"/>
+        </field>
+        <field name="DAYS8_15" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS8_15"/>
+        </field>
+        <field name="DAYS16_30" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS16_30"/>
+        </field>
+        <field name="DAYS31_60" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DAYS31_60"/>
+        </field>
+        <variable name="TTL_DAYS1_7" class="java.lang.Long" resetType="Group" resetGroup="Group1" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS1_7}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DAYS8_15" class="java.lang.Long" resetType="Group" resetGroup="Group1" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS8_15}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DAYS16_30" class="java.lang.Long" resetType="Group" resetGroup="Group1" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS16_30}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DAYS31_60" class="java.lang.Long" resetType="Group" resetGroup="Group1" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS31_60}]]></variableExpression>
+        </variable>
+        <variable name="CLMP_TTL" class="java.lang.Long" resetType="Group" resetGroup="Group1" calculation="Sum">
+            <variableExpression><![CDATA[$F{DAYS1_7}+$F{DAYS8_15}+$F{DAYS16_30}+$F{DAYS31_60}]]></variableExpression>
+        </variable>
+        <group name="Group1">
+            <groupExpression><![CDATA[$F{PRD_CMNT}]]></groupExpression>
+        </group>
+    </subDataset>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="date" class="java.lang.String"/>
+    <parameter name="pndgSummryList" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <parameter name="clntLoanMatuProjList" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <field name="EMP_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+    </field>
+    <field name="PRD_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PRD_NM"/>
+    </field>
+    <field name="SAMEDAY" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="SAMEDAY"/>
+    </field>
+    <field name="DAYS_1_4" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAYS_1_4"/>
+    </field>
+    <field name="DAYS_5_15" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAYS_5_15"/>
+    </field>
+    <field name="DAYS_16_30" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAYS_16_30"/>
+    </field>
+    <field name="ABV30" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ABV30"/>
+    </field>
+    <variable name="total" class="java.lang.Long" resetType="None">
+        <variableExpression>
+            <![CDATA[$F{SAMEDAY}+$F{DAYS_1_4}+$F{DAYS_5_15}+$F{DAYS_16_30}+$F{ABV30}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_SAMEDAY" class="java.lang.Long" resetType="Group" resetGroup="PrdGrp" calculation="Sum">
+        <variableExpression><![CDATA[$F{SAMEDAY}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DAYS_1_4" class="java.lang.Long" resetType="Group" resetGroup="PrdGrp" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAYS_1_4}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DAYS_5_15" class="java.lang.Long" resetType="Group" resetGroup="PrdGrp" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAYS_5_15}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DAYS_16_30" class="java.lang.Long" resetType="Group" resetGroup="PrdGrp" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAYS_16_30}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_ABV30" class="java.lang.Long" resetType="Group" resetGroup="PrdGrp" calculation="Sum">
+        <variableExpression><![CDATA[$F{ABV30}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="grp_ttl" class="java.lang.Long" resetType="Group" resetGroup="PrdGrp">
+        <variableExpression>
+            <![CDATA[$V{TTL_SAMEDAY}+$V{TTL_DAYS_1_4}+$V{TTL_DAYS_5_15}+$V{TTL_DAYS_16_30}+$V{TTL_ABV30}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <group name="PrdGrp">
+        <groupExpression><![CDATA[$F{PRD_NM}]]></groupExpression>
+        <groupHeader>
+            <band height="36">
+                <staticText>
+                    <reportElement x="0" y="12" width="36" height="24" uuid="fd921aed-f5f0-469d-923c-dcd7ef47e9da"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Sr. No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="180" y="22" width="60" height="14" uuid="b18ba76f-569a-46b0-8bb0-4eea310b1471"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Same Day]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="286" y="22" width="46" height="14" uuid="8ee0c41f-73b9-4468-9769-b9d0392bef67"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[5-15]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="482" y="12" width="73" height="24" uuid="224980e2-38a4-43ad-933d-a5dbe50fdafa"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[TAT (Within 15 Days) %age]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="240" y="22" width="46" height="14" uuid="7f719fc4-9c85-4fa5-9bbc-ac67ea42e054"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[1-4]]></text>
+                </staticText>
+                <textField isStretchWithOverflow="true">
+                    <reportElement positionType="Float" stretchType="ElementGroupHeight" mode="Opaque" x="0" y="0"
+                                   width="555" height="12" backcolor="#CCCCCC"
+                                   uuid="543b5877-3fa4-41d3-8be6-3cd306742f15"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement verticalAlignment="Middle">
+                        <font size="9" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{PRD_NM}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="36" y="12" width="144" height="24" uuid="c4541bba-4d88-42ed-8e2f-ec7d44f13d15"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[BDO Name]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="332" y="22" width="46" height="14" uuid="ad541bea-0efb-4ade-b114-a9df1e75d4ba"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[16-30]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="378" y="22" width="46" height="14" uuid="36b9ffd2-7299-4505-aa4a-e042b26df48a"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Above 30]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="424" y="12" width="58" height="24" uuid="30f0e007-cebd-425d-bd89-b27459bad8b7"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Total]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="180" y="12" width="244" height="10" uuid="9b92142a-89f1-4327-a335-392f792ca329"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Days]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="28">
+                <textField>
+                    <reportElement x="180" y="0" width="60" height="12" uuid="0c845fac-5d49-4c22-8a80-2538ef721bb8"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_SAMEDAY}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="286" y="0" width="46" height="12" uuid="c70106f3-5d50-497b-a129-1647fb3c8d43"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAYS_5_15}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="332" y="0" width="46" height="12" uuid="86d84c26-64a9-4d27-919f-8e22c7ab46f4"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAYS_16_30}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="240" y="0" width="46" height="12" uuid="cf440682-fe46-4121-a2c5-25ab227fd70c"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAYS_1_4}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="378" y="0" width="46" height="12" uuid="508c002c-9bc8-4346-a44f-98c3e1b2a4ac"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_ABV30}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="424" y="0" width="58" height="12" uuid="f2063afd-7e20-4555-ab9a-837248f79697"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{grp_ttl}]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Auto">
+                    <reportElement x="482" y="0" width="73" height="12" uuid="b5797be8-44cb-4529-b209-b8f4bf9427e3"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{grp_ttl}!=null&& $V{grp_ttl}!=0?new BigDecimal($V{TTL_SAMEDAY}.doubleValue()+$V{TTL_DAYS_1_4}.doubleValue()+$V{TTL_DAYS_5_15}.doubleValue()/$V{grp_ttl}.doubleValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Auto">
+                    <reportElement x="286" y="12" width="46" height="12" uuid="39d039e1-cc4b-4ac3-bca4-007929adcbde"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_DAYS_5_15}!=0 && $V{grp_ttl}!=0?($V{TTL_DAYS_5_15}.doubleValue()/$V{grp_ttl}.doubleValue()*100)+"%":0+"%"]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Auto">
+                    <reportElement x="240" y="12" width="46" height="12" uuid="f78c97bd-cc5a-41dd-a822-9f299e1f2784"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAYS_1_4}!=0 && $V{grp_ttl}!=0?($V{TTL_DAYS_1_4}.doubleValue()/$V{grp_ttl}.doubleValue()*100)+"%":0+"%"
+]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Auto">
+                    <reportElement x="180" y="12" width="60" height="12" uuid="2e4895d1-223a-4e13-924f-10411d12326c"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_SAMEDAY}!=0 && $V{grp_ttl}!=0?($V{TTL_SAMEDAY}.doubleValue()/$V{grp_ttl}.doubleValue()*100)+"%":0+"%"]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Auto">
+                    <reportElement x="378" y="12" width="46" height="12" uuid="2d7a9f8a-a66a-4657-a525-ab078a8155e8"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_ABV30}!=0 && $V{grp_ttl}!=0?($V{TTL_ABV30}.doubleValue()/$V{grp_ttl}.doubleValue()*100)+"%":0+"%"]]></textFieldExpression>
+                </textField>
+                <textField evaluationTime="Auto">
+                    <reportElement x="332" y="12" width="46" height="12" uuid="b6b06c97-0518-4116-a95f-1df8d388987e"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_DAYS_16_30}!=0 && $V{grp_ttl}!=0?($V{TTL_DAYS_16_30}.doubleValue()/$V{grp_ttl}.doubleValue()*100)+"%":0+"%"]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="424" y="12" width="58" height="12" uuid="50f84e7c-515e-48c6-a33c-d5ce51e368df"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <text><![CDATA[]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="482" y="12" width="73" height="12" uuid="1ac848cc-dd64-4085-85f2-0f9ccf10bcaf"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <text><![CDATA[]]></text>
+                </staticText>
+            </band>
+        </groupFooter>
+    </group>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="94">
+            <image>
+                <reportElement x="0" y="0" width="40" height="50" uuid="466d32bb-171e-41ee-85d0-ad162f4ebb58"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="43" y="0" width="127" height="20"
+                               uuid="142f4959-695d-44c7-b5bd-77cca170c0c8"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="140" y="20" width="278" height="20" uuid="1d27ebe5-e23b-4df5-95bb-455fc9196bbc"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Turnover Analysis & Planning ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="57" width="39" height="12" uuid="525f3230-e878-4adb-85bd-8dcb347c90a1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="40" y="57" width="80" height="12" uuid="83c66f42-8985-4b45-8bc9-d2f43d540997"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="120" y="57" width="30" height="12" uuid="b72decff-2e33-4be2-a517-1894ef1c492e"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="150" y="57" width="80" height="12" uuid="4cc555e0-9e26-45e2-9616-bbc8cd863109"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="421" y="5" width="38" height="12" uuid="7da89e6d-4dba-4f72-a587-ec9692273003"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[User: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="421" y="18" width="58" height="12" uuid="3e0ccd84-1eb5-46c2-bc30-f4e38ff2f97c"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date: ]]></text>
+            </staticText>
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement x="480" y="18" width="90" height="12" uuid="e014e5a8-7519-40fd-a1dc-52d06e7f53d3"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="480" y="6" width="74" height="12" uuid="8320f790-c940-49e3-aa2e-360f8e5a13fb"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="270" y="57" width="82" height="12" uuid="efb86cd1-ffc4-4151-8f34-12d95f59752b"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="230" y="57" width="40" height="12" uuid="d386f29b-bdb5-4c75-8d55-a17ca4968c52"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="419" y="57" width="42" height="12" uuid="9fea9cf3-2a00-4835-b5f6-aceb5cfa165a"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_cd}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="353" y="57" width="66" height="12" uuid="1a934861-1fa7-45f4-92d3-cb04e72f1207"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Code:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="490" y="57" width="64" height="12" uuid="4f088604-72a3-4a9a-8b2d-8380571e4ee7"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{date}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="460" y="57" width="30" height="12" uuid="6c59a6e3-d2e1-4f24-9a3d-dd3cd6efcd80"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Date:]]></text>
+            </staticText>
+            <line>
+                <reportElement x="0" y="73" width="555" height="1" uuid="3747f4ab-98ab-4f36-a680-b67d0b469570"/>
+            </line>
+            <line>
+                <reportElement x="0" y="52" width="555" height="1" uuid="f9d40c3f-92f0-4f92-be65-e1b14ea82b0b"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="80" width="100" height="14"
+                               uuid="848faa4c-dd0c-45cf-933d-f2f913881837"/>
+                <textElement>
+                    <font isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[Client Turnover Status]]></text>
+            </staticText>
+        </band>
+    </title>
+    <detail>
+        <band height="12">
+            <textField>
+                <reportElement x="332" y="0" width="46" height="12" uuid="c025d710-ec41-4962-8b7c-9277289e8631"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAYS_16_30}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="180" y="0" width="60" height="12" uuid="7100578c-6c52-4942-8e0d-2c0e577d44bf"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{SAMEDAY}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="286" y="0" width="46" height="12" uuid="0e20713c-56c8-4c42-95a1-c039d57b65b2"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAYS_5_15}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Auto">
+                <reportElement x="482" y="0" width="73" height="12" uuid="03beb6e7-3c4a-43dd-a33e-32fe9db88853"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{total}!=0 ?new BigDecimal(($F{SAMEDAY}.doubleValue()+$F{DAYS_1_4}.doubleValue()+$F{DAYS_5_15}.doubleValue()/$V{total}.doubleValue())*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="0" width="36" height="12" uuid="c7ecaa04-3edb-4e68-b4dd-a987ee83e12b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{COLUMN_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="378" y="0" width="46" height="12" uuid="e7a7ae25-6860-4a51-9a9f-d68259cf489c"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ABV30}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="36" y="0" width="144" height="12" uuid="cc2d8db4-6924-4544-ac40-34708f039064"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{EMP_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="424" y="0" width="58" height="12" uuid="20b86f40-f1fd-461b-9475-6d74cb7efebd"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{SAMEDAY}+$F{DAYS_1_4}+$F{DAYS_5_15}+$F{DAYS_16_30}+$F{ABV30}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="240" y="0" width="46" height="12" uuid="8469fb81-9aed-4e2a-a4b4-a06bb8596a85"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAYS_1_4}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="17">
+            <textField evaluationTime="Report">
+                <reportElement x="510" y="0" width="45" height="12" uuid="6d2c122a-b515-4088-a08b-4118d5ea1b34"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="458" y="0" width="52" height="12" uuid="1fe451e5-6253-49be-bad8-26d4034dfa78"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="241" splitType="Stretch">
+            <componentElement>
+                <reportElement positionType="Float" x="0" y="20" width="308" height="60"
+                               uuid="4bf2e3de-77a9-48c0-a171-4e081a40240f">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.table.style.table_header" value="Table 1_TH"/>
+                    <property name="com.jaspersoft.studio.table.style.column_header" value="Table 1_CH"/>
+                    <property name="com.jaspersoft.studio.table.style.detail" value="Table 1_TD"/>
+                </reportElement>
+                <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                    <datasetRun subDataset="PCSummary" uuid="27ef0043-0645-41fb-8825-4f100cb45c42">
+                        <dataSourceExpression><![CDATA[$P{pndgSummryList}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:column width="150" uuid="81076af9-9f9c-418d-a85d-a5a288b29f7e">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                        <jr:groupHeader groupName="PCSGrp">
+                            <jr:cell style="Table 1_CH" height="12" rowSpan="1">
+                                <textField>
+                                    <reportElement mode="Opaque" x="0" y="0" width="150" height="12" backcolor="#CCCCCC"
+                                                   uuid="709fdcfd-0c05-4228-a290-c57375895440"/>
+                                    <box leftPadding="1" rightPadding="1">
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement>
+                                        <font size="8" isBold="true"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$F{PRD_CMNT}]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="PCSGrp">
+                            <jr:cell style="Table 1_CH" height="24" rowSpan="1">
+                                <staticText>
+                                    <reportElement mode="Opaque" x="0" y="0" width="150" height="12"
+                                                   uuid="e87da0d1-80e7-465e-bf1c-2ea5fd85c9f1"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <text><![CDATA[Total]]></text>
+                                </staticText>
+                                <staticText>
+                                    <reportElement mode="Opaque" x="0" y="12" width="150" height="12"
+                                                   uuid="4d694408-b171-4609-8934-cc7b1703cfe9"/>
+                                    <text><![CDATA[]]></text>
+                                </staticText>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 1_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="150" height="12"
+                                               uuid="205c782d-a5dc-4dc1-a9ea-66779bd58304"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[BDO]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 1_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="150" height="12"
+                                               uuid="b21fe064-4c72-40b6-a7b5-d52440e28426"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{EMP_NM}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="39" uuid="196d5840-b2d2-46df-89f9-0f136eb014d7">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                        <jr:groupHeader groupName="PCSGrp">
+                            <jr:cell height="12" rowSpan="1"/>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="PCSGrp">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="39" height="12"
+                                                   uuid="35aa48c2-ffed-44c4-b2c2-c1cfc8aaf955"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS1_7}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="39" height="12"
+                                                   uuid="9e5655ec-f985-4984-8616-65e3857d439e"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS1_7}!=0&& $V{BTAP_TTL}!=0?new BigDecimal(($V{TTL_DAYS1_7}.doubleValue()/$V{BTAP_TTL}.doubleValue())*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 1_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="39" height="12"
+                                               uuid="0696b5dc-478e-46b9-8a80-15a26572eb4b"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[1-7]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 1_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="39" height="12"
+                                               uuid="b327704b-fc81-4a3c-a56f-f77f98ff9ccb"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS1_7}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="39" uuid="1f4be7cf-f572-4832-998d-c1664aa0f47c">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:groupHeader groupName="PCSGrp">
+                            <jr:cell height="12" rowSpan="1"/>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="PCSGrp">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="39" height="12"
+                                                   uuid="0f159b96-154b-4823-a6b7-96838eaee078"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS8_15}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="39" height="12"
+                                                   uuid="e76a3208-df53-4f8c-8b46-9bc0399fa938"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS8_15}!=null&& $V{BTAP_TTL}!=0?new BigDecimal(($V{TTL_DAYS8_15}.doubleValue()/$V{BTAP_TTL}.doubleValue())*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 1_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="39" height="12"
+                                               uuid="0b31f947-a393-4338-91ce-60c088ccad89"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[8-15]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 1_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="39" height="12"
+                                               uuid="eaaced0b-9f36-4532-b934-ae24dc49bda9"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS8_15}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="ce7cab14-567e-4e8d-8e20-c861ee5a7cfe">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                        <jr:groupHeader groupName="PCSGrp">
+                            <jr:cell height="12" rowSpan="1"/>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="PCSGrp">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="40" height="12"
+                                                   uuid="454f89c9-ea2b-4595-b02d-c72625c2a1ec"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS16_30}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="40" height="12"
+                                                   uuid="ae215a9e-b9c7-442e-88ce-8a0f6e5bddd8"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS16_30}!=0&& $V{BTAP_TTL}!=0?new BigDecimal(($V{TTL_DAYS16_30}.doubleValue()/$V{BTAP_TTL}.doubleValue())*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 1_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="40" height="12"
+                                               uuid="de46c838-0ff5-4962-b768-3c33eb25645f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[16-30]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 1_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="93a0b8d1-3467-4b95-ab11-0345abbb98cc"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS16_30}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="a7efdb3e-db0e-49e8-97c4-a0956f7e560e">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                        <jr:groupHeader groupName="PCSGrp">
+                            <jr:cell height="12" rowSpan="1">
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                            </jr:cell>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="PCSGrp">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="40" height="12"
+                                                   uuid="7085ca42-fcb6-4a3d-8921-4c1c203a71ac"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS31_60}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="40" height="12"
+                                                   uuid="100c377f-1ced-4b79-9cd6-8a742a5c95e4"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS31_60}!=0&& $V{BTAP_TTL}!=0?new BigDecimal(($V{TTL_DAYS31_60}.doubleValue()/$V{BTAP_TTL}.doubleValue())*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 1_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="40" height="12"
+                                               uuid="09479d41-2850-4db5-82fc-3a162153b5d6"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[31-60]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 1_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="2a15c50d-92be-4e85-9bf3-f612ede5215f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS31_60}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                </jr:table>
+            </componentElement>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="1" width="180" height="14"
+                               uuid="5bb736f8-9be6-4ab5-b8d1-60859f58b1bf"/>
+                <textElement>
+                    <font isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[Pending Clients Summary]]></text>
+            </staticText>
+            <componentElement>
+                <reportElement positionType="Float" x="0" y="110" width="310" height="60"
+                               uuid="ec42983e-6a3f-483f-8ff6-2a4d31c71eb2">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.table.style.table_header" value="Table 2_TH"/>
+                    <property name="com.jaspersoft.studio.table.style.column_header" value="Table 2_CH"/>
+                    <property name="com.jaspersoft.studio.table.style.detail" value="Table 2_TD"/>
+                </reportElement>
+                <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+                          whenNoDataType="AllSectionsNoDetail">
+                    <datasetRun subDataset="CLMP" uuid="fe446d13-f8d8-4467-ab78-e54c49319197">
+                        <dataSourceExpression><![CDATA[$P{clntLoanMatuProjList}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:column width="150" uuid="e29e1838-d7b5-488f-9709-4ec9e9eade9d">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                        <jr:groupHeader groupName="Group1">
+                            <jr:cell style="Table 2_CH" height="12" rowSpan="1">
+                                <textField>
+                                    <reportElement mode="Opaque" x="0" y="0" width="150" height="12" backcolor="#CCCCCC"
+                                                   uuid="33985b6d-2be0-4b39-b161-0b43e8a38127"/>
+                                    <box leftPadding="1" rightPadding="1"/>
+                                    <textElement>
+                                        <font size="8" isBold="true"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$F{PRD_CMNT}]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="Group1">
+                            <jr:cell style="Table 2_CH" height="24" rowSpan="1">
+                                <staticText>
+                                    <reportElement mode="Opaque" x="0" y="0" width="150" height="12"
+                                                   uuid="c04dfedf-6cae-4917-a30c-144084e49f40"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <text><![CDATA[Total]]></text>
+                                </staticText>
+                                <staticText>
+                                    <reportElement mode="Opaque" x="0" y="12" width="150" height="12"
+                                                   uuid="84670b92-8742-4268-9383-f0075e94c06c"/>
+                                    <text><![CDATA[]]></text>
+                                </staticText>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 2_CH" height="12">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="150" height="12"
+                                               uuid="9e13242f-36c8-49e2-b53a-348b4a18673d"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[BDO]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 2_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="150" height="12"
+                                               uuid="b9900995-82a7-4f17-a505-fe11970169f4"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{EMP_NM}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="d2fa6817-ba2b-479b-a397-505f52139186">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                        <jr:groupHeader groupName="Group1">
+                            <jr:cell height="12" rowSpan="1"/>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="Group1">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="40" height="12"
+                                                   uuid="9aa173d4-8967-48ce-8e2b-1080f7e462f9"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS1_7}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="40" height="12"
+                                                   uuid="a8803d36-2a0f-400d-b1c5-2ba84693a65b"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS1_7}!=0 && $V{CLMP_TTL}!=0?new BigDecimal($V{TTL_DAYS1_7}.doubleValue()/$V{CLMP_TTL}.doubleValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 2_CH" height="12">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="40" height="12"
+                                               uuid="b7d167b4-935f-47c1-a647-7aaf0a28fc5f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[1-7]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 2_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="6b7215b2-ad0d-4b1b-842e-0e05e9b95351"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS1_7}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="9bbe827f-fcbe-4864-a4d0-8d56b2105c41">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:groupHeader groupName="Group1">
+                            <jr:cell height="12" rowSpan="1"/>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="Group1">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="40" height="12"
+                                                   uuid="66f98a40-35d3-466b-b4e1-342d1c44c67e"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS8_15}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="40" height="12"
+                                                   uuid="f556e741-8a44-4e3b-8160-80ad94b99fe3"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS8_15}!=null && $V{CLMP_TTL}!=0?new BigDecimal($V{TTL_DAYS8_15}.doubleValue()/$V{CLMP_TTL}.doubleValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 2_CH" height="12">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="40" height="12"
+                                               uuid="8c946188-5607-45ae-b470-b4d3e342edba"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[8-15]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 2_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="86c64350-005b-48e8-9058-09993b7f9030"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS8_15}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="9640a805-de04-4ee4-ae5a-f055d6109d06">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                        <jr:groupHeader groupName="Group1">
+                            <jr:cell height="12" rowSpan="1"/>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="Group1">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="40" height="12"
+                                                   uuid="d4d8d29b-1790-4c42-a9c0-471a5e1b1d6e"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS16_30}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="40" height="12"
+                                                   uuid="e7e08f18-7c3e-4bf8-91ec-a4420b8c092e"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS16_30}!=null && $V{CLMP_TTL}!=0?new BigDecimal($V{TTL_DAYS16_30}.doubleValue()/$V{CLMP_TTL}.doubleValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 2_CH" height="12">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="40" height="12"
+                                               uuid="8545bf09-9f58-467f-8c9f-e64e4bcfe746"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[16-30]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 2_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="1d8abbcc-df89-4ba6-ae8f-1238e4801f22"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS16_30}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="e9a3348c-d8a2-4e3d-aa21-391c968a9f90">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                        <jr:groupHeader groupName="Group1">
+                            <jr:cell height="12" rowSpan="1">
+                                <box>
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                            </jr:cell>
+                        </jr:groupHeader>
+                        <jr:groupFooter groupName="Group1">
+                            <jr:cell height="24" rowSpan="1">
+                                <textField>
+                                    <reportElement x="0" y="0" width="40" height="12"
+                                                   uuid="a18e6d94-ee82-4951-8c97-e97bbd3e9f58"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS31_60}]]></textFieldExpression>
+                                </textField>
+                                <textField evaluationTime="Auto">
+                                    <reportElement x="0" y="12" width="40" height="12"
+                                                   uuid="5574531b-b395-4063-b5a5-108521efd080"/>
+                                    <box>
+                                        <pen lineWidth="0.25"/>
+                                    </box>
+                                    <textElement textAlignment="Center">
+                                        <font size="8"/>
+                                    </textElement>
+                                    <textFieldExpression><![CDATA[$V{TTL_DAYS31_60}!=null && $V{CLMP_TTL}!=0?new BigDecimal($V{TTL_DAYS31_60}.doubleValue()/$V{CLMP_TTL}.doubleValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()+"%":0+"%"
+]]></textFieldExpression>
+                                </textField>
+                            </jr:cell>
+                        </jr:groupFooter>
+                        <jr:columnHeader style="Table 2_CH" height="12">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="40" height="12"
+                                               uuid="477534ca-f7f6-40ca-a4a1-d621aa9a587c"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[31-60]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:detailCell style="Table 2_TD" height="12">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="ba84d92a-6c14-4512-9a19-c1fa74690cbc"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DAYS31_60}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                </jr:table>
+            </componentElement>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="90" width="180" height="14"
+                               uuid="bc482cf7-1e3b-44b6-8def-9ee42f50ce7d"/>
+                <textElement>
+                    <font isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[Client Loan Maturity Projection]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="270" y="211" width="90" height="30"
+                               uuid="8e45ffd1-3d7f-43e9-8af1-8df7facfc295"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Branch Manager Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="270" y="210" width="90" height="1"
+                               uuid="1fc62968-b109-4f7a-8e85-e2bf580e72d9"/>
+            </line>
+        </band>
+    </summary>
+</jasperReport>

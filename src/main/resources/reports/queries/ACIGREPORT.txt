@@ -1,0 +1,21 @@
+select 
+        (select min(dts.trng_dt) from MW_trng_dts dts where dts.crnt_rec_flg=1 and dts.trng_seq=trn.trng_SEQ) trn_dt,
+        rg.reg_nm,
+        ar.area_nm,
+        trnr_nm,        
+        brnch_nm,
+        p.prtcpnt_id,
+        p.prtcpnt_cnic_num,
+        gndr.ref_cd_dscr group1,
+        p.prtcpnt_nm,
+        rl.ref_cd_dscr relation,
+        trn.trng_STS_KEY
+       from MW_trng trn
+join mw_brnch brnch on brnch.brnch_seq=trn.brnch_seq
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_reg rg on rg.reg_seq=ar.reg_seq and rg.crnt_rec_flg=1
+join MW_trng_prtcpnt p on p.trng_seq=trn.trng_SEQ and p.crnt_rec_flg=1
+join mw_ref_cd_val gndr on gndr.ref_cd_seq=prtcpnt_gndr_key and gndr.crnt_rec_flg=1
+join mw_ref_cd_val rl on rl.ref_cd_seq=p.prtcpnt_rel_key and rl.crnt_rec_flg=1
+where trn.crnt_rec_flg=1
+and trn.trng_SEQ=:trng_seq

@@ -1,0 +1,167 @@
+
+
+SELECT pg.PRD_GRP_NM,  nvl(SUM (dsb.LOANS),0) dsb_loans,  
+            nvl(SUM (dsb.DSB_AMT),0) dsb_amt,  nvl(SUM (rec.rec_amt),0) rec,  nvl(SUM (dip.AMT),0) dip,  nvl(SUM (ip.AMT),0) IP,  
+            nvl(SUM (ddoc.AMT),0) ddoc,  nvl(SUM (doc.AMT),0) doc,  nvl(SUM (dtf.AMT),0) dtf,  nvl(SUM (tf.AMT),0) tf,  
+            nvl(SUM (dkszb.AMT),0) dkszb,  nvl(SUM (kszb.AMT),0) kszb,  nvl(SUM (fc.AMT),0) fc,  nvl(SUM (la1.AMT),0) LA  
+            FROM MW_PRD_GRP PG left join 
+            ( 
+            SELECT  get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(DISTINCT(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ))),0) loans, ----DISTINCT--- 
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) DSB_AMT 
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch
+            AND MJH.BRNCH_SEQ = MB.BRNCH_SEQ  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            and MJH.ENTY_TYP = 'Disbursement'
+            and not exists (select MJH1.PRNT_VCHR_REF from MW_JV_HDR MJH1 where MJH1.ENTY_TYP = 'Disbursement' and MJH1.RCVRY_TRX_SEQ = MJH.RCVRY_TRX_SEQ
+                            AND MJH1.PRNT_VCHR_REF = MJH.JV_HDR_SEQ)
+            AND MJD.GL_ACCT_NUM IN (SELECT  mpa.GL_ACCT_NUM FROM MW_PRD_ACCT_SET mpa WHERE mpa.GL_ACCT_NUM = MJD.GL_ACCT_NUM) 
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) > 0
+            ) dsb on pg.PRD_GRP_SEQ = dsb.PRD_GRP_SEQ  left join
+            (
+            select get_prd_seq(mjd.GL_ACCT_NUM) PRD_GRP_SEQ,
+            count( mjh.ENTY_SEQ) loans,---distinct--
+            sum(nvl(MJD.AMT,0)) rec_amt
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  
+            AND MJD.CRDT_DBT_FLG = 0
+            AND MJH.BRNCH_SEQ = :branch
+            AND MJH.BRNCH_SEQ = MB.BRNCH_SEQ  
+            --and mjh.RCVRY_TRX_SEQ = 15512826            
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            and not exists (select MJH1.RCVRY_TRX_SEQ from MW_JV_HDR MJH1 where MJH1.ENTY_TYP = 'Recovery' and MJH1.RCVRY_TRX_SEQ = MJH.RCVRY_TRX_SEQ
+                            AND MJH1.PRNT_VCHR_REF = MJH.JV_HDR_SEQ
+                            )        
+            and MJH.ENTY_TYP = 'Recovery'
+            and MJD.GL_ACCT_NUM not in ('000.000.404714.00000','000.000.404709.00000')
+            group by get_prd_seq(GL_ACCT_NUM)
+            having get_prd_seq(GL_ACCT_NUM) is not null
+            ) rec on  pg.PRD_GRP_SEQ = rec.PRD_GRP_SEQ left join      
+            (  SELECT  get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB  WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM in ('000.000.203716.00000','000.000.203723.00000')  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) > 0    
+            ) dip on pg.PRD_GRP_SEQ = dip.PRD_GRP_SEQ left join     
+            ( 
+            SELECT  get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) PRD_GRP_SEQ,  
+                    nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)),0) loans,  
+                    nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  
+              FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB  
+             WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+               AND MB.CRNT_REC_FLG = 1  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch  
+               and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+               AND MJD.GL_ACCT_NUM in ('000.000.404714.00000','000.000.404716.00000') 
+               and not exists (select MJH1.PRNT_VCHR_REF from MW_JV_HDR MJH1 where MJH1.ENTY_TYP in ('Disbursement','Recovery') and MJH1.RCVRY_TRX_SEQ = MJH.RCVRY_TRX_SEQ
+                            AND MJH1.PRNT_VCHR_REF = MJH.JV_HDR_SEQ) 
+          group by get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) > 0    
+            ) ip on pg.PRD_GRP_SEQ = ip.PRD_GRP_SEQ  left join     
+            ( SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,  MJH.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP,  MJH.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) amt   FROM MW_JV_HDR MJH, MW_JV_DTL MJD 
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0   AND MJH.BRNCH_SEQ = :branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203713.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0   
+            ) ddoc  on pg.PRD_GRP_SEQ = ddoc.PRD_GRP_SEQ left join   
+            (
+            SELECT
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, :branch)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ =:branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404713.00000'
+            and not exists (select MJH1.RCVRY_TRX_SEQ from MW_JV_HDR MJH1 where MJH1.ENTY_TYP = 'Recovery' and MJH1.RCVRY_TRX_SEQ = MJH.RCVRY_TRX_SEQ
+                            AND MJH1.PRNT_VCHR_REF = MJH.JV_HDR_SEQ
+                            )  
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0  
+            ) doc on pg.PRD_GRP_SEQ = doc.PRD_GRP_SEQ left join     
+            (  SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MJH.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203717.00000'  
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0    
+            ) dtf on pg.PRD_GRP_SEQ = dtf.PRD_GRP_SEQ left join     
+            (   SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP,:branch)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404715.00000'  
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0   
+            ) tf on pg.PRD_GRP_SEQ = tf.PRD_GRP_SEQ left join 
+            (   
+            SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, :branch)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203709.00000'  
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0 
+            ) dkszb on pg.PRD_GRP_SEQ = dkszb.PRD_GRP_SEQ left join  
+            ( 
+            SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP,:branch)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = :branch  
+            and trunc(MJH.JV_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404709.00000'  
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0               
+            ) kszb on pg.PRD_GRP_SEQ = kszb.PRD_GRP_SEQ left join 
+            (SELECT PRD_GRP_SEQ, nvl(COUNT (loans),0) loans, nvl(SUM (5000),0) amt  FROM   
+                (             
+                 SELECT  prd.PRD_GRP_SEQ ------DISTINCT----
+                 , me.EXP_REF loans, me.EXPNS_AMT amt  FROM mw_loan_app la, mw_exp me, mw_port mp, mw_prd prd             
+                 WHERE la.CLNT_SEQ = me.EXP_REF and la.PRD_SEQ = prd.PRD_SEQ AND me.CRNT_REC_FLG = 1  AND LA.PORT_SEQ = MP.PORT_SEQ
+                 and not exists(select MJH1.ENTY_SEQ from MW_JV_HDR MJH1 where MJH1.ENTY_TYP = 'Expense' and MJH1.PRNT_VCHR_REF is not null and mjh1.ENTY_SEQ = me.EXP_SEQ)   
+                 and la.LOAN_APP_SEQ = (select la.LOAN_APP_SEQ
+                 from mw_loan_app la  where la.clnt_SEQ = me.EXP_REF AND la.LOAN_APP_SEQ = la.PRNT_LOAN_APP_SEQ  
+                 ORDER BY trunc(la.crtd_dt) DESC FETCH FIRST 1 ROWS ONLY    )
+                 AND la.CRNT_REC_FLG = 1  AND MP.CRNT_REC_FLG = 1  AND MP.BRNCH_SEQ = :branch    
+                 AND trunc(me.CRTD_DT) BETWEEN to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')
+                 and la.PRD_SEQ not in (2,3,5,13,14,29)  AND me.EXPNS_TYP_SEQ = 424             
+                 )  GROUP BY PRD_GRP_SEQ
+            ) fc on pg.PRD_GRP_SEQ = fc.PRD_GRP_SEQ left join 
+            ( 
+            select prd.PRD_GRP_SEQ , count(distinct la.loan_app_seq) loans,(nvl(sum(psd.PPAL_AMT_DUE),0) + nvl(sum(psd.TOT_CHRG_DUE),0)) amt 
+            from mw_rcvry_trx trx  join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 1  
+            join mw_rcvry_dtl dtl on dtl.rcvry_trx_seq = trx.rcvry_trx_seq and dtl.crnt_rec_flg = 1 
+            join mw_pymt_sched_dtl psd on psd.pymt_sched_dtl_seq = dtl.pymt_sched_dtl_seq and psd.crnt_rec_flg = 1  
+            join mw_pymt_sched_hdr psh on psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq and psh.crnt_rec_flg = 1  
+            join mw_loan_app la on la.loan_app_seq = psh.loan_app_seq and la.crnt_rec_flg = 1  
+            join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0  
+            join mw_port prt on prt.port_seq = la.PORT_SEQ and prt.crnt_rec_flg = 1
+            join mw_prd prd on prd.PRD_SEQ = la.PRD_SEQ and prd.crnt_rec_flg = 1 
+            where trx.post_flg = 1 and trx.crnt_rec_flg = 1 and rcvry.typ_id ='0020'  
+            and trunc(trx.pymt_dt) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')
+            and prt.brnch_seq = :branch  
+            and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+            and not exists (select  ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4  ---distinct---
+            and ctl.loan_app_seq = la.LOAN_APP_SEQ and trunc(ctl.EFF_START_DT) <= to_date(:todt,'dd-mm-yyyy')
+            group by  ctl.LOAN_APP_SEQ) 
+            and dtl.chrg_typ_key=-1  group by prd.PRD_GRP_SEQ             
+            ) la1 on pg.PRD_GRP_SEQ = la1.PRD_GRP_SEQ 
+            WHERE 
+             (dsb.LOANS > 0 or rec.rec_amt > 0 or dip.AMT > 0 or ip.AMT > 0 or ddoc.AMT > 0 or doc.AMT > 0 or  
+            dtf.AMT > 0 or tf.AMT > 0 or dkszb.AMT > 0 or kszb.AMT > 0 or fc.AMT > 0 or la1.AMT > 0)  AND pg.CRNT_REC_FLG = 1  
+            GROUP BY pg.PRD_GRP_NM, pg.prd_grp_seq  
+            ORDER BY pg.prd_grp_seq
+

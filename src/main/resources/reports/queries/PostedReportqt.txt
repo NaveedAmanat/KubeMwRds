@@ -1,0 +1,47 @@
+select distinct trx.rcvry_trx_seq,   clnt.clnt_id,
+                 clnt.frst_nm|| ' '|| clnt.last_nm name, instr_num, sum(dtl.pymt_amt) pymt_amt, rcvry.typ_str, p.prd_cmnt,
+                 case when tg.loan_app_seq is null then 'RECOVERIES' else 'TAGGED CLIENT RECOVERIES' end rcvry_flg,emp.emp_nm, to_char(trx.last_upd_dt,'HH12:MI:SSAM') upd_dt, psd.due_dt
+                 from mw_rcvry_trx trx join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 1 and trx.RCVRY_TYP_SEQ != 3571
+                 join mw_rcvry_dtl dtl on dtl.rcvry_trx_seq = trx.rcvry_trx_seq and dtl.crnt_rec_flg = 1
+                 join mw_pymt_sched_dtl psd on psd.pymt_sched_dtl_seq = dtl.pymt_sched_dtl_seq and psd.crnt_rec_flg = 1
+                 join mw_pymt_sched_hdr psh on psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq and psh.crnt_rec_flg = 1
+                 join mw_loan_app la on la.loan_app_seq = psh.loan_app_seq and la.crnt_rec_flg = 1
+                 join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0
+                 join mw_acl acl on acl.port_seq = la.port_seq and acl.user_id =:userId
+                 join mw_prd p on p.prd_seq = la.prd_seq and p.crnt_rec_flg = 1
+                 join mw_clnt clnt on clnt.clnt_seq = trx.pymt_ref and clnt.crnt_rec_flg = 1  
+                 join mw_port_emp_rel prt on prt.port_seq = la.port_seq and prt.crnt_rec_flg = 1
+                 join mw_emp emp on emp.emp_seq = prt.emp_seq
+                 join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+                 left outer join mw_clnt_tag_list tg on tg.loan_app_seq=la.loan_app_seq and tg.TAGS_SEQ = 4
+                 where trx.post_flg = 1 and trx.crnt_rec_flg = 1    and rcvry.typ_id !='0020'
+                 and trunc(trx.pymt_dt) = to_date(:reportdate,'MM-dd-yyyy')
+                 and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.enty_seq = trx.rcvry_trx_seq)
+                 and prt.brnch_seq=:branch
+                 group by trx.rcvry_trx_seq,
+                 clnt.clnt_id,clnt.frst_nm|| ' '|| clnt.last_nm, instr_num,
+                 rcvry.typ_str,p.prd_cmnt,case when tg.loan_app_seq is null then 'RECOVERIES' else 'TAGGED CLIENT RECOVERIES' end,emp.emp_nm,trx.last_upd_dt,psd.due_dt
+UNION ALL
+select distinct trx.WRT_OF_RCVRY_TRX_SEQ,   cl.clnt_id,
+                 clnt.clnt_nm name, instr_num, trx.pymt_amt pymt_amt, rcvry.typ_str, p.prd_cmnt,
+                 case when la.loan_app_seq is null then 'RECOVERIES' else 'TAGGED CLIENT RECOVERIES' end rcvry_flg,emp.emp_nm, to_char(trx.last_upd_dt,'HH12:MI:SSAM') upd_dt, null due_dt
+    from mw_wrt_of_rcvry_trx trx
+    join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 1
+    join mw_wrt_of_rcvry_dtl dtl on dtl.WRT_OF_RCVRY_TRX_SEQ = trx.WRT_OF_RCVRY_TRX_SEQ and dtl.crnt_rec_flg = 1
+                 join mw_wrt_of_clnt clnt on clnt.CLNT_SEQ = trx.CLNT_SEQ and clnt.crnt_rec_flg = 1
+                 join mw_clnt cl on cl.CLNT_SEQ = clnt.CLNT_SEQ and cl.crnt_rec_flg = 1
+                 join mw_loan_app la on la.clnt_seq = clnt.clnt_seq and la.crnt_rec_flg = 1
+                 join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0
+                 join mw_acl acl on acl.port_seq = la.port_seq and acl.user_id =:userId
+                 join mw_prd p on p.prd_seq = la.prd_seq and p.crnt_rec_flg = 1
+                 join mw_port_emp_rel prt on prt.port_seq = la.port_seq and prt.crnt_rec_flg = 1
+                 join mw_emp emp on emp.emp_seq = prt.emp_seq
+                 join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+    where trx.crnt_rec_flg = 1 and rcvry.typ_id !='0020'
+    and trunc(trx.pymt_dt) = to_date(:reportdate,'MM-dd-yyyy')
+                 and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.enty_seq = trx.WRT_OF_RCVRY_TRX_SEQ)
+                 and prt.brnch_seq=:branch
+                 group by trx.WRT_OF_RCVRY_TRX_SEQ,
+                 cl.clnt_id,clnt.clnt_nm, instr_num,trx.pymt_amt,
+                 rcvry.typ_str,p.prd_cmnt,case when la.loan_app_seq is null then 'RECOVERIES' else 'TAGGED CLIENT RECOVERIES' end,emp.emp_nm,trx.last_upd_dt
+                 order by rcvry_flg, typ_str

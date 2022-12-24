@@ -1,0 +1,15 @@
+select brnch.brnch_nm,emp.emp_nm bdo,prd.prd_cmnt, app.loan_id,clnt.clnt_id,clnt.frst_nm||' '||clnt.last_nm clnt_nm,clnt.spz_frst_nm||clnt.fthr_frst_nm ||'/'||clnt.spz_last_nm||clnt.fthr_last_nm fath, clnt.cnic_num,  
+                        app.aprvd_loan_amt,pc1.chrg_val doc,slb.val  
+                        ,app.loan_cycl_num,to_char(nvl(vh.dsbmt_dt,sysdate),'dd-MM-yyyy') dt,clnt.clnt_seq,prd.irr_val   from mw_loan_app app    
+                        join mw_dsbmt_vchr_hdr vh on vh.LOAN_APP_SEQ=app.LOAN_APP_SEQ and vh.CRNT_REC_FLG = 1   
+                        join mw_clnt clnt on app.clnt_seq=clnt.clnt_seq and clnt.crnt_rec_flg=1    
+                        join mw_port port on port.port_seq=app.port_seq and port.crnt_rec_flg=1   
+                        join mw_port_emp_rel poer on poer.port_seq=port.port_seq and poer.crnt_rec_flg=1   
+                        join mw_emp emp on emp.emp_seq=poer.emp_seq    
+                        join mw_brnch brnch on brnch.brnch_seq=port.brnch_seq and brnch.crnt_rec_flg=1    
+                        join mw_prd prd on prd.prd_seq = app.prd_seq and prd.crnt_rec_flg=1    
+                        join mw_prd_chrg pc on prd.prd_seq=pc.prd_seq and pc.crnt_rec_flg = 1    
+                        join mw_typs pct on pct.TYP_SEQ=pc.CHRG_TYP_SEQ and pct.CRNT_REC_FLG=1 AND pct.TYP_ID='0017'   
+                        join mw_prd_chrg_slb  slb on slb.prd_chrg_seq=pc.prd_chrg_seq and slb.crnt_rec_flg=1    
+                        left outer join mw_prd_chrg pc1 on prd.prd_seq=pc1.prd_seq and pc1.crnt_rec_flg = 1 and pc1.chrg_typ_seq=1   
+                        where app.crnt_rec_flg=1 and app.loan_app_seq =:loanAppSeq and vh.DSBMT_VCHR_TYP=:vtyp"

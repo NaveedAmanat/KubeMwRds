@@ -1,0 +1,13 @@
+select to_char(to_date(dvh.DSBMT_DT),'Mon-YYYY') mon,  
+                               count( distinct case when mt.typ_id='0008' then ap.loan_app_seq else null end) bnk_clnt_cnt, 
+                               sum(case when mt.typ_id='0008' then ap.aprvd_loan_amt else 0 end) bnk_clnt_amt, 
+                               count(distinct case when mt.typ_id not in ('0008','0001') then ap.loan_app_seq else null end) ep_cnt, 
+                               sum(case when mt.typ_id not in ('0008','0001') then ap.aprvd_loan_amt else 0 end)  ep_amt 
+                        from mw_loan_app ap, MW_DSBMT_VCHR_HDR dvh, MW_DSBMT_VCHR_DTL dvd, mw_port mp, mw_acl ma, mw_typs mt 
+                        where ap.crnt_rec_flg=1   and ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ 
+                        and dvh.DSBMT_HDR_SEQ = dvd.DSBMT_HDR_SEQ  and dvd.PYMT_TYPS_SEQ = mt.TYP_SEQ 
+                        and mt.TYP_CTGRY_KEY = 3   and dvd.CRNT_REC_FLG = 1   and dvh.crnt_rec_flg=1  
+                        and dvh.crnt_rec_flg=1   and ap.PORT_SEQ = mp.PORT_SEQ  and ap.PORT_SEQ = ma.PORT_SEQ 
+                        and ma.USER_ID = :userid 
+                        and to_date(dvh.DSBMT_DT) between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt, 'dd-MM-yyyy')  
+                        group by to_char(to_date(dvh.DSBMT_DT),'Mon-YYYY')

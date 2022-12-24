@@ -1,0 +1,25 @@
+select pg.prd_grp_nm,    count(distinct app.clnt_seq) tot_clnt,
+                  sum(app.aprvd_loan_amt) tot_clnt_amt,
+                  count(distinct case when app.loan_cycl_num =1 then app.clnt_seq else null end) new_clnt, 
+                  sum(case when app.loan_cycl_num = 1 then app.aprvd_loan_amt else 0 end) new_clnt_amt, 
+                  count(distinct case when app.loan_cycl_num > 1 then app.clnt_seq else null end) rpt_clnt, 
+                  sum(case when app.loan_cycl_num > 1 then app.aprvd_loan_amt else 0 end) rpt_clnt_amt, 
+                  max((select count(distinct app.clnt_seq)  from mw_loan_app app 
+                  join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+                  where app.crnt_rec_flg=1  and loan_app_sts=703  and app.prd_seq=prd.prd_seq 
+                  and to_date(loan_app_sts_dt) between to_date(:frm_dt,'dd-mm-yyyy') and to_date(:to_dt,'dd-mm-yyyy') 
+                  and to_char(lst_loan_cmpltn_dt(app.loan_app_seq),'YYYYMM')=TO_CHAR(to_date(:to_dt,'dd-mm-yyyy'),'YYYYMM') 
+                   )) rnw_clnt_month,        max((select count(distinct app.clnt_seq)  from mw_loan_app app 
+                  join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+                   where app.crnt_rec_flg=1  and app.prd_seq=prd.prd_seq  and loan_app_sts=704 
+                    and to_date(loan_app_sts_dt) between to_date(:frm_dt,'dd-mm-yyyy') and to_date(:to_dt,'dd-mm-yyyy')  )) cmpltd_mnth, 
+                                        max((select count(distinct app.clnt_seq)  from mw_loan_app app 
+                   join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+                   where app.crnt_rec_flg=1  and app.prd_seq=prd.prd_seq  and loan_app_sts=703 
+                    and to_date(loan_app_sts_dt) between to_date(:frm_dt,'dd-mm-yyyy') and to_date(:to_dt,'dd-mm-yyyy') )) dsbmt_mnth  
+                        from mw_loan_app app join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1 
+                   join mw_prd_grp pg on pg.prd_grp_seq=prd.prd_grp_seq and pg.crnt_rec_flg=1 
+                   join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id where app.crnt_rec_flg=1 
+                    and loan_app_sts=703 
+                    and to_date(loan_app_sts_dt) between to_date(:frm_dt,'dd-mm-yyyy') and to_date(:to_dt,'dd-mm-yyyy') 
+                    group by pg.prd_grp_nm

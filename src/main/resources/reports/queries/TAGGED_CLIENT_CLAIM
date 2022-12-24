@@ -1,0 +1,20 @@
+             select 'No_Active_Portfolio' emp_nm,            AP.CLNT_SEQ clsng_clnt,  
+                     get_clnt_SPZ_NM(ap.loan_app_seq) clsng_clnt_NAME, 
+                     (select distinct CTL.TAG_FROM_DT from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4  
+                     and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:aDt,'dd-MM-yyyy')) TAG_DT, 
+                     C.PH_NUM,           get_clnt_addr(ap.loan_app_seq) ADDRESS,           DSBH.DSBMT_DT, 
+                     DSBD.AMT DISB_AMT,           loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ri') clsng_rem_inst, 
+                     loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ps') clsng_OST_AMT, 
+                     loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ri') clsng_od_rem_inst, 
+                     loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ps') clsng_od_AMT, 
+                     get_od_info_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'d') od_days,        
+                     ((select distinct CTL.TAG_FROM_DT from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:aDt,'dd-MM-yyyy')) - (to_date(:aDt,'dd-MM-yyyy') - get_od_info_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'d'))) od_days_when_taged 
+               FROM MW_LOAN_APP ap,          MW_CLNT C,          MW_PRD MP,          MW_PORT MP1, 
+                    MW_PRD_GRP MPG,          MW_DSBMT_VCHR_HDR DSBH,          MW_DSBMT_VCHR_DTL DSBD 
+                where ap.PRD_SEQ = MP.PRD_SEQ   AND MP.PRD_GRP_SEQ = MPG.PRD_GRP_SEQ    and MPG.PRD_GRP_SEQ = :prdSeq 
+             AND MPG.CRNT_REC_FLG = 1   AND MP.CRNT_REC_FLG = 1   AND ap.CRNT_REC_FLG = 1 
+             AND ap.CLNT_SEQ = C.CLNT_SEQ   AND C.CRNT_REC_FLG = 1   AND ap.LOAN_APP_SEQ = DSBH.LOAN_APP_SEQ 
+             AND DSBH.CRNT_REC_FLG = 1   AND DSBH.DSBMT_HDR_SEQ = DSBD.DSBMT_HDR_SEQ   AND DSBD.CRNT_REC_FLG = 1 
+             AND ap.PORT_SEQ = MP1.PORT_SEQ   AND MP1.CRNT_REC_FLG = 1   and mp1.brnch_seq = :brnchSeq 
+             and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(to_date(:aDt,'dd-MM-yyyy'))) 
+             and loan_app_ost_trn(ap.loan_app_seq,to_date(to_date(:aDt,'dd-MM-yyyy'))) > 0

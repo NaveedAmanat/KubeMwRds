@@ -1,0 +1,18 @@
+select ar.area_nm,
+       brnch.brnch_nm,
+       pg.prd_grp_nm,
+       max((select trgt_clients from mw_brnch_trgt trgt where trgt.del_flg=0 and trgt.brnch_seq=brnch.brnch_seq and trgt.prd_seq=pg.prd_grp_seq and trgt.trgt_perd=to_number(to_char(to_date(:as_dt,'dd-mm-yyyy'),'YYYYMM')))) trgt_clnts, 
+       count(1) achvd_clnt,
+       max((select trgt_amt from mw_brnch_trgt trgt where trgt.del_flg=0 and trgt.brnch_seq=brnch.brnch_seq and trgt.prd_seq=pg.prd_grp_seq and trgt.trgt_perd=to_number(to_char(to_date(:as_dt,'dd-mm-yyyy'),'YYYYMM')))) trgt_amt, 
+       sum(la.aprvd_loan_amt) achvd_amt
+from mw_loan_app la
+join mw_prd prd on prd.prd_seq=la.prd_seq and prd.crnt_rec_flg=1
+join mw_prd_grp pg on pg.prd_grp_seq=prd.prd_grp_seq and pg.crnt_rec_flg=1
+join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_acl acl on acl.port_seq=la.port_seq and acl.user_id=:userid
+where la.crnt_rec_flg=1
+and loan_app_sts=703
+and to_char(to_date(la.loan_app_sts_dt),'YYYYMM') =  to_char(to_date(:as_dt,'dd-mm-yyyy'),'YYYYMM')
+group by  brnch.brnch_nm,pg.prd_grp_nm,ar.area_nm

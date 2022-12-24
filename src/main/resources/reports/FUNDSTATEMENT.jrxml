@@ -1,0 +1,2530 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="FUNDSTATEMENT" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail"
+              columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="fb45aa6d-1328-4dec-894b-dd776f411429">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <style name="Table_TH" mode="Transparent" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.25" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_CH" mode="Transparent" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.25" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TD" mode="Transparent" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.25" lineColor="#000000"/>
+        </box>
+    </style>
+    <subDataset name="Dataset" uuid="c4668d3f-9dc8-444a-bf28-b5bc5c366682">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+        <queryString language="SQL">
+            <![CDATA[SELECT pg.PRD_GRP_NM,  nvl(SUM (dsb.LOANS),0) dsb_loans,
+            nvl(SUM (dsb.DSB_AMT),0) dsb_amt,  nvl(SUM (rec.rec_amt),0) rec,  nvl(SUM (dip.AMT),0) dip,  nvl(SUM (ip.AMT),0) IP,  
+            nvl(SUM (ddoc.AMT),0) ddoc,  nvl(SUM (doc.AMT),0) doc,  nvl(SUM (dtf.AMT),0) dtf,  nvl(SUM (tf.AMT),0) tf,  
+            nvl(SUM (dkszb.AMT),0) dkszb,  nvl(SUM (kszb.AMT),0) kszb,  nvl(SUM (fc.AMT),0) fc,  nvl(SUM (la1.AMT),0) LA  
+            FROM MW_PRD_GRP PG, 
+            ( 
+            SELECT  get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(distinct get_clnt_seq (ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) DSB_AMT 
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98
+            AND MJH.BRNCH_SEQ = MB.BRNCH_SEQ  
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            and MJH.ENTY_TYP = 'Disbursement'
+            AND MJD.GL_ACCT_NUM IN (SELECT  mpa.GL_ACCT_NUM FROM MW_PRD_ACCT_SET mpa WHERE mpa.GL_ACCT_NUM = MJD.GL_ACCT_NUM) 
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) > 0
+            ) dsb,    
+            (
+            select get_prd_seq(GL_ACCT_NUM) PRD_GRP_SEQ,
+            count(distinct mjh.ENTY_SEQ) loans,
+            sum(nvl(MJD.AMT,0)) rec_amt
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  
+            AND MJD.CRDT_DBT_FLG = 1
+            AND MJH.BRNCH_SEQ = 98
+            AND MJH.BRNCH_SEQ = MB.BRNCH_SEQ              
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')          
+            and MJH.ENTY_TYP = 'Recovery'
+            group by get_prd_seq(GL_ACCT_NUM)
+            having get_prd_seq(GL_ACCT_NUM) is not null
+            ) rec,   
+            (  SELECT  get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB  WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98 
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203716.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) > 0    
+            ) dip,    
+            ( SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) amt  
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB  WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  
+            AND MB.CRNT_REC_FLG = 1  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98  
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404714.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) > 0    
+            ) ip,    
+            ( SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,  MJH.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP,  MJH.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt   FROM MW_JV_HDR MJH, MW_JV_DTL MJD 
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0   AND MJH.BRNCH_SEQ = 98  
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203713.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0   
+            ) ddoc,   
+            (   SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, 96)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ =98 
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404713.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0   
+            ) doc,    
+            (  SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, MJH.BRNCH_SEQ)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98 
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203717.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0    
+            ) dtf,    
+            (   SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP,98)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98 
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404715.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0   
+            ) tf,   
+            (   
+            SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  
+            nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP, 98)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0)),0) amt  
+            FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98  
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.203709.00000'  group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0 
+            ) dkszb,    
+            (               
+            SELECT  
+            get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) PRD_GRP_SEQ,  nvl(count(get_clnt_seq (ENTY_SEQ, ENTY_TYP,98)),0) loans,  
+            nvl(sum(NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0)),0) amt  FROM MW_JV_HDR MJH, MW_JV_DTL MJD  
+            WHERE MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ  AND MJD.AMT > 0  AND MJH.BRNCH_SEQ = 98  
+            AND TO_DATE (MJH.JV_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+            AND MJD.GL_ACCT_NUM = '000.000.404709.00000'  
+            group by get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ)  
+            having get_enty_prd1(ENTY_SEQ, ENTY_TYP,MJH.BRNCH_SEQ) > 0 
+            ) kszb,  
+            (SELECT PRD_GRP_SEQ, nvl(COUNT (loans),0) loans, nvl(SUM (5000),0) amt  FROM   
+                (             
+                 SELECT DISTINCT prd.PRD_GRP_SEQ
+                 , me.EXP_REF loans, me.EXPNS_AMT amt  FROM mw_loan_app la, mw_exp me, mw_port mp, mw_prd prd             
+                 WHERE la.CLNT_SEQ = me.EXP_REF and la.PRD_SEQ = prd.PRD_SEQ AND me.CRNT_REC_FLG = 1  AND LA.PORT_SEQ = MP.PORT_SEQ   
+                 and la.LOAN_APP_SEQ = (select la.LOAN_APP_SEQ
+                 from mw_loan_app la  where la.clnt_SEQ = me.EXP_REF          
+                 ORDER BY to_date(la.crtd_dt) DESC              FETCH FIRST 1 ROWS ONLY              )
+                 AND la.CRNT_REC_FLG = 1  AND MP.CRNT_REC_FLG = 1  AND MP.BRNCH_SEQ = 98    
+                 AND TO_DATE (me.CRTD_DT) BETWEEN to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy')  
+                 and la.PRD_SEQ not in (2,3,5,13,14,29)  AND me.EXPNS_TYP_SEQ = 424             
+                 )  GROUP BY PRD_GRP_SEQ
+            ) fc,   
+            (   
+            select prd.PRD_GRP_SEQ, count(distinct la.loan_app_seq) loans,(nvl(sum(psd.PPAL_AMT_DUE),0) + nvl(sum(psd.TOT_CHRG_DUE),0)) amt 
+            from mw_rcvry_trx trx  join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 0  
+            join mw_rcvry_dtl dtl on dtl.rcvry_trx_seq = trx.rcvry_trx_seq and dtl.crnt_rec_flg = 0 
+            join mw_pymt_sched_dtl psd on psd.pymt_sched_dtl_seq = dtl.pymt_sched_dtl_seq and psd.crnt_rec_flg = 1  
+            join mw_pymt_sched_hdr psh on psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq and psh.crnt_rec_flg = 1  
+            join mw_loan_app la on la.loan_app_seq = psh.loan_app_seq and la.crnt_rec_flg = 1  
+            join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0  
+            join mw_port prt on prt.port_seq = la.PORT_SEQ and prt.crnt_rec_flg = 1
+            join mw_prd prd on prd.PRD_SEQ = la.PRD_SEQ and prd.crnt_rec_flg = 1 
+            where trx.post_flg = 1 and trx.crnt_rec_flg = 1 and rcvry.typ_id ='0020'  
+            and to_date(trx.pymt_dt) between to_date('11-11-2019','dd-mm-yyyy') and to_date('11-11-2019','dd-mm-yyyy') 
+            and prt.brnch_seq = 98  
+            and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+            and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4  
+            and ctl.loan_app_seq = la.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-mm-yyyy')) 
+            and dtl.chrg_typ_key=-1  group by prd.PRD_GRP_SEQ 
+            ) la1  
+            WHERE pg.PRD_GRP_SEQ = dsb.PRD_GRP_SEQ(+)  
+            AND pg.PRD_GRP_SEQ = rec.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = dip.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = ip.PRD_GRP_SEQ(+)  
+            AND pg.PRD_GRP_SEQ = ddoc.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = doc.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = dtf.PRD_GRP_SEQ(+)  
+            AND pg.PRD_GRP_SEQ = tf.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = dkszb.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = kszb.PRD_GRP_SEQ(+)  
+            AND pg.PRD_GRP_SEQ = fc.PRD_GRP_SEQ(+)  AND pg.PRD_GRP_SEQ = la1.PRD_GRP_SEQ(+)  
+            and (dsb.LOANS > 0 or rec.rec_amt > 0 or dip.AMT > 0 or ip.AMT > 0 or ddoc.AMT > 0 or doc.AMT > 0 or  
+            dtf.AMT > 0 or tf.AMT > 0 or dkszb.AMT > 0 or kszb.AMT > 0 or fc.AMT > 0 or la1.AMT > 0)  AND pg.CRNT_REC_FLG = 1  
+            GROUP BY pg.PRD_GRP_NM, pg.prd_grp_seq  ORDER BY pg.prd_grp_seq]]>
+        </queryString>
+        <field name="PRD_GRP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_GRP_NM"/>
+        </field>
+        <field name="DSB_LOANS" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSB_LOANS"/>
+        </field>
+        <field name="DSB_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSB_AMT"/>
+        </field>
+        <field name="REC" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="REC"/>
+        </field>
+        <field name="DIP" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DIP"/>
+        </field>
+        <field name="IP" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="IP"/>
+        </field>
+        <field name="DDOC" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DDOC"/>
+        </field>
+        <field name="DOC" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DOC"/>
+        </field>
+        <field name="DTF" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DTF"/>
+        </field>
+        <field name="TF" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="TF"/>
+        </field>
+        <field name="DKSZB" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DKSZB"/>
+        </field>
+        <field name="KSZB" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="KSZB"/>
+        </field>
+        <field name="FC" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="FC"/>
+        </field>
+        <field name="LA" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="LA"/>
+        </field>
+        <variable name="TTL_DSB_LOANS" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DSB_LOANS}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DSB_AMT" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DSB_AMT}]]></variableExpression>
+        </variable>
+        <variable name="TT_REC" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{REC}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DIP" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DIP}]]></variableExpression>
+        </variable>
+        <variable name="TTL_IP" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{IP}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DDOC" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DDOC}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DOC" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DOC}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DTF" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DTF}]]></variableExpression>
+        </variable>
+        <variable name="TTL_TF" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{TF}]]></variableExpression>
+        </variable>
+        <variable name="TTL_DKSZB" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{DKSZB}]]></variableExpression>
+        </variable>
+        <variable name="TTL_KSZB" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{KSZB}]]></variableExpression>
+        </variable>
+        <variable name="TTL_FC" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{FC}]]></variableExpression>
+        </variable>
+        <variable name="TTL_LA" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{LA}]]></variableExpression>
+        </variable>
+    </subDataset>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="date" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <parameter name="dataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <parameter name="datasett" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <field name="GRP" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="GRP"/>
+    </field>
+    <field name="PERD_KEY" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PERD_KEY"/>
+    </field>
+    <field name="PERD_STRT_DT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PERD_STRT_DT"/>
+    </field>
+    <field name="PERD_END_DT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PERD_END_DT"/>
+    </field>
+    <field name="TYP_SEQ" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TYP_SEQ"/>
+    </field>
+    <field name="TYP_STR" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TYP_STR"/>
+    </field>
+    <field name="BDGT_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="BDGT_AMT"/>
+    </field>
+    <field name="CASH_DB_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CASH_DB_AMT"/>
+    </field>
+    <field name="CASH_CR_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CASH_CR_AMT"/>
+    </field>
+    <field name="BNK_DB_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="BNK_DB_AMT"/>
+    </field>
+    <field name="BNK_CR_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="BNK_CR_AMT"/>
+    </field>
+    <variable name="TTL_BDGT_AMT" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1" calculation="Sum">
+        <variableExpression><![CDATA[$F{BDGT_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CASH_DB_AMT" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{CASH_DB_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CASH_CR_AMT" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{CASH_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CASH_NET" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1" calculation="Sum">
+        <variableExpression><![CDATA[$F{CASH_DB_AMT}-$F{CASH_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_BNK_DB_AMT" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{BNK_DB_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_BNK_CR_AMT" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{BNK_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_BNK_NEW" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1" calculation="Sum">
+        <variableExpression><![CDATA[$F{BNK_DB_AMT}-$F{BNK_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_TTL" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1" calculation="Sum">
+        <variableExpression>
+            <![CDATA[($F{CASH_DB_AMT}-$F{CASH_CR_AMT})+($F{BNK_DB_AMT}-$F{BNK_CR_AMT})]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_VAR" class="java.lang.Long" resetType="Group" resetGroup="predKeyGroup1" calculation="Sum">
+        <variableExpression>
+            <![CDATA[$F{BDGT_AMT}-(($F{CASH_DB_AMT}-$F{CASH_CR_AMT})+($F{BNK_DB_AMT}-$F{BNK_CR_AMT}))]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_BDGT_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{BDGT_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_CASH_DB_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CASH_DB_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_CASH_CR_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CASH_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_CASH_NET" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CASH_DB_AMT}-$F{CASH_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_BNK_DB_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{BNK_DB_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_BNK_CR_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{BNK_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_BNK_NEW" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{BNK_DB_AMT}-$F{BNK_CR_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_TTL" class="java.lang.Long" calculation="Sum">
+        <variableExpression>
+            <![CDATA[($F{CASH_DB_AMT}-$F{CASH_CR_AMT})+($F{BNK_DB_AMT}-$F{BNK_CR_AMT})]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="GTTL_VAR" class="java.lang.Long">
+        <variableExpression><![CDATA[$V{GTTL_TTL}-$V{TTL_BDGT_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <group name="bdgtCtgryGroup" isReprintHeaderOnEachPage="true">
+        <groupExpression><![CDATA[$F{GRP}]]></groupExpression>
+        <groupHeader>
+            <band height="12">
+                <textField>
+                    <reportElement positionType="Float" mode="Opaque" x="0" y="-12" width="555" height="12"
+                                   backcolor="#D9D4D4" uuid="fc4ed98a-cdbd-4c46-89fa-559b5dae5ba5"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement>
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{GRP}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+    </group>
+    <group name="predKeyGroup1">
+        <groupExpression><![CDATA[$F{PERD_KEY}]]></groupExpression>
+        <groupHeader>
+            <band height="36">
+                <staticText>
+                    <reportElement positionType="Float" x="300" y="12" width="40" height="12"
+                                   uuid="466a35ce-6544-4960-bcac-6b83051440bc"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Credit]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="430" y="0" width="50" height="24"
+                                   uuid="4fdae99a-2f89-4152-9cd9-9e0433ee746c"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Variance]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="0" y="0" width="100" height="24"
+                                   uuid="e1914f71-05b2-43af-a8eb-b6f0f92bbb4e"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Budget Head]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="260" y="0" width="120" height="12"
+                                   uuid="14d7eac0-d75e-46b4-ab6d-64580c110c71"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[By Bank]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="340" y="12" width="40" height="12"
+                                   uuid="177c3912-b8ee-4cb8-a94b-2aee6d56f864"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Net]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="100" y="0" width="40" height="24"
+                                   uuid="fefba5f7-f603-4554-8422-2e5fa7079309"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Budget Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="0" y="-12" width="100" height="12"
+                                   uuid="8aa3c290-4358-4258-945b-666639f16448"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement>
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Expense Period]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="140" y="12" width="40" height="12"
+                                   uuid="97f02667-79c1-4536-8e4b-12daf4820b81"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Debit]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="180" y="12" width="40" height="12"
+                                   uuid="394bf41a-64ba-4fbf-bba7-fcbae5c06c36"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Credit]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="140" y="0" width="120" height="12"
+                                   uuid="4ebbe2fb-c0c6-40f0-bae2-0d7e8139b2e7"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[By Cash]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="220" y="12" width="40" height="12"
+                                   uuid="6b25a637-c1b6-4042-be30-119362f6a967"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Net]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="380" y="0" width="50" height="24"
+                                   uuid="bae8f1fd-94c4-4cb2-88bb-e22ac8242b8b"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Total]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="480" y="0" width="75" height="24"
+                                   uuid="6bda48f8-a696-4b40-bf14-e1a964e9f2a6"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Explanations]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement positionType="Float" x="260" y="12" width="40" height="12"
+                                   uuid="4e46e013-a0af-4913-9aa2-cb0470a6d017"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Debit]]></text>
+                </staticText>
+                <textField>
+                    <reportElement positionType="Float" x="100" y="-12" width="455" height="12"
+                                   uuid="86ea9252-6c02-481d-baad-18a6b5c255a5"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement>
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{PERD_STRT_DT}+" to "+$F{PERD_END_DT}]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="12">
+                <textField>
+                    <reportElement positionType="Float" x="100" y="-12" width="40" height="12"
+                                   uuid="c71d4d39-7e26-48aa-acf7-dc28e92c9d59"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_BDGT_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_BDGT_AMT}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="220" y="-12" width="40" height="12"
+                                   uuid="909db960-a2ab-4e3f-b20e-90a449d2a725"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_CASH_NET}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_CASH_NET}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="300" y="-12" width="40" height="12"
+                                   uuid="ce3f6323-932e-4d94-86c3-87beb12131ea"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_BNK_CR_AMT}!= null  ? new java.text.DecimalFormat("#,##0").format($V{TTL_BNK_CR_AMT}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="180" y="-12" width="40" height="12"
+                                   uuid="92f3eb8b-9cf2-47db-a818-10bcf702050a"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_CASH_CR_AMT}!=null  ? new java.text.DecimalFormat("#,##0").format($V{TTL_CASH_CR_AMT}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="340" y="-12" width="40" height="12"
+                                   uuid="2a236dfa-e8b1-499d-a729-3e39870905a9"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_BNK_NEW}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_BNK_NEW}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="430" y="-12" width="50" height="12"
+                                   uuid="c11ab86c-e323-4f19-8794-5e22713dec3c"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_VAR}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_VAR}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="260" y="-12" width="40" height="12"
+                                   uuid="f73f9c6f-6b73-4394-8816-8374a6a0c93f"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_BNK_DB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_BNK_DB_AMT}):0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement positionType="Float" x="140" y="-12" width="40" height="12"
+                                   uuid="9cddbaad-b65b-4be3-9c2c-fa1fb06e272c"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_CASH_DB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_CASH_DB_AMT}):0]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement positionType="Float" x="0" y="-12" width="100" height="12"
+                                   uuid="68198be2-752c-4937-864a-1c0eca26fbd1"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Total:]]></text>
+                </staticText>
+                <textField>
+                    <reportElement positionType="Float" x="380" y="-12" width="50" height="12"
+                                   uuid="4f2b8db1-973c-4b92-b2f1-ea1c25901002"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[$V{TTL_TTL}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_TTL}):0]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement positionType="Float" x="480" y="-12" width="75" height="12"
+                                   uuid="a7717e45-03fe-4c5c-a645-806f3840a7ae"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement>
+                        <font size="8" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[]]></text>
+                </staticText>
+            </band>
+        </groupFooter>
+    </group>
+    <title>
+        <band height="273" splitType="Stretch">
+            <image>
+                <reportElement positionType="Float" x="0" y="0" width="40" height="50"
+                               uuid="d5154c80-a7d5-4fc6-b165-91e5ea5701a7"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="43" y="0" width="127"
+                               height="20" uuid="bd4fef36-8c19-465b-a061-cdb17cb80015"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="180" y="12" width="200" height="20"
+                               uuid="a8c6aefc-5432-4c59-8e23-50b21c92cc53"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fund Statement Report]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="54" width="39" height="12" uuid="2e4ba822-04c9-475a-8459-1b91cb6c0a6c"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="39" y="54" width="81" height="12" uuid="80e5d1d0-8b68-43c5-960b-d007ecba1c7a"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="150" y="54" width="70" height="12" uuid="7ee0dba3-7f6e-4f35-a603-e57ea691e73b"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="120" y="54" width="30" height="12" uuid="f86680eb-6115-452e-abce-2b775ce0eb88"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="284" y="54" width="72" height="12" uuid="de10c3a9-27ad-43ab-8d18-cb82856b17df"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="220" y="54" width="64" height="12" uuid="7086408f-b0de-4718-9da7-7637e4e231cc"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Name:]]></text>
+            </staticText>
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement positionType="Float" x="460" y="18" width="90" height="12"
+                               uuid="cb2527e3-9492-49ad-920f-93a9194580c7"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="460" y="6" width="74" height="12"
+                               uuid="556dafb8-2820-4ed5-9fd1-45dc23f7540d"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="401" y="5" width="38" height="12"
+                               uuid="cca9c92c-ed37-4dd7-8079-9b82c24d7378"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[User: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="401" y="18" width="58" height="12"
+                               uuid="6ba258c9-bf13-45ab-89cd-a16089d7c06d"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date: ]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="0" y="69" width="555" height="1"
+                               uuid="4e7320c5-e9b5-4825-8f57-f96809cb4a54"/>
+            </line>
+            <textField>
+                <reportElement x="507" y="54" width="48" height="12" uuid="0f5d89b0-e54d-4ef2-9bc4-427e392f9ce1"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{to_dt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="410" y="54" width="30" height="12" uuid="69236ec8-d6a7-483d-bc53-9ea7702c44f2"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[From:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="488" y="54" width="19" height="12" uuid="69531b73-24a7-4599-878f-f3b9b760bdf0"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[To :]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="440" y="54" width="48" height="12" uuid="8646aeee-2987-49b5-b39d-f2a96ab55d8c"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{from_dt}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="380" y="54" width="30" height="12" uuid="40605a53-f6ae-45c9-9e28-4b03439dcdc8"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_cd}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="356" y="54" width="24" height="12" uuid="90aff6db-08c7-44dc-ab9d-2fd60f2be01e"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Code:]]></text>
+            </staticText>
+            <componentElement>
+                <reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="113" width="555" height="40"
+                               uuid="6fea6f6e-a4c1-43be-b149-77646ace0171">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+                    <property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+                    <property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+                </reportElement>
+                <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+                          whenNoDataType="AllSectionsNoDetail">
+                    <datasetRun subDataset="Dataset" uuid="5ed26681-5367-4bc2-b4eb-be4874fdc329">
+                        <dataSourceExpression><![CDATA[$P{dataset}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:column width="50" uuid="ac2ccc50-f82a-48a6-97d3-64ca4775973d">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="12"
+                                               uuid="88994e9b-9b8b-4ae7-bd7d-7c65f9a073e8"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Product]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="98ae5509-29ff-44ce-beb7-3c9e9b142e76"/>
+                                <textElement textAlignment="Center">
+                                    <font size="6"/>
+                                </textElement>
+                                <text><![CDATA[Total]]></text>
+                            </staticText>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="9048fc73-b1a3-43b8-a831-46b0d1be4776"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Left">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{PRD_GRP_NM}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="20" uuid="f2196e3f-c7bf-42f1-83e6-633ed5f44ca6">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="20" height="12"
+                                               uuid="50743ce8-5021-4d4f-8bdd-365f7ec09ac2"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Loans]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="20" height="12" uuid="41842060-4c80-43b7-80ad-7354cf76f172"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{TTL_DSB_LOANS}]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="20" height="12" uuid="1f80d1af-9b5b-48ad-bd44-2b23112e3d07"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DSB_LOANS}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="3754e58b-b7cd-4d51-bef1-e6077318544c">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="12"
+                                               uuid="21071859-0cc0-4066-a2b9-350e62e165b3"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Disbursment]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="b02c33bc-ccc2-47d2-8ac7-390d634fc357"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DSB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DSB_AMT}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="bcdd4ebb-0caa-445d-8501-ad8f5399df3f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DSB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($F{DSB_AMT}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="819c7342-8576-4668-9a46-42003a6d8e81">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="770631c4-79e0-46e8-b319-88faa7f970ee"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="eab35254-23de-422f-af10-12694a821267"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TT_REC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TT_REC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="3dc3f3f2-f173-4b96-abf1-2755f6817cc6"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{REC}!=null ? new java.text.DecimalFormat("#,##0").format($F{REC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="98d7e167-e851-42d7-8b53-cf22819c61e3">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="2d42f8c3-4a6f-4240-b1e7-1762197ff430"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deferred]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="90b177e5-3763-4fba-ad3e-5b017a816763"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DIP}!=null  ? new java.text.DecimalFormat("#,##0").format($V{TTL_DIP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="20bb48b9-0132-48f4-9efb-fcbc26dcd89d"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DIP}!=null ? new java.text.DecimalFormat("#,##0").format($F{DIP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="0c113486-b5e9-4e5d-8861-82528fa50bbe">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="d0089aa0-b624-46db-80b0-0055b5da4853"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="fa69f3de-1318-40f4-af17-2cdfa161471a"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_IP}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_IP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="8a1220d1-b440-46cd-b357-302f329e0aef"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{IP}!=null ? new java.text.DecimalFormat("#,##0").format($F{IP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="46a6f047-3be1-4f30-aadc-37b40f41c3a0">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="91b9fd52-9037-44d8-bdb5-a221c36a8004"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deferred]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="42e4eb10-e321-4297-8b73-f22d559cb1c7"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DDOC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DDOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="58551196-7874-40db-b9ba-353490be2524"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DDOC}!=null  ? new java.text.DecimalFormat("#,##0").format($F{DDOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="def5b41a-a1be-4edd-ba46-9599b940fbef">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="c9a96503-5ffb-4320-8368-52ddd6776e24"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="1dc7707f-d501-4d50-89dc-a02dbdab312c"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DOC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="7af61359-5fe2-4fd2-a4c2-d480ea5a7bcf"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DOC}!=null ? new java.text.DecimalFormat("#,##0").format($F{DOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="8ee0711c-4849-4afe-9c9c-2d4929fd411d">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="093e9110-391d-42c6-99ec-39a66ad6b9ec"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deferred]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="199c722c-eb4e-43fd-b645-b54810892f7f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DTF}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DTF}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="85beea5d-965c-4d35-bf7a-e141ad06c204"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DTF})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="fd20da86-abcf-4810-b548-649c0be10869">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="d0e2df91-a8f2-488f-98e7-c9e22098a1c3"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="7750348d-6c97-44e1-99be-3ba2c34b831b"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_TF}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_TF}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="557f8489-0f1e-43f0-97c6-07fc363996ee"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{TF})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="30" uuid="3421ad09-09e5-4547-9b24-c7773321cf42">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="30" height="12"
+                                               uuid="1ac7938e-a04a-4855-ab27-118441694031"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deferred]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="9c66ac36-2cc9-4ed8-86b5-46d545243fca"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DKSZB}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DKSZB}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="96e4f3de-f387-4dad-85cb-1672daa97cc1"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DKSZB})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="30" uuid="df781706-9d07-42c2-a236-57fd10a97b78">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="30" height="12"
+                                               uuid="731d57e8-1939-43f6-b32f-af45f686239c"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="dd33b61a-4ebb-4d78-b267-ddd148723c93"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_KSZB}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_KSZB}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="3b8a95ad-3680-4022-ba4a-5024605ad450"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{KSZB})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="99f37811-055e-49bc-a5fa-ce90b3becdf8">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="12"
+                                               uuid="5da02ba1-c7d2-4955-a530-bc858c03ed18"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="cdaf23db-6e09-451c-b812-9013599d580f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_FC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_FC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="d280a58c-9c32-439b-8ff5-9b1d6717a0ea"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{FC})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="39" uuid="089b79ed-735f-4fe5-8ca0-f68a8665bc79">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="39" height="12"
+                                               uuid="2f40deef-39bd-4afc-ba2a-f022e854ac09"/>
+                                <textElement textAlignment="Center">
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="39" height="12" uuid="a10573f0-ad66-4bc6-aa00-43c73df61f9c"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_LA}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_LA}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="39" height="12" uuid="d92c960b-847f-4024-8a8a-84616c33a16c"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{LA}!=null ? new java.text.DecimalFormat("#,##0").format($F{LA}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                </jr:table>
+            </componentElement>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="81" width="180" height="20"
+                               uuid="cefa0521-9a0f-4554-b700-1c2a2743b116"/>
+                <textElement>
+                    <font size="12" isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[1. Credit Portfolio]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="237" width="100" height="20"
+                               uuid="50773633-1205-4466-adbd-d3d8e4df27f4"/>
+                <textElement>
+                    <font size="12" isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[3. Expenses]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="70" y="101" width="90" height="12"
+                               uuid="f06e73eb-2a68-4087-b478-4aa9701f33b7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Portfolio]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="160" y="101" width="80" height="12"
+                               uuid="f6e86d60-d480-4700-a6ca-7531ed958d14"/>
+                <box>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ins. Premium]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="240" y="101" width="80" height="12"
+                               uuid="184d5f96-3cbc-4b25-8321-253db088534e"/>
+                <box>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Doc Fee]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="320" y="101" width="80" height="12"
+                               uuid="30a9e368-48ef-4d3d-a538-2a5ed877c483"/>
+                <box>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Training Fee]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="400" y="101" width="60" height="12"
+                               uuid="5519ea62-5ed2-4348-9217-9b7941f1a111"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[KSZB]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="460" y="101" width="50" height="12"
+                               uuid="2163724e-3fd8-42e1-99cc-467739494e29"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fun. Chrgs]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="510" y="101" width="39" height="12"
+                               uuid="20b52b75-9f8c-4dda-85cb-98efbeac68c3"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Loan Adj.]]></text>
+            </staticText>
+            <componentElement>
+                <reportElement positionType="Float" isPrintRepeatedValues="false" x="0" y="192" width="555" height="40"
+                               uuid="866d6969-03fd-4357-818e-d1e153ffe815">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+                    <property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+                    <property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+                </reportElement>
+                <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+                          whenNoDataType="AllSectionsNoDetail">
+                    <datasetRun subDataset="Dataset" uuid="d845fcdb-7ad6-4638-a7cc-9c9adecd73ab">
+                        <dataSourceExpression><![CDATA[$P{datasett}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:column width="50" uuid="0614e169-ad94-43ce-9d22-f8c3220a67f8">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="12"
+                                               uuid="5986ff8d-be07-43ea-8ab0-69064d10da36"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Product]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="c957026c-f9f7-494a-9b80-b132c4f4aa09"/>
+                                <textElement textAlignment="Center">
+                                    <font size="6"/>
+                                </textElement>
+                                <text><![CDATA[Total]]></text>
+                            </staticText>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="219077ee-e81f-4599-b577-a1f7ad1d81e6"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Left">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{PRD_GRP_NM}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="20" uuid="35aff39b-4b32-40b4-8599-a32a63635b3e">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="20" height="12"
+                                               uuid="eee5c64d-d6b4-46f0-ad6a-08aea4c4e2e5"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Loan]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="20" height="12" uuid="b8bb68e8-33c7-4948-974b-7621f062957c"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{TTL_DSB_LOANS}]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="20" height="12" uuid="4ca54f72-64f7-4732-9096-4e334dcb69dc"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DSB_LOANS}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="31627412-ca09-408b-9c85-e5845aaa4054">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="12"
+                                               uuid="4564b081-509d-4558-95a5-c3c2d5dbf9e6"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Disbursment]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="44dd640b-23cb-4bec-8dc6-def0a06497e8"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DSB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DSB_AMT}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="8cf9a98d-7105-44cc-ada3-46f151a2880d"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DSB_AMT} != null ? new java.text.DecimalFormat("#,##0").format($F{DSB_AMT}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="0d3d8194-e768-4947-8cec-e32e4ebab6bd">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="ce787a29-1cc9-423b-88ac-4a7ee8fdad79"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="2d2083dc-c528-4eac-8f22-0383537e2202"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TT_REC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TT_REC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="e9bbf8a7-d785-4ac7-8aaf-859fea408be0"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{REC}!=null ? new java.text.DecimalFormat("#,##0").format($F{REC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="5daa4b95-4511-4276-b202-4d5939965adf">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="63fadf0d-20d6-4d37-9f32-49d6160bde28"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deffered]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="7163abf4-6f6d-4009-b960-b50cd68b9396"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DIP}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DIP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="4230014c-fbeb-4bff-a18a-b78d07a68c9b"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DIP}!=null ? new java.text.DecimalFormat("#,##0").format($F{DIP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="64d4ee5e-8d4b-4ee8-b447-a28357b52445">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="3ca16da0-728d-4919-ad8e-95fbcf42eae1"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="4d30070c-f0f5-4c6a-9619-9bc2c021b0bd"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_IP}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_IP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="5506534d-c14d-49d2-a351-3bde4fc09e7f"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{IP}!=null ? new java.text.DecimalFormat("#,##0").format($F{IP}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="3835d22a-1ed7-4d33-b9a5-284ec167d013">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="04f6e1ff-1d99-40dd-9286-b6145528a824"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deffered]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="140b0887-11b5-48a8-871a-3dbc6ccab39a"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DDOC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DDOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="54d94277-9202-4253-a403-9b6497be2de5"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$F{DDOC}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="a666074a-a2f0-4d48-99d9-df18f1b577cb">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="4006d94a-7b50-49c8-a95b-038dd7c930ec"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="6086f050-ab6b-4829-9953-f35812fbefb6"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DOC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="475ac0fc-ff91-40df-bdd8-59d592481335"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DOC}!=null ? new java.text.DecimalFormat("#,##0").format($F{DOC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="c4123108-f4d5-4652-9383-af11ea8e1143">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="0dcb1f11-0f7f-4257-8c96-26042f431169"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deffered]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="05d3d74c-3fc3-4872-98b1-b18bc5ce173e"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DTF}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DTF}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="d9682c00-6848-4aed-8f5d-a8a10333b23e"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DTF}!=null ? new java.text.DecimalFormat("#,##0").format($F{DTF}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="cfe24dcb-bc6e-46b6-8232-fab1ebf7c1c3">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="40" height="12"
+                                               uuid="f10c2a09-5033-44ba-afd9-65c111f97e12"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="50085187-1194-46bd-878b-22c32d33b351"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_TF}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_TF}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="40" height="12" uuid="160fc03f-16f8-43cb-b78a-167eb70d25cb"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{TF}!=null ? new java.text.DecimalFormat("#,##0").format($F{TF}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="30" uuid="a12e6a0b-a8cc-44af-8eca-237ec2c2c340">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="30" height="12"
+                                               uuid="343ed3e3-5b38-453d-8902-6ffc5ea7dbc8"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Deffred]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="25f76082-4895-4df5-879c-85131eaf29a2"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_DKSZB}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_DKSZB}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="cf20f768-7f14-4f42-8f0a-5a7f0e63d044"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{DKSZB}!=null ? new java.text.DecimalFormat("#,##0").format($F{DKSZB}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="30" uuid="2546dc57-37e9-4264-973f-4038f3a843ea">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="30" height="12"
+                                               uuid="1c726923-969e-454e-af4f-1bd34d347355"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement>
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Recovery]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="d69f5a58-5eeb-4a79-9bfd-42688cd2e9a2"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_KSZB}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_KSZB}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="30" height="12" uuid="75e2cf71-3873-40b1-9936-589c31823fb8"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{KSZB}!=null ? new java.text.DecimalFormat("#,##0").format($F{KSZB}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="5fe33f72-efd4-46c0-a85b-0cd553580b61">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="50" height="12"
+                                               uuid="63aab5c2-2d13-4037-ac89-88fd87bdd00a"/>
+                                <textElement>
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Funeral Charges]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="32157d1a-2f35-4adb-85d3-c18b53f445dd"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_FC}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_FC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="50" height="12" uuid="18755165-7850-462d-89d3-d3bd7d61b473"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{FC}!=null ? new java.text.DecimalFormat("#,##0").format($F{FC}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="39" uuid="7b19d698-1857-44c4-8953-720b2291dcc6">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column14"/>
+                        <jr:columnHeader style="Table_CH" height="12" rowSpan="1">
+                            <staticText>
+                                <reportElement x="0" y="0" width="39" height="12"
+                                               uuid="d2cf01b8-b3fb-4920-8a82-bf238eb503f3"/>
+                                <textElement textAlignment="Center">
+                                    <font size="6" isBold="true"/>
+                                </textElement>
+                                <text><![CDATA[Loan Adj]]></text>
+                            </staticText>
+                        </jr:columnHeader>
+                        <jr:columnFooter style="Table_CH" height="12" rowSpan="1">
+                            <textField>
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="39" height="12" uuid="f2e3a63c-ee3d-4e5b-bdea-896cd1b69651"/>
+                                <box leftPadding="1" rightPadding="1"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$V{TTL_LA}!=null ? new java.text.DecimalFormat("#,##0").format($V{TTL_LA}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:columnFooter>
+                        <jr:detailCell style="Table_TD" height="12">
+                            <textField isStretchWithOverflow="true">
+                                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0"
+                                               width="39" height="12" uuid="6fac83f1-6f31-4067-85e3-df2bfcad9e5f"/>
+                                <textElement textAlignment="Right">
+                                    <font size="6"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[$F{LA}!=null ? new java.text.DecimalFormat("#,##0").format($F{LA}):0]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                </jr:table>
+            </componentElement>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="159" width="180" height="20"
+                               uuid="e4b30728-39b8-4473-8767-54e731673aa4"/>
+                <textElement>
+                    <font size="12" isBold="true" isUnderline="true"/>
+                </textElement>
+                <text><![CDATA[2. Reversal Credit Portfolio]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="50" y="180" width="110" height="12"
+                               uuid="49631e48-4212-4591-afd5-fe4c9de20666"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Portfolio]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="160" y="180" width="80" height="12"
+                               uuid="d7ec9118-3e85-48da-9ade-5426bade892d"/>
+                <box>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Ins. Premium]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="240" y="180" width="80" height="12"
+                               uuid="2194012c-db0d-4488-8111-023813865282"/>
+                <box>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Doc Fee]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="320" y="180" width="80" height="12"
+                               uuid="ab0757ba-e7f8-4b6e-8be2-4c428db16f2c"/>
+                <box>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Training Fee]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="400" y="180" width="60" height="12"
+                               uuid="6f49f6c2-1dcf-4ed2-a768-1bc3e502dd59"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[KSZB]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="460" y="180" width="50" height="12"
+                               uuid="cfd808c7-ffc9-4d1e-937e-d5abf425557b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Fun. Chrgs]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="510" y="180" width="39" height="12"
+                               uuid="8a0f0654-4815-4fac-aeeb-370fdaae4afe"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Loan Adj.]]></text>
+            </staticText>
+        </band>
+    </title>
+    <detail>
+        <band height="12" splitType="Stretch">
+            <textField>
+                <reportElement positionType="Float" x="0" y="-12" width="100" height="12"
+                               uuid="a916ac92-33cf-47ac-a4d1-15e4219f87ec">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="dd6e02b2-78aa-42d6-bc6c-4b794cf2e500"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TYP_STR}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="100" y="-12" width="40" height="12"
+                               uuid="7005e322-19b3-423d-999f-48a90f8225d3">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="a3cb4c65-58c4-42ea-9aa6-55207ddeb082"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{BDGT_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($F{BDGT_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="140" y="-12" width="40" height="12"
+                               uuid="b4841184-8ba5-4278-89ad-e23b7ecf3201">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="96a75d51-7bc9-436b-ba45-c0db5f05531f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{CASH_DB_AMT}!=null ?new java.text.DecimalFormat("#,##0").format($F{CASH_DB_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="180" y="-12" width="40" height="12"
+                               uuid="1dc7d034-fe7b-4511-8a9d-2188b49f5278">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="e208dae5-bf2c-44dc-95a4-96560c980b7d"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{CASH_CR_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($F{CASH_CR_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="260" y="-12" width="40" height="12"
+                               uuid="67024620-3daa-4850-9229-af35862ac744">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8afed7fe-a3bb-4b3f-acaf-475362021a54"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{BNK_DB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($F{BNK_DB_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="300" y="-12" width="40" height="12"
+                               uuid="2d589256-c34f-4308-9047-80905d24a0ac">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="a55fbebc-c916-4923-8a5f-e8953000e7bb"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{BNK_CR_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($F{BNK_CR_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="340" y="-12" width="40" height="12"
+                               uuid="aecbeeab-b10e-4c97-9a9e-5ebe40bdb077">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8afed7fe-a3bb-4b3f-acaf-475362021a54"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{BNK_DB_AMT}-$F{BNK_CR_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="220" y="-12" width="40" height="12"
+                               uuid="dd176d1b-f962-4b61-97e6-a2b131573369">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="96a75d51-7bc9-436b-ba45-c0db5f05531f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{CASH_DB_AMT}-$F{CASH_CR_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="380" y="-12" width="50" height="12"
+                               uuid="cb5aab59-f052-440f-93ec-9910cbe4075f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8afed7fe-a3bb-4b3f-acaf-475362021a54"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format(($F{CASH_DB_AMT}-$F{CASH_CR_AMT})+($F{BNK_DB_AMT}-$F{BNK_CR_AMT}))]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="430" y="-12" width="50" height="12"
+                               uuid="0feacad7-028c-4eb2-a3ee-2df572fa38a9">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="8afed7fe-a3bb-4b3f-acaf-475362021a54"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{BDGT_AMT}-(($F{CASH_DB_AMT}-$F{CASH_CR_AMT})+($F{BNK_DB_AMT}-$F{BNK_CR_AMT})))]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="480" y="-12" width="75" height="12"
+                               uuid="f70e13fc-a11c-4498-8981-92528b9b21d0"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="12">
+            <textField evaluationTime="Report">
+                <reportElement x="509" y="-12" width="45" height="12" uuid="b00411b6-7685-4c33-943d-e21925a02eb2"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="457" y="-12" width="52" height="12" uuid="c87e487c-148b-4630-b1d8-08cbda2515df"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="60" splitType="Stretch">
+            <textField>
+                <reportElement positionType="Float" x="100" y="-12" width="40" height="12"
+                               uuid="7b9e300b-2e7e-4544-80e4-b9e9495d829a"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_BDGT_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_BDGT_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="220" y="-12" width="40" height="12"
+                               uuid="05c00852-f892-4aea-a7c0-c4b03c69298d"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_CASH_NET}!=null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_CASH_NET}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="300" y="-12" width="40" height="12"
+                               uuid="c079f176-0012-40a2-bfc9-106a04cfde45"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_BNK_CR_AMT}!=null ?new java.text.DecimalFormat("#,##0").format($V{GTTL_BNK_CR_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="180" y="-12" width="40" height="12"
+                               uuid="aef0d233-9fd5-4014-9590-62e692c22a4c"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_CASH_CR_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_CASH_CR_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="340" y="-12" width="40" height="12"
+                               uuid="b013876d-423d-4c01-97c2-32a9572eae70"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_BNK_NEW}!=null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_BNK_NEW}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="430" y="-12" width="50" height="12"
+                               uuid="e8984dbb-0324-4d9f-b01e-a5f109ae911f"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{GTTL_BDGT_AMT}-$V{GTTL_TTL})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="260" y="-12" width="40" height="12"
+                               uuid="a575e3b4-0d40-4818-9f12-0bcd76aba974"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_BNK_DB_AMT}!=null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_BNK_DB_AMT}):0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="140" y="-12" width="40" height="12"
+                               uuid="f2e5b42a-6877-4b6b-a644-3858be8eabe8"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_CASH_DB_AMT}!= null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_CASH_DB_AMT}):0]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="-12" width="100" height="12"
+                               uuid="151fcaa2-c71c-4b72-9729-feffc61baa58"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Grand Total:]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="380" y="-12" width="50" height="12"
+                               uuid="a21aea7b-ae3d-4bac-b7b0-239f15073b0b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{GTTL_TTL}!=null ? new java.text.DecimalFormat("#,##0").format($V{GTTL_TTL}):0]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="480" y="-12" width="75" height="12"
+                               uuid="78a5a56e-f75e-47c5-8186-3bc7471d7508"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="445" y="32" width="110" height="19"
+                               uuid="82618fa4-0394-4f79-83f6-94c649fc57ee"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Branch Manager Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="445" y="28" width="110" height="1"
+                               uuid="a7d399a8-7830-4fcd-b8b5-987f03601dc5"/>
+            </line>
+        </band>
+    </summary>
+</jasperReport>

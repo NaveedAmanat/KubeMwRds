@@ -1,0 +1,24 @@
+select mr.REG_NM, mar.AREA_NM, mb.BRNCH_NM,  
+                         mt.TYP_STR, mpg.PRD_GRP_NM, to_char(to_date(trx.pymt_dt),'Mon-YYYY') pymt_dt,          
+                         (case when dtl.CHRG_TYP_KEY = -2 then 'KSZB' 
+                              when dtl.CHRG_TYP_KEY = -1 then 'PRINCIPAL' 
+                            else (select mts.TYP_STR from mw_typs mts where mts.TYP_SEQ = dtl.CHRG_TYP_KEY) 
+                         end) chrg_typ,                  count(DISTINCT ap.loan_app_seq) rcvrd_clnt, 
+                         sum(dtl.pymt_amt) rcvrd_amt           from mw_loan_app ap 
+                         join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1 
+                         join mw_pymt_sched_hdr psh on psh.loan_app_seq=ap.loan_app_seq and psh.crnt_rec_flg=1 
+                         join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                         join mw_ref_cd_val vl on vl.ref_cd_seq=psd.pymt_sts_key and vl.crnt_rec_flg=1   
+                         join mw_rcvry_dtl dtl on dtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and dtl.crnt_rec_flg=1         
+                         join mw_rcvry_trx trx on trx.rcvry_trx_seq=dtl.rcvry_trx_seq and trx.crnt_rec_flg=1, 
+                         mw_port mp, mw_brnch mb, mw_area mar, mw_reg mr, mw_typs mt, mw_acl ma, mw_prd mprd, mw_prd_grp mpg    
+                     where ap.crnt_rec_flg=1 
+                     and trx.pymt_dt between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt, 'dd-MM-yyyy') 
+                     and ap.PORT_SEQ = mp.PORT_SEQ       and mp.BRNCH_SEQ = mb.BRNCH_SEQ 
+                     and mb.AREA_SEQ = mar.AREA_SEQ       and mar.REG_SEQ = mr.REG_SEQ       and mb.CRNT_REC_FLG = 1 
+                     and mp.CRNT_REC_FLG = 1       and mar.CRNT_REC_FLG = 1       and mr.CRNT_REC_FLG = 1 
+                     and trx.RCVRY_TYP_SEQ = mt.TYP_SEQ       and mt.CRNT_REC_FLG = 1       and ap.PORT_SEQ = ma.PORT_SEQ 
+                     and ap.PRD_SEQ = mprd.PRD_SEQ       and mprd.PRD_GRP_SEQ = mpg.PRD_GRP_SEQ 
+                    and dtl.CHRG_TYP_KEY = -1 
+                     group by mr.REG_NM, mar.AREA_NM, mb.BRNCH_NM,mt.TYP_STR,to_char(to_date(trx.pymt_dt),'Mon-YYYY'), 
+                     dtl.CHRG_TYP_KEY, mpg.PRD_GRP_NM

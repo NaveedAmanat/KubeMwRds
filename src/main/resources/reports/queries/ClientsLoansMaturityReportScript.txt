@@ -1,0 +1,27 @@
+select emp.EMP_NM,  ap.clnt_Seq, 
+    (select mc.FRST_NM||' '||mc.LAST_NM from mw_clnt mc where mc.CLNT_SEQ = ap.clnt_seq and mc.CRNT_REC_FLG = 1) clnt_nm,
+    (select mc.ph_num from mw_clnt mc where mc.CLNT_SEQ = ap.clnt_seq and mc.CRNT_REC_FLG = 1) ph_nm,
+    ap.loan_App_Seq,
+    to_char(dvh.dsbmt_dt, 'dd-MM-yyyy') dsbmt_dt,   
+    (select mc.CNIC_num from mw_clnt mc where mc.CLNT_SEQ = ap.clnt_seq and mc.CRNT_REC_FLG = 1) clnt_cnic,
+    dsd.AMT dsb_amt, 
+    loan_app_ost(ap.loan_app_Seq, to_date(:todt, 'dd-MM-yyyy'), 'psc') outs,
+    get_od_info(ap.loan_app_Seq, to_date(:todt, 'dd-MM-yyyy'), 'psc') od_amt,
+    nvl(get_od_info(ap.loan_app_Seq, to_date(:todt, 'dd-MM-yyyy'), 'd'),0) od_dys,
+    (select mc.PH_NUM from mw_clnt mc where mc.CLNT_SEQ = ap.clnt_seq and mc.CRNT_REC_FLG = 1) remitance_acc_#,
+    mt.TYP_STR remittance_typ,
+    to_char(Loan_mturty_dt(ap.loan_app_Seq), 'dd-MM-yyyy') Loan_mturty_dt, mb.brnch_nm
+    from mw_loan_app ap     
+    join mw_prd prd on ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG = 1 
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1  
+    join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1 
+    join mw_emp emp on emp.emp_seq=erl.emp_seq
+    join mw_brnch mb on prt.brnch_seq = mb.brnch_seq and mb.crnt_rec_flg = 1,   
+    mw_dsbmt_vchr_hdr dvh, mw_dsbmt_vchr_dtl dsd, mw_typs mt
+    where ap.CRNT_REC_FLG = 1 and dvh.DSBMT_HDR_SEQ = dsd.DSBMT_HDR_SEQ and dsd.CRNT_REC_FLG = 1 
+    and dsd.PYMT_TYPS_SEQ = mt.TYP_SEQ and mt.crnt_rec_flg = 1
+    and ap.loan_app_sts = 703
+    and Loan_mturty_dt(ap.loan_app_Seq) between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt, 'dd-MM-yyyy') 
+    and dvh.loan_app_seq = ap.loan_app_seq 
+    and dvh.crnt_rec_flg = 1

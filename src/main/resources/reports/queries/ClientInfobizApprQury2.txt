@@ -1,0 +1,15 @@
+select ba.sch_aprsl_seq,ba.sch_yr,'' mnth_in_biz,biz.ref_cd_dscr biz,prsn.ref_cd_dscr prsn,'SCHOOL' sect,'School' acty  
+                                ,'H No '||ad.HSE_NUM ||' ,St No '|| ad.STRT||' ,'|| ad.oth_dtl ||' ,'||city.CITY_NM||','||dist.dist_nm||','||cntry.cntry_nm addr 
+                               from mw_sch_aprsl  ba 
+                               join mw_ref_cd_val biz on ba.sch_own_typ_key=biz.ref_cd_seq and biz.crnt_rec_flg=1 and biz.del_flg=0 
+                               join mw_ref_cd_val prsn on ba.rel_wth_own_key=prsn.ref_cd_seq and prsn.crnt_rec_flg=1 and prsn.del_flg=0 
+                               join mw_addr_rel addrRel on addrrel.enty_key = ba.sch_aprsl_seq and addrRel.enty_typ='SchoolAppraisal' and addrRel.crnt_rec_flg=1 and addrRel.del_flg=0 
+                               join mw_addr ad on ad.addr_seq = addrRel.addr_seq and ad.crnt_rec_flg=1 and ad.del_flg=0 
+                               join mw_city_uc_rel rel on rel.city_uc_rel_seq = ad.city_seq and rel.crnt_rec_flg=1 and rel.del_flg = 0 
+                               join mw_uc uc on rel.uc_SEQ =uc.UC_SEQ  and uc.del_flg = 0 and uc.crnt_rec_flg = 1 
+                               join mw_thsl thsl on uc.thsl_SEQ =thsl.thsl_SEQ and thsl.del_flg = 0 and thsl.crnt_rec_flg = 1 
+                               join mw_dist dist on thsl.dist_SEQ =dist.dist_SEQ and dist.del_flg = 0 and dist.crnt_rec_flg = 1 
+                               join mw_st st on dist.st_SEQ =st.st_SEQ and st.del_flg = 0  and st.crnt_rec_flg = 1 
+                               join mw_cntry cntry on st.cntry_SEQ =cntry.cntry_SEQ and cntry.crnt_rec_flg = 1 and cntry.del_flg=0 
+                               join mw_city city on city.city_seq = rel.city_seq  and city.del_flg = 0  and city.crnt_rec_flg = 1 
+                               where ba.loan_app_seq=:loanAppSeq and ba.crnt_rec_flg=1     

@@ -1,0 +1,21 @@
+select ap.LOAN_CYCL_NUM,  count(ap.loan_app_seq) loan_cnt,  
+    sum(ap.APRVD_LOAN_AMT) APRVD_LOAN_AMT, sum(loan_app_ost(ap.loan_app_seq,to_date(:todt, 'dd-MM-yyyy'),'psc')) ost_amt
+    from mw_loan_app ap     
+    join mw_prd prd on ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG = 1 
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1      
+    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1 
+    join mw_emp emp on emp.emp_seq=erl.emp_seq,
+    mw_dsbmt_vchr_hdr dvh
+    where ( (asts.ref_cd='0005' and trunc(ap.loan_app_sts_dt) <= to_date(:todt, 'dd-MM-yyyy') and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='0006' and trunc(ap.loan_app_sts_dt) > to_date(:todt, 'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:todt, 'dd-MM-yyyy')
+    and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='1245' and trunc(ap.loan_app_sts_dt) > to_date(:todt, 'dd-MM-yyyy'))) and dvh.loan_app_seq = ap.loan_app_seq 
+    and dvh.crnt_rec_flg = 1
+    and loan_app_ost(ap.loan_app_seq,to_date(:todt, 'dd-MM-yyyy'),'psc') > 0
+    and ap.PRD_SEQ not in (2,5)
+    and not exists (select distinct ctl.loan_app_seq from mw_clnt_tag_list ctl where ctl.loan_app_seq = ap.loan_app_seq 
+    and trunc(ctl.eff_start_dt) <= to_date(:todt, 'dd-MM-yyyy') and ctl.tags_seq = 4 and ctl.crnt_rec_flg=1)  
+    group by ap.LOAN_CYCL_NUM
+    order by 1   

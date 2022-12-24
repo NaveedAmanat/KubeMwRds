@@ -1,0 +1,17 @@
+select mjd.GL_ACCT_NUM Account_code, 
+(select min(og.mw_code)
+from mw_erp_mapping og
+where og.erp_code = mjd.GL_ACCT_NUM 
+) LAGACY_CODE,
+(select min(og.MW_CODE_DESC)
+from mw_erp_mapping og
+where og.erp_code = mjd.GL_ACCT_NUM 
+) LAGACY_desc,
+NVL(SUM((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN NVL(MJD.AMT,0) END)),0) DEBIT,
+NVL(SUM((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN NVL(MJD.AMT,0) END)),0) CREDIT
+from mw_jv_hdr mjh,mw_jv_dtl mjd
+where mjh.JV_HDR_SEQ=mjd.JV_HDR_SEQ and
+mjh.BRNCH_SEQ = :brnch
+and to_date(mjh.JV_DT) between to_date(:frmdt , 'dd-mm-yyyy') and to_date(:todt , 'dd-mm-yyyy') 
+GROUP BY mjd.GL_ACCT_NUM 
+ORDER BY 2

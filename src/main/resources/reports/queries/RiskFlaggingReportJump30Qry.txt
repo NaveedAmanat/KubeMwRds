@@ -1,0 +1,32 @@
+
+    select  'Loan Above 30K' DSCR,
+        count (case when (app.loan_cycl_num>1 and app.aprvd_loan_amt-lst_loan_aprvd_amt(app.loan_app_seq) >= 30000) 
+            then app.loan_app_seq else 0 end) loans_30
+     FROM mw_loan_app app  
+     join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1
+     JOIN mw_clnt c ON c.clnt_seq = app.clnt_seq AND c.crnt_rec_flg = 1
+     join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1  
+     join mw_prd_grp grp on grp.prd_grp_seq=prd.prd_grp_seq and grp.crnt_rec_flg=1
+     join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1  
+     join mw_emp emp on emp.emp_seq=per.emp_seq   
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq=:brnch_seq    
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+where app.crnt_rec_flg=1
+ and trunc(dsbmt_dt) between TO_DATE(:frmdt,'dd-MM-yyyy') and TO_DATE(:todt,'dd-MM-yyyy') 
+ union
+ select 'Active Clients', count(ap.loan_app_seq) loans
+        FROM mw_loan_app ap  
+           join mw_clnt c on c.clnt_seq = ap.clnt_seq and c.crnt_Rec_flg = 1        
+           join mw_ref_cd_val rt on rt.ref_cd_seq=c.res_typ_key and rt.crnt_rec_flg=1 
+           join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1
+           join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnch_seq,
+           mw_dsbmt_vchr_hdr dvh, mw_ref_cd_val asts         
+     where ( (asts.ref_cd='0005' and trunc(ap.loan_app_sts_dt) <= to_date(:todt,'dd-MM-yyyy') and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='0006' and trunc(ap.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:todt,'dd-MM-yyyy')
+    and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='1245' and trunc(ap.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy'))) 
+    and dvh.loan_app_seq = ap.loan_app_seq and dvh.crnt_rec_flg = 1
+    and asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1
+    and loan_app_ost(ap.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'psc') > 0
+  

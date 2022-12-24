@@ -1,0 +1,21 @@
+select emp.EMP_NM, to_char(dvh.dsbmt_dt, 'dd-MM-yyyy') dsbmt_dt, ap.clnt_Seq, 		
+    (select mc.FRST_NM||' '||mc.LAST_NM from mw_clnt mc where mc.CLNT_SEQ = ap.clnt_seq and mc.CRNT_REC_FLG = 1) clnt_nm,		
+    ap.loan_App_Seq,		
+    (select mc.CNIC_num from mw_clnt mc where mc.CLNT_SEQ = ap.clnt_seq and mc.CRNT_REC_FLG = 1) clnt_cnic,		
+    dsd.INSTR_NUM remitance_acc_#, dsd.AMT ,		
+    mt.TYP_STR remittance_typ		
+    from mw_loan_app ap     		
+    join mw_prd prd on ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG = 1 		
+    join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1      		
+    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1 		
+    join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq		
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1 		
+    join mw_emp emp on emp.emp_seq=erl.emp_seq		
+    join mw_brnch mb on prt.brnch_seq = mb.brnch_seq and mb.crnt_rec_flg = 1		
+    join mw_area ma on ma.area_seq = mb.area_seq and ma.crnt_Rec_flg = 1		
+    join mw_reg mr on mr.reg_seq = ma.reg_seq and mr.crnt_Rec_flg = 1,		
+    mw_dsbmt_vchr_hdr dvh, mw_dsbmt_vchr_dtl dsd, mw_typs mt		
+    where ap.CRNT_REC_FLG = 1 and dvh.DSBMT_HDR_SEQ = dsd.DSBMT_HDR_SEQ and dsd.CRNT_REC_FLG = 1		
+    and mt.TYP_SEQ = dsd.PYMT_TYPS_SEQ and mt.CRNT_REC_FLG = 1 and mt.TYP_ID in (16228,16229)		
+    and trunc(dvh.dsbmt_dt) between to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy') and dvh.loan_app_seq = ap.loan_app_seq 		
+    and dvh.crnt_rec_flg = 1

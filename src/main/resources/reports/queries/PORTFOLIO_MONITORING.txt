@@ -1,0 +1,408 @@
+/* Formatted on 11/21/2022 10:40:51 AM (QP5 v5.326) 
+PORTFOLIO_MONITORING   PRD
+UPDATED BY AISHA KHAN*/
+  SELECT grp.prd_grp_nm                       prd_nm,
+         emp.emp_nm,
+         erl.last_upd_dt,
+         SUM (NVL (ost_clnt, 0))              ost_clnt,
+         SUM (NVL (ost_amt, 0))               ost_amt,
+         SUM (NVL (due_perd_clnt, 0))         due_perd_clnt,
+         SUM (NVL (due_perd_amt, 0))          due_perd_amt,
+         SUM (NVL (rcvrd_clnt, 0))            rcvrd_clnt,
+         SUM (NVL (rcvrd_amt, 0))             rcvrd_amt,
+         MAX (NVL (tgt.trgt_clnt, 0))         trgt_clnt,
+         SUM (NVL (achvd_in_perd, 0))         achvd_in_perd,
+         MAX (NVL (tgt.trgt_amt, 0))          trgt_amt,
+         SUM (NVL (achvd_in_perd_amt, 0))     achvd_in_perd_amt,
+         SUM (NVL (par_1_dy_cnt, 0))          od_clnt,
+         SUM (NVL (od_amt, 0))                od_amt,
+         SUM (NVL (par_1_dy_cnt, 0))          par_1_dy_cnt,
+         SUM (NVL (par_1_dy_amt, 0))          par_1_dy_amt,
+         SUM (NVL (par_30_day_cnt, 0))        par_30_day_cnt,
+         SUM (NVL (par_30_day_amt, 0))        par_30_day_amt,
+         SUM (NVL (cmpltd_loans, 0))          cmpltd_loans,
+         SUM (NVL (od_bp_clnt, 0))            od_bp_clnt,
+         SUM (NVL (od_bp_amt, 0))             od_bp_amt
+    FROM mw_brnch        brnch,
+         mw_port         prt,
+         mw_port_emp_rel erl,
+         mw_emp          emp,
+         mw_brnch_prd_rel prl,
+         mw_prd          prd,
+         mw_prd_grp      grp,
+         (  SELECT ap.prd_seq,
+                   ap.port_seq,
+                   COUNT (ap.loan_app_seq)
+                       ost_clnt,
+                   SUM (loan_app_ost (ap.loan_app_seq, TO_DATE ( :todt)))
+                       ost_amt
+              FROM mw_loan_app ap, mw_dsbmt_vchr_hdr dvh
+             WHERE     ap.BRNCH_SEQ = :branch
+                   AND (   :p_type = 1
+                        OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                        OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                   AND (   (    ap.loan_app_sts = 703
+                            AND TRUNC (ap.loan_app_sts_dt) <= TO_DATE ( :todt)
+                            AND ap.crnt_rec_flg = 1)
+                        OR (    ap.loan_app_sts = 704
+                            AND TRUNC (ap.loan_app_sts_dt) > TO_DATE ( :todt)
+                            AND TRUNC (dvh.dsbmt_dt) <= TO_DATE ( :todt)
+                            AND ap.crnt_rec_flg = 1)
+                        OR (    ap.loan_app_sts = 1245
+                            AND TRUNC (ap.loan_app_sts_dt) > TO_DATE ( :todt)))
+                   AND dvh.loan_app_seq = ap.loan_app_seq
+                   AND dvh.crnt_rec_flg = 1
+                   AND loan_app_ost (ap.loan_app_seq, TO_DATE ( :todt)) > 0
+                   AND NOT EXISTS
+                           (SELECT 1
+                              FROM mw_clnt_tag_list ctl
+                             WHERE     ctl.loan_app_seq = ap.loan_app_seq
+                                   AND TRUNC (ctl.eff_start_dt) <=
+                                       TO_DATE ( :todt)
+                                   AND ctl.tags_seq = 4)
+          GROUP BY ap.prd_seq, ap.port_seq) ost,
+         (  SELECT ap.prd_seq,
+                   ap.port_seq,
+                   COUNT (ap.loan_app_seq)
+                       DUE_PERD_CLNT,
+                   SUM (psd.PPAL_AMT_DUE + NVL (psd.TOT_CHRG_DUE, 0))
+                       DUE_PERD_AMT
+              FROM mw_loan_app    ap,
+                   mw_pymt_sched_hdr psh,
+                   mw_pymt_sched_dtl psd,
+                   mw_dsbmt_vchr_hdr dvh
+             WHERE     psh.loan_app_seq = ap.loan_app_seq
+                   AND (   :p_type = 1
+                        OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                        OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                   AND psh.crnt_rec_flg = 1
+                   AND psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq
+                   AND psd.crnt_rec_flg = 1
+                   AND dvh.LOAN_APP_SEQ = ap.LOAN_APP_SEQ
+                   AND dvh.CRNT_REC_FLG = 1
+                   AND ap.BRNCH_SEQ = :branch
+                   AND ap.crnt_rec_flg = 1
+                   AND TRUNC (psd.due_dt) BETWEEN TO_DATE ( :frmdt)
+                                              AND TO_DATE ( :todt)
+                   AND (   (psd.PYMT_STS_KEY = 945)
+                        OR (    psd.PYMT_STS_KEY IN (946,
+                                                     947,
+                                                     948,
+                                                     1145)
+                            AND (SELECT MAX (trx.pymt_dt)
+                                   FROM mw_rcvry_trx trx, mw_rcvry_dtl dtl
+                                  WHERE     trx.RCVRY_TRX_SEQ = dtl.RCVRY_TRX_SEQ
+                                        AND dtl.pymt_sched_dtl_seq =
+                                            psd.pymt_sched_dtl_seq
+                                        AND dtl.crnt_rec_flg = 1
+                                        AND trx.crnt_rec_flg = 1) >=
+                                TO_DATE ( :frmdt)))
+          --                     and ap.port_seq=286
+          GROUP BY ap.prd_seq, ap.port_seq) dip,
+         (  SELECT prd_seq,
+                   port_seq,
+                   COUNT (LOAN_APP_SEQ)              rcvrd_clnt,
+                   (SUM (rec_pr) + SUM (rec_sc))     rcvrd_amt
+              FROM (  SELECT ap.LOAN_APP_SEQ,
+                             ap.prd_seq,
+                             ap.port_seq,
+                             NVL (
+                                 SUM (
+                                     (SELECT SUM (NVL (rdtl.pymt_amt, 0))
+                                        FROM mw_rcvry_trx rht,
+                                             mw_rcvry_dtl rdtl
+                                             LEFT OUTER JOIN mw_typs rtyp
+                                                 ON     rtyp.typ_seq =
+                                                        rdtl.chrg_typ_key
+                                                    AND rtyp.crnt_rec_flg = 1
+                                       WHERE     rdtl.pymt_sched_dtl_seq =
+                                                 psd.pymt_sched_dtl_seq
+                                             AND rdtl.crnt_rec_flg = 1
+                                             AND rht.RCVRY_TRX_SEQ =
+                                                 rdtl.RCVRY_TRX_SEQ
+                                             AND rht.crnt_rec_flg = 1
+                                             AND (rdtl.chrg_typ_key = -1)
+                                             AND TRUNC (rht.PYMT_DT) BETWEEN TO_DATE (
+                                                                                 :frmdt)
+                                                                         AND TO_DATE (
+                                                                                 :todt))),
+                                 0)
+                                 rec_pr,
+                             NVL (
+                                 SUM (
+                                     (SELECT SUM (NVL (rdtl.pymt_amt, 0))
+                                        FROM mw_rcvry_trx rht,
+                                             mw_rcvry_dtl rdtl
+                                             LEFT OUTER JOIN mw_typs rtyp
+                                                 ON     rtyp.typ_seq =
+                                                        rdtl.chrg_typ_key
+                                                    AND rtyp.crnt_rec_flg = 1
+                                       WHERE     rdtl.pymt_sched_dtl_seq =
+                                                 psd.pymt_sched_dtl_seq
+                                             AND rdtl.crnt_rec_flg = 1
+                                             AND rht.RCVRY_TRX_SEQ =
+                                                 rdtl.RCVRY_TRX_SEQ
+                                             AND rht.crnt_rec_flg = 1
+                                             AND EXISTS
+                                                     (SELECT 1
+                                                        FROM mw_typs mt
+                                                       WHERE     mt.typ_seq =
+                                                                 rdtl.chrg_typ_key
+                                                             AND mt.typ_id = '0017'
+                                                             AND mt.crnt_rec_flg =
+                                                                 1)
+                                             AND TRUNC (rht.PYMT_DT) BETWEEN TO_DATE (
+                                                                                 :frmdt)
+                                                                         AND TO_DATE (
+                                                                                 :todt))),
+                                 0)
+                                 rec_sc
+                        FROM mw_loan_app ap
+                             JOIN mw_pymt_sched_hdr psh
+                                 ON     psh.loan_app_seq = ap.loan_app_seq
+                                    AND psh.crnt_rec_flg = 1
+                             JOIN mw_pymt_sched_dtl psd
+                                 ON     psd.pymt_sched_hdr_seq =
+                                        psh.pymt_sched_hdr_seq
+                                    AND psd.crnt_rec_flg = 1
+                             JOIN mw_dsbmt_vchr_hdr dvh
+                                 ON     dvh.LOAN_APP_SEQ = ap.LOAN_APP_SEQ
+                                    AND dvh.CRNT_REC_FLG = 1
+                       WHERE     ap.BRNCH_SEQ = :branch
+                             AND (   :p_type = 1
+                                  OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                                  OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                             AND ap.crnt_rec_flg = 1
+                             AND TRUNC (psd.due_dt) BETWEEN TO_DATE ( :frmdt)
+                                                        AND TO_DATE ( :todt)
+                             AND psd.PYMT_STS_KEY NOT IN (1145)
+                             AND NOT EXISTS
+                                     (SELECT 1
+                                        FROM MW_CLNT_TAG_LIST ctl
+                                       WHERE     ctl.tags_seq = 4
+                                             AND ctl.loan_app_seq = ap.LOAN_APP_SEQ
+                                             AND TRUNC (ctl.eff_start_dt) <=
+                                                 TO_DATE ( :todt))
+                    GROUP BY ap.prd_seq, ap.port_seq, ap.loan_app_seq)
+             WHERE (rec_pr > 0 OR rec_sc > 0)
+          GROUP BY prd_seq, port_seq) rcvd,
+         (  SELECT prd_seq,
+                   ptg.port_seq,
+                   SUM (NVL (ptg.trgt_clnts, 0))     trgt_clnt,
+                   SUM (NVL (ptg.trgt_amt, 0))       trgt_amt
+              FROM mw_brnch_trgt tgt, mw_port_trgt ptg
+             WHERE     ptg.brnch_trgts_seq = tgt.brnch_targets_seq
+                   AND ptg.del_flg = 0
+                   AND tgt.del_flg = 0
+                   AND tgt.prd_seq != 8
+                   AND tgt.trgt_perd = TO_CHAR (TO_DATE ( :todt), 'YYYYMM')
+                   AND tgt.brnch_seq = :branch
+          GROUP BY tgt.prd_seq, ptg.port_seq) tgt,
+         (  SELECT ap.prd_seq,
+                   ap.port_seq,
+                   COUNT (ap.loan_app_seq)     achvd_in_perd,
+                   SUM (ap.aprvd_loan_amt)     achvd_in_perd_amt
+              FROM mw_loan_app ap, mw_dsbmt_vchr_hdr dvh
+             WHERE     ap.crnt_rec_flg = 1
+                   AND ap.loan_app_seq = dvh.loan_app_seq
+                   AND dvh.crnt_rec_flg = 1
+                   AND ap.BRNCH_SEQ = :branch
+                   AND (   :p_type = 1
+                        OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                        OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                   AND dvh.crnt_rec_flg = 1
+                   AND TRUNC (dvh.dsbmt_dt) BETWEEN TO_DATE ( :frmdt)
+                                                AND TO_DATE ( :todt)
+          GROUP BY ap.prd_seq, ap.port_seq) achvd,
+         (  SELECT prd_seq,
+                   port_seq,
+                   COUNT (par_1_dy_cnt)            par_1_dy_cnt,
+                   COUNT (par_30_day_cnt)          par_30_day_cnt,
+                   SUM (NVL (od_amt, 0))           od_amt,
+                   SUM (NVL (par_1_dy_amt, 0))     par_1_dy_amt,
+                   SUM (NVL (par_30_day, 0))       par_30_day_amt
+              FROM (  SELECT prd_seq,
+                             port_seq,
+                             od_clnt                         par_1_dy_cnt,
+                             par_30_day_cnt                  par_30_day_cnt,
+                             SUM (NVL (od_amt, 0))           od_amt,
+                             SUM (NVL (par_1_dy_amt, 0))     par_1_dy_amt,
+                             SUM (NVL (par_30_day, 0))       par_30_day
+                        FROM (SELECT ap.prd_seq,
+                                     ap.port_seq,
+                                     ap.loan_app_seq
+                                         od_clnt,
+                                     GET_OD_INFO (ap.loan_app_seq,
+                                                        TO_DATE ( :todt),
+                                                        'ps')
+                                         od_amt,
+                                     loan_app_ost (ap.loan_app_seq,
+                                                   TO_DATE ( :todt))
+                                         par_1_dy_amt,
+                                     (CASE
+                                          WHEN GET_OD_INFO (ap.loan_app_seq,
+                                                                  TO_DATE ( :todt),
+                                                                  'd') >
+                                               30
+                                          THEN
+                                              ap.loan_app_seq
+                                      END)
+                                         par_30_day_cnt,
+                                     (CASE
+                                          WHEN GET_OD_INFO (ap.loan_app_seq,
+                                                                  TO_DATE ( :todt),
+                                                                  'd') >
+                                               30
+                                          THEN
+                                              loan_app_ost (ap.loan_app_seq,
+                                                            TO_DATE ( :todt))
+                                      END)
+                                         par_30_day,
+                                     GET_OD_INFO (ap.loan_app_seq,
+                                                        TO_DATE ( :todt),
+                                                        'd')
+                                         od_dys
+                                FROM mw_loan_app ap, mw_dsbmt_vchr_hdr dvh
+                               WHERE     ap.BRNCH_SEQ = :branch
+                                     AND (   :p_type = 1
+                                          OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                                          OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                                     AND (   (    ap.loan_app_sts = 703
+                                              AND TRUNC (ap.loan_app_sts_dt) <=
+                                                  TO_DATE ( :todt)
+                                              AND ap.crnt_rec_flg = 1)
+                                          OR (    ap.loan_app_sts = 704
+                                              AND TRUNC (ap.loan_app_sts_dt) >
+                                                  TO_DATE ( :todt)
+                                              AND TRUNC (dvh.dsbmt_dt) <=
+                                                  TO_DATE ( :todt))
+                                          OR (    ap.loan_app_sts = 1245
+                                              AND TRUNC (ap.loan_app_sts_dt) >
+                                                  TO_DATE ( :todt)))
+                                     AND dvh.loan_app_seq = ap.loan_app_seq
+                                     AND dvh.crnt_rec_flg = 1
+                                     AND NOT EXISTS
+                                             (SELECT 1
+                                                FROM mw_clnt_tag_list ctl
+                                               WHERE     ctl.loan_app_seq =
+                                                         ap.loan_app_seq
+                                                     AND TRUNC (ctl.eff_start_dt) <=
+                                                         TO_DATE ( :todt)
+                                                     AND ctl.tags_seq = 4))
+                    GROUP BY prd_seq,
+                             port_seq,
+                             od_clnt,
+                             par_30_day_cnt
+                      HAVING SUM (NVL (od_amt, 0)) > 0)
+          GROUP BY prd_seq, port_seq) od,
+         (  SELECT ap.prd_seq, ap.port_seq, COUNT (ap.loan_app_seq) cmpltd_loans
+              FROM mw_loan_app ap, mw_dsbmt_vchr_hdr dvh
+             WHERE     dvh.LOAN_APP_SEQ = ap.LOAN_APP_SEQ
+                   AND ap.BRNCH_SEQ = :branch
+                   AND ap.crnt_rec_flg = 1
+                   AND dvh.CRNT_REC_FLG = 1
+                   AND ap.loan_app_sts = 703
+                   AND (   :p_type = 1
+                        OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                        OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                   AND TO_DATE (ap.loan_app_sts_dt) BETWEEN TO_DATE ( :frmdt)
+                                                        AND TO_DATE ( :todt)
+          GROUP BY ap.prd_seq, ap.port_seq) cmpltd,
+         (  SELECT prd_seq,
+                   port_seq,
+                   COUNT (od_bp_clnt)           od_bp_clnt,
+                   SUM (NVL (od_bp_amt, 0))     od_bp_amt
+              FROM (  SELECT prd_seq,
+                             port_seq,
+                             od_bp_clnt                   od_bp_clnt,
+                             SUM (NVL (od_bp_amt, 0))     od_bp_amt
+                        FROM (SELECT ap.prd_seq,
+                                     ap.port_seq,
+                                     ap.loan_app_seq
+                                         od_bp_clnt,
+                                     GET_OD_INFO (ap.loan_app_seq,
+                                                        TO_DATE ( :frmdt) - 1,
+                                                        'ps')
+                                         od_bp_amt
+                                FROM mw_loan_app ap, mw_dsbmt_vchr_hdr dvh
+                               WHERE     ap.prd_seq = 4
+                                     AND (   :p_type = 1
+                                          OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                                          OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                                     AND ap.BRNCH_SEQ = :branch
+                                     AND (   (    ap.loan_app_Sts = 703
+                                              AND TRUNC (ap.loan_app_sts_dt) <=
+                                                  TO_DATE ( :frmdt) - 1
+                                              AND ap.crnt_rec_flg = 1)
+                                          OR (    ap.loan_app_Sts = 704
+                                              AND TRUNC (ap.loan_app_sts_dt) >
+                                                  TO_DATE ( :frmdt) - 1
+                                              AND TRUNC (dvh.dsbmt_dt) <=
+                                                  TO_DATE ( :frmdt) - 1
+                                              AND ap.crnt_rec_flg = 1)
+                                          OR (    ap.loan_app_Sts = 1245
+                                              AND TRUNC (ap.loan_app_sts_dt) >
+                                                  TO_DATE ( :frmdt) - 1))
+                                     AND dvh.loan_app_seq = ap.loan_app_seq
+                                     AND dvh.crnt_rec_flg = 1
+                                     AND NOT EXISTS
+                                             (SELECT 1
+                                                FROM mw_clnt_tag_list ctl
+                                               WHERE     ctl.loan_app_seq =
+                                                         ap.loan_app_seq
+                                                     AND TRUNC (ctl.eff_start_dt) <=
+                                                         TO_DATE ( :frmdt) - 1
+                                                     AND ctl.tags_seq = 4))
+                    GROUP BY prd_seq,
+                             port_seq,
+                             od_bp_clnt,
+                             od_bp_amt
+                      HAVING SUM (NVL (od_bp_amt, 0)) > 0)
+          GROUP BY prd_seq, port_seq) pbp
+   WHERE     prt.brnch_seq = brnch.brnch_seq
+         AND prt.crnt_rec_flg = 1
+         AND erl.port_seq = prt.port_seq
+         AND erl.crnt_rec_flg = 1
+         AND emp.emp_seq = erl.emp_seq
+         AND prl.brnch_seq = brnch.brnch_seq
+         AND prl.crnt_rec_flg = 1
+         AND prd.prd_seq = prl.prd_seq
+         AND prd.crnt_rec_flg = 1
+         AND grp.prd_grp_seq = prd.prd_grp_seq
+         AND grp.crnt_rec_flg = 1
+         AND ost.prd_seq(+) = prd.prd_seq
+         AND ost.port_seq(+) = prt.port_seq
+         AND dip.prd_seq(+) = prd.prd_seq
+         AND dip.port_seq(+) = prt.port_seq
+         AND rcvd.prd_seq(+) = prd.prd_seq
+         AND rcvd.port_seq(+) = prt.port_seq
+         AND tgt.prd_seq(+) = grp.prd_grp_seq
+         AND tgt.port_seq(+) = prt.port_seq
+         AND achvd.prd_seq(+) = prd.prd_seq
+         AND achvd.port_seq(+) = prt.port_seq
+         AND od.prd_seq(+) = prd.prd_seq
+         AND od.port_seq(+) = prt.port_seq
+         AND cmpltd.prd_seq(+) = prd.prd_seq
+         AND cmpltd.port_seq(+) = prt.port_seq
+         AND pbp.prd_seq(+) = prd.prd_seq
+         AND pbp.port_seq(+) = prt.port_seq
+         AND prt.brnch_seq = :branch
+         AND (  NVL (ost_clnt, 0)
+              + NVL (ost_amt, 0)
+              + NVL (due_perd_clnt, 0)
+              + NVL (due_perd_amt, 0)
+              + NVL (rcvrd_clnt, 0)
+              + NVL (rcvrd_amt, 0)
+              + NVL (achvd_in_perd, 0)
+              + NVL (achvd_in_perd_amt, 0)
+              + NVL (par_1_dy_cnt, 0)
+              + NVL (par_1_dy_amt, 0)
+              + NVL (par_30_day_cnt, 0)
+              + NVL (par_30_day_amt, 0)
+              + NVL (cmpltd_loans, 0)) >
+             0
+GROUP BY grp.prd_grp_seq,
+         grp.prd_grp_nm,
+         emp.emp_nm,
+         erl.last_upd_dt
+ORDER BY grp.prd_grp_nm, emp.emp_nm

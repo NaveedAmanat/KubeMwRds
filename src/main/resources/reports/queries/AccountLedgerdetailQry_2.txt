@@ -1,0 +1,89 @@
+/* Formatted on 03/03/2022 4:23:27 pm (QP5 v5.326) */
+  SELECT TRUNC (mjh.jv_dt)
+             voucher_date,
+         INITCAP (mjh.enty_typ)
+             voucher_type,
+         mjh.jv_hdr_seq,
+         mjh.enty_seq,
+         nvl((CASE
+              WHEN     INITCAP (mjh.enty_typ) = 'Expense'
+                   AND mjd.gl_acct_num NOT IN
+                           ('000.000.201118.00000',
+                            '000.000.201113.00000',
+                            '000.000.201117.00000')
+              THEN
+                  (SELECT MAX (mt.TYP_STR)
+                     FROM mw_typs mt
+                    WHERE     mt.gl_acct_num = mjd.gl_acct_num
+                          AND mt.TYP_CTGRY_KEY = 1)
+              WHEN     INITCAP (mjh.enty_typ) = 'Expense'
+                   AND mjd.gl_acct_num IN
+                           ('000.000.201118.00000',
+                            '000.000.201113.00000',
+                            '000.000.201117.00000')
+              THEN
+                     INITCAP (mjh.JV_DSCR)
+                  || ' '
+                  || MAX (
+                         (SELECT MAX (
+                                     DISTINCT    TRANSACTION_ID
+                                              || '-'
+                                              || (CASE
+                                                      WHEN (    CLM_TYP = 2
+                                                            AND clm_amt <= 2000)
+                                                      THEN
+                                                          'LOI'
+                                                      ELSE
+                                                          'KCA'
+                                                  END))
+                            FROM MW_EXP ME, MW_CLNT_HLTH_INSR_CLM clm
+                           WHERE     (   ME.EXP_REF = clm.CLNT_HLTH_CLM_SEQ
+                                      OR ME.EXP_REF = clm.CLNT_SEQ)
+                                 AND ME.EXP_SEQ = mjh.enty_seq
+                                 AND ME.EXPNS_AMT = NVL (mjd.amt, 0)
+                                 AND ME.BRNCH_SEQ = :brnchseq))
+              ELSE
+                  INITCAP (mjh.JV_DSCR)
+          END),mjh.JV_DSCR)
+             DSCR,
+         NVL (mjh.instr_num,
+              get_instr_num (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq))
+             instr_no,
+         NVL (mjh.clnt_seq,
+              get_clnt_seq (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq))
+             clnt_info_seq,
+         get_clnt_name (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)
+             clnt_info_name,
+         NVL (
+             SUM (
+                 NVL (
+                     (CASE WHEN mjd.crdt_dbt_flg = 1 THEN NVL (mjd.amt, 0) END),
+                     0)),
+             0)
+             debit,
+         NVL (
+             SUM (
+                 NVL (
+                     (CASE WHEN mjd.crdt_dbt_flg = 0 THEN NVL (mjd.amt, 0) END),
+                     0)),
+             0)
+             credit,
+         0
+             CLS_BLNC
+    FROM mw_jv_hdr mjh, mw_jv_dtl mjd
+   WHERE     mjh.jv_hdr_seq = mjd.jv_hdr_seq
+         AND brnch_seq = :brnchseq
+         AND mjd.gl_acct_num = :gl_acc_num
+         AND TRUNC (mjh.jv_dt) BETWEEN TO_DATE(:frmdt,'MM/dd/yyyy') AND TO_DATE ( :todt,'MM/dd/yyyy')
+GROUP BY TRUNC (mjh.jv_dt),
+         NVL (mjh.clnt_seq,
+              get_clnt_seq (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)),
+         get_clnt_name (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq),
+         INITCAP (mjh.enty_typ),
+         mjh.jv_hdr_seq,
+         mjh.enty_seq,
+         mjh.jv_dscr,
+         NVL (mjh.instr_num,
+              get_instr_num (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)),
+         mjd.gl_acct_num
+ORDER BY TRUNC (mjh.jv_dt), mjh.jv_hdr_seq, mjh.enty_seq DESC

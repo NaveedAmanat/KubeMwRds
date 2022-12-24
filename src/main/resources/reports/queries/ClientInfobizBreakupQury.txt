@@ -1,0 +1,11 @@
+select case when dtl.incm_ctgry_key=1 then 'Primary Income' else 'Secondary Income' end incm_ctgry_key,val.ref_cd_dscr ,dtl.incm_amt  
+                         from mw_biz_aprsl_incm_dtl dtl  
+                         join mw_biz_aprsl_incm_hdr hdr on hdr.incm_hdr_seq=dtl.incm_hdr_seq and hdr.crnt_rec_flg = 1  
+                         join mw_biz_aprsl ba on ba.biz_aprsl_seq = hdr.biz_aprsl_seq and ba.crnt_rec_flg = 1  
+                         join mw_ref_cd_val val on val.ref_cd_seq=incm_typ_key and val.crnt_rec_flg = 1  
+                         where dtl.crnt_rec_flg=1 and ba.loan_app_seq=:loanAppSeq    union  
+                         select case when dtl.incm_ctgry_key=1 then 'Primary Income' else 'Secondary Income' end incm_ctgry_key  
+                         ,val.ref_cd_dscr     ,dtl.incm_amt    from mw_biz_aprsl_incm_dtl dtl  
+                         join mw_sch_aprsl ba on ba.sch_aprsl_seq = dtl.incm_hdr_seq and ba.crnt_rec_flg = 1  
+                         join mw_ref_cd_val val on val.ref_cd_seq=incm_typ_key and val.crnt_rec_flg = 1  
+                         where dtl.crnt_rec_flg=1 and ba.loan_app_seq=:loanAppSeq

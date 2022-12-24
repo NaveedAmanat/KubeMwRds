@@ -1,0 +1,18 @@
+select emp.emp_nm , app.clnt_seq CLNT_seq, c.FRST_NM||' '||c.LAST_NM clnt_nm, c.PH_NUM, 
+(select cr.FRST_NM||' '||cr.LAST_NM from mw_clnt_rel cr where cr.LOAN_APP_SEQ = app.LOAN_APP_SEQ and cr.CRNT_REC_FLG = 1 and cr.REL_TYP_FLG = 1) nominee_nm,
+(select cr.PH_NUM from mw_clnt_rel cr where cr.LOAN_APP_SEQ = app.LOAN_APP_SEQ and cr.CRNT_REC_FLG = 1 and cr.REL_TYP_FLG = 1) nominee_ph_num,
+app.LOAN_CYCL_NUM, grp.PRD_GRP_NM, to_date(sysdate) - trunc(hdr.dsbmt_dt) days_missed
+from mw_loan_app app  
+join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1  
+join mw_clnt c on c.clnt_seq = app.clnt_Seq and c.crnt_Rec_flg = 1
+join mw_emp emp on emp.emp_seq=per.emp_seq 
+join mw_port prt on prt.port_seq = app.port_seq and prt.crnt_rec_flg = 1 
+join mw_prd prd on prd.PRD_SEQ = app.PRD_SEQ and prd.CRNT_REC_FLG = 1
+join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnch_seq  
+join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=app.loan_app_seq and hdr.crnt_rec_flg=1 
+left outer join mw_ref_cd_val utl on utl.ref_cd_seq=app.LOAN_UTL_STS_SEQ and utl.crnt_rec_flg=1 
+where app.crnt_rec_flg=1
+and trunc(hdr.dsbmt_dt) between to_date(:frmdt, 'dd-MM-yyyy') and to_date(:todt, 'dd-MM-yyyy')
+and not exists (select null from mw_loan_app_mntrng_chks chk where chk.crnt_rec_flg=1 and chk_flg=1 and chk.loan_app_seq=app.loan_app_seq)
+order by emp.emp_nm, days_missed desc

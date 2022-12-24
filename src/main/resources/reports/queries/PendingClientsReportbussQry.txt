@@ -1,0 +1,26 @@
+select mp.port_nm,  get_port_bdo(la.port_seq) bdo_name,  clnt.clnt_id,  
+                clnt.frst_nm||' '||clnt.last_nm clnt_nm, fthr_frst_nm ||' '||fthr_last_nm fthr_nm,  
+                spz_frst_nm ||' '||spz_last_nm spz_nm, clnt.ph_num,  
+                (select ref.ref_cd_dscr from mw_biz_aprsl aprsl join mw_ref_cd_val ref on ref.ref_cd_seq=aprsl.prsn_run_the_biz and ref.crnt_rec_flg=1 where aprsl.crnt_rec_flg=1 and aprsl.loan_app_seq=la.loan_app_seq) loanuser,  
+                adr.hse_num ||' '||adr.strt ||' '||adr.oth_dtl||' '||city_nm addr, loan_cycl_num,  
+                la.aprvd_loan_amt dsbmt_amt,   LST_LOAN_CMPLTN_DT(la.loan_app_seq) cmp_dt,  
+                get_pd_od_inst(la.loan_app_seq) od_inst,   la.LOAN_APP_SEQ loans, 
+                to_date(:asDt,'dd-mm-yyyy') - TO_DATE (la.LOAN_APP_STS_DT) dys   
+                from mw_loan_app la 
+                join MW_PORT MP on mp.port_seq=la.port_seq and mp.crnt_rec_flg=1 
+                join mw_prd mpg on mpg.prd_seq=la.prd_seq and mpg.crnt_rec_flg=1 
+                join mw_clnt clnt on clnt.clnt_seq=la.clnt_seq and clnt.crnt_rec_flg=1 
+                join mw_addr_rel adrl on adrl.enty_key=clnt.clnt_seq and adrl.enty_typ='Client' and adrl.crnt_rec_flg=1  
+                join mw_addr adr on adr.addr_seq=adrl.addr_seq and adr.crnt_rec_flg=1  
+                join mw_city_uc_rel ucrl on ucrl.city_uc_rel_seq=adr.city_seq and ucrl.crnt_rec_flg=1  
+                join mw_city cty on cty.city_seq=ucrl.city_seq and cty.crnt_rec_flg=1   
+                WHERE la.CRNT_REC_FLG = 1
+                and la.eff_start_dt= (select max(ap.eff_start_dt) from mw_loan_app ap where ap.crnt_rec_flg=1 and ap.loan_app_seq=la.loan_app_seq)
+                AND MP.BRNCH_SEQ = :brnch 
+				AND MP.PORT_SEQ  = (CASE WHEN :P_PORT_SEQ <> -1 THEN :P_PORT_SEQ ELSE MP.PORT_SEQ END)
+                and not exists (select * from MW_DSBMT_VCHR_HDR dvh, mw_loan_app ap where ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ 
+                and ap.CLNT_SEQ = la.CLNT_SEQ and ap.PRD_SEQ = la.PRD_SEQ and ap.CRNT_REC_FLG = 1 
+                and dvh.crnt_rec_flg=1 and to_date(dvh.DSBMT_DT) > TO_DATE (:fromDt,'dd-mm-yyyy'))  and mpg.CRNT_REC_FLG = 1  
+                and la.LOAN_APP_STS = 704  AND mpg.prd_grp_seq=:prd 
+                and not exists (select null from mw_loan_app ap where ap.crnt_rec_flg=1 and ap.loan_app_sts=703 and ap.clnt_seq=la.clnt_seq)
+                AND TO_DATE (la.LOAN_APP_STS_DT) BETWEEN TO_DATE (:fromDt,'dd-mm-yyyy') AND TO_DATE (to_date(:toDt,'dd-mm-yyyy')) order by bdo_name,dys desc

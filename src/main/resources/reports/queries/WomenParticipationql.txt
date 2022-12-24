@@ -1,0 +1,18 @@
+select bo.ref_cd_dscr,   bo.ref_cd, 
+                 count(distinct case when loan_app_sts_dt between to_date('01-'||to_char(to_date('09-apr-19'),'MON-YY')) and to_date('9-apr-19') then ap.clnt_seq else null end) crnt_clnt_cnt, 
+                 count(distinct case when (((bo.ref_cd='0191' and gndr.ref_cd='0019') or (bo.ref_cd in ('0190','1055','1057','1056','1058','1059')))  
+                 and (loan_app_sts_dt between to_date('01-apr-19') and to_date('9-apr-19'))) then ap.clnt_seq else null end) crnt_wmn_cnt, 
+                 --prev  
+                 count(distinct case when to_char(loan_app_sts_dt,'YYYYMM') = to_char(add_months(to_date('09-apr-19'),-1),'YYYYMM') then ap.clnt_seq else null end) prv_clnt_cnt, 
+                 count(distinct case when (((bo.ref_cd='0191' and gndr.ref_cd='0019') or (bo.ref_cd in ('0190','1055','1057','1056','1058','1059')))  
+                 and (to_char(loan_app_sts_dt,'YYYY') = to_char(loan_app_sts_dt,'YYYYMM') )) then ap.clnt_seq else null end) prv_wmn_cnt, 
+                 -- port   count(distinct ap.clnt_seq) prt_clnt_cnt, 
+                 count(distinct case when (((bo.ref_cd='0191' and gndr.ref_cd='0019') or (bo.ref_cd in ('0190','1055','1057','1056','1058','1059'))) ) then ap.clnt_seq else null end) prt_wmn_cnt 
+                 --count(distinct case when (bo.ref_cd='0193' ) then ap.clnt_seq else null end) prt_jnt_cnt 
+                 from mw_loan_app ap   join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1 
+                 join mw_ref_cd_val gndr on gndr.ref_cd_seq=clnt.gndr_key and gndr.crnt_rec_flg=1 
+                 join mw_ref_cd_val lsts on lsts.ref_cd_seq=ap.loan_app_sts and lsts.crnt_rec_flg=1  
+                 join mw_biz_aprsl biz on biz.loan_app_seq=ap.loan_app_seq and biz.crnt_rec_flg=1 
+                 join mw_ref_cd_val bo on bo.ref_cd_seq=biz.prsn_run_the_biz and bo.crnt_rec_flg=1    where ap.crnt_rec_flg=1 
+                 and (lsts.ref_cd='0005' or (lsts.ref_cd='0006' and ap.loan_app_sts_dt >= '9-apr-19'))   and port_seq in (9) 
+                 group by bo.ref_cd,bo.ref_cd_dscr

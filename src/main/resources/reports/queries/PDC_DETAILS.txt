@@ -1,0 +1,16 @@
+select distinct clnt.clnt_id,clnt.frst_nm||' '||clnt.last_nm clnt_nm,  
+                 cbr.frst_nm||' '||cbr.last_nm pdc_prvdr_nm,        bnk.ref_cd_dscr,        phdr.acct_num,  
+                 phdr.pdc_hdr_seq,dense_rank() over (PARTITION BY clnt.clnt_seq order by clnt.clnt_seq,chq_num) sr_no,  
+                 chq_num    from mw_loan_app ap    join mw_port prt on prt.PORT_SEQ=ap.PORT_SEQ and prt.crnt_rec_flg=1  
+             join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.CRNT_REC_FLG=1  
+             join mw_dsbmt_vchr_hdr dh on dh.loan_app_seq=ap.loan_app_seq and dh.crnt_rec_flg=1  
+             join mw_clnt_rel cbr on cbr.loan_app_seq=ap.loan_app_seq and cbr.crnt_rec_flg=1 and cbr.rel_typ_flg=3  
+             join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1  
+             join mw_pdc_hdr phdr on phdr.loan_app_seq=ap.loan_app_seq and phdr.crnt_rec_flg=1  
+             join mw_pdc_dtl pdtl on pdtl.pdc_hdr_seq=phdr.pdc_hdr_seq and pdtl.crnt_rec_flg=1  
+             join mw_ref_cd_val bnk on bnk.ref_cd_seq=phdr.bank_key and asts.crnt_rec_flg=1    where ap.crnt_rec_flg=1  
+               and ( (asts.ref_cd='0005' and to_date(ap.loan_app_sts_dt) <= to_date(:toDt,'dd-MM-yyyy') and ap.crnt_rec_flg=1)    
+                                 or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date(:toDt,'dd-MM-yyyy'))  
+                                 or (asts.ref_cd='1245' and to_date(ap.loan_app_sts_dt) > to_date(:toDt,'dd-MM-yyyy')))  
+               and dh.dsbmt_dt between to_date(:frmDt,'dd-MM-yyyy') and to_date(:toDt,'dd-MM-yyyy') and prt.BRNCH_SEQ=:brnchSeq  
+             order by clnt.clnt_id

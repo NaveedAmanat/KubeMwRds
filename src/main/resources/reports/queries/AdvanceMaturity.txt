@@ -1,0 +1,37 @@
+select grp_nm,
+    sum(mat_15_30) mat_15_30,
+    sum(mat_31_60) mat_31_60,
+    sum(mat_61_90) mat_61_90,
+    sum(mat_61_90) mat_61_90_1
+from(    
+select 
+    case when :rpt_flg= 1 then brnch.brnch_nm else ar.area_nm end grp_nm,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 15 and 30 then 1 else 0 end mat_15_30,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 31 and 60 then 1 else 0 end mat_31_60,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 61 and 90 then 1 else 0 end mat_61_90,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) >90 then 1 else 0 end mat_ovr_90
+from mw_loan_app la 
+join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_acl acl on acl.port_seq=la.port_seq and acl.user_id=:user
+where la.crnt_rec_flg=1
+and la.loan_app_sts=703
+and to_date(loan_mturty_dt(la.loan_app_seq))<= to_date(:as_dt,'dd-mm-yyyy')
+union all
+select 'zzzOverall',
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 15 and 30 then 1 else 0 end mat_15_30,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 31 and 60 then 1 else 0 end mat_31_60,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 61 and 90 then 1 else 0 end mat_61_90,
+    case when to_date(:as_dt,'dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) >90 then 1 else 0 end mat_ovr_90
+from mw_loan_app la 
+join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_acl acl on acl.port_seq=la.port_seq and acl.user_id=:user
+where la.crnt_rec_flg=1
+and la.loan_app_sts=703
+and to_date(loan_mturty_dt(la.loan_app_seq))<= to_date(:as_dt,'dd-mm-yyyy')
+)
+group by grp_nm
+order by 1

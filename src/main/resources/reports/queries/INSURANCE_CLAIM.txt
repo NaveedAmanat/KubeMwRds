@@ -1,0 +1,135 @@
+select   distinct
+                emp.emp_nm,clnt_id,clnt.frst_nm||' '||clnt.last_nm clnt_nm,
+                nom_nm,dth.dt_of_dth,
+                case when dth.clnt_nom_flg=0 then 'SELF' else prsn end dsd_prsn,
+                adj.pymt_dt adj_dt,
+                prd.prd_cmnt,hdr.dsbmt_dt,ap.aprvd_loan_amt dsbmt_amt,
+                adj.prn_amt prn_amt,adj.svc_amt srv_amt,
+                jh.jv_dt ins_clm_dt,
+                case when ap.prnt_loan_app_seq=ap.loan_app_seq then 5000 else 0 end fnrl_chrgs
+from mw_dth_rpt dth
+join mw_clnt clnt on clnt.clnt_seq = dth.clnt_seq and clnt.crnt_rec_flg=1 --and dth.AMT is not null
+join mw_loan_app ap on ap.clnt_seq=clnt.clnt_seq and ap.crnt_rec_flg=1
+     and ap.loan_app_seq in (--select max(loan_cycl_num) from mw_loan_app where crnt_rec_flg=1 and clnt_seq=clnt.clnt_seq and
+     --select max(la.loan_cycl_num) from mw_loan_app la where la.crnt_rec_flg=1 and la.clnt_seq=clnt.clnt_seq
+     --       and la.loan_app_sts in (704,703) and la.loan_app_sts_dt > to_date(dth.EFF_START_DT)
+    select aa.loan_app_seq
+    from
+    (select la.loan_app_seq--,0 as clnt_seq
+                from mw_rcvry_trx trx
+                join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 1
+                join mw_rcvry_dtl dtl on dtl.rcvry_trx_seq = trx.rcvry_trx_seq and dtl.crnt_rec_flg = 1
+                join mw_pymt_sched_dtl psd on psd.pymt_sched_dtl_seq = dtl.pymt_sched_dtl_seq and psd.crnt_rec_flg = 1
+                join mw_pymt_sched_hdr psh on psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq and psh.crnt_rec_flg = 1
+                join mw_loan_app la on la.loan_app_seq = psh.loan_app_seq and la.crnt_rec_flg = 1
+                join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0
+                --left outer join (select ep.exp_ref from mw_exp ep where ep.expns_typ_seq=424 and ep.crnt_rec_flg = 1)fnr on fnr.EXP_REF = la.clnt_seq
+                where trx.post_flg = 1
+                and trx.crnt_rec_flg = 1
+                and la.clnt_seq = clnt.clnt_seq
+                and rcvry.typ_id ='0020'
+                and dtl.chrg_typ_key=-1
+                group by la.loan_app_seq,trx.pymt_dt,la.prd_seq
+    UNION
+    SELECT max(ap1.LOAN_APP_SEQ)--,ap1.clnt_seq
+              FROM mw_exp ep,mw_loan_app ap1
+             WHERE ep.expns_typ_seq = 424 AND ep.crnt_rec_flg = 1
+              and ep.EXP_REF = ap1.clnt_seq and ap1.crnt_rec_flg = 1
+              and ap1.clnt_seq = clnt.clnt_seq
+              and ap1.loan_app_sts = 703
+              and ap1.prd_seq not in (13,14,29)
+              and not exists (select la.loan_app_seq
+                from mw_rcvry_trx trx
+                join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 1
+                join mw_rcvry_dtl dtl on dtl.rcvry_trx_seq = trx.rcvry_trx_seq and dtl.crnt_rec_flg = 1
+                join mw_pymt_sched_dtl psd on psd.pymt_sched_dtl_seq = dtl.pymt_sched_dtl_seq and psd.crnt_rec_flg = 1
+                join mw_pymt_sched_hdr psh on psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq and psh.crnt_rec_flg = 1
+                join mw_loan_app la on la.loan_app_seq = psh.loan_app_seq and la.crnt_rec_flg = 1
+                join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0
+                --left outer join (select ep.exp_ref from mw_exp ep where ep.expns_typ_seq=424 and ep.crnt_rec_flg = 1)fnr on fnr.EXP_REF = la.clnt_seq
+                where trx.post_flg = 1
+                and trx.crnt_rec_flg = 1
+                and la.clnt_seq = ep.EXP_REF
+                --and la.clnt_seq = clnt.clnt_seq
+                and rcvry.typ_id ='0020'
+                and dtl.chrg_typ_key=-1
+                group by la.loan_app_seq,trx.pymt_dt,la.prd_seq)
+                --GROUP BY ap1.clnt_seq
+            )aa
+          where aa.loan_app_seq is not null
+     )
+join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1
+join mw_port_emp_rel erl on erl.port_seq=ap.port_seq and erl.crnt_rec_flg=1
+join mw_emp emp on emp.emp_seq=erl.emp_seq
+join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=1
+join mw_exp fnrl on fnrl.crnt_rec_flg=1 and fnrl.exp_ref=clnt.clnt_seq and fnrl.expns_typ_seq=424 and fnrl.DEL_FLG = 0
+     and fnrl.EXP_SEQ not in   nvl((select jh1.JV_HDR_SEQ
+                                    from mw_jv_hdr jh1
+                                    where jh1.ENTY_SEQ = fnrl.EXP_SEQ
+                                    and upper(jh1.ENTY_TYP) = 'EXPENSE'
+                                    and jh1.PRNT_VCHR_REF in (select jh2.JV_HDR_SEQ from mw_jv_hdr jh2 where jh2.ENTY_SEQ = fnrl.EXP_SEQ and jh2.ENTY_TYP = 'Expense')
+                                    union
+                                    select jh2.PRNT_VCHR_REF
+                                    from mw_jv_hdr jh2
+                                    where jh2.ENTY_SEQ = fnrl.EXP_SEQ
+                                    and upper(jh2.ENTY_TYP) = 'EXPENSE'
+                                   ),0)
+join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1
+join mw_jv_hdr jh on jh.enty_seq = fnrl.exp_seq and upper(jh.ENTY_TYP)='EXPENSE'
+and not exists (select * from mw_jv_hdr jh1 where jh1.PRNT_VCHR_REF = jh.JV_HDR_SEQ )
+  left outer join  (
+                    select loan_app_seq,
+                           frst_nm||' '||last_nm nom_nm, ref_cd_dscr prsn,
+                           nom.CNIC_NUM
+                    from mw_clnt_rel nom
+                    join mw_ref_cd_val rwc on rwc.ref_cd_seq=nom.rel_wth_clnt_key and rwc.crnt_rec_flg=1
+                    where nom.crnt_rec_flg=1
+                    and nom.rel_typ_flg=1
+                    --and nom.loan_app_seq = 33391075202447
+                    union
+                    select distinct la.loan_app_seq,
+                           null nom_nm,
+                           null prsn,
+                           null CNIC_NUM
+                    from mw_loan_app la
+                    where la.crnt_rec_flg = 1
+                    --and la.loan_app_seq = 33391075202447
+                    and not exists (select loan_app_seq
+                           from mw_clnt_rel nom
+                    join mw_ref_cd_val rwc on rwc.ref_cd_seq=nom.rel_wth_clnt_key and rwc.crnt_rec_flg=1
+                    where nom.crnt_rec_flg=1
+                    and nom.rel_typ_flg=1
+                    and nom.loan_app_seq = la.loan_app_seq)
+                ) nom on nom.loan_app_seq = ap.loan_app_seq
+  left outer join
+    (
+     select sk.loan_app_seq,sk.pymt_dt,sk.prd_seq,sum(sk.PPAL_AMT_DUE)prn_amt,sum(sk.TOT_CHRG_DUE)svc_amt
+from
+ (select la.loan_app_seq,trx.pymt_dt,la.prd_seq,
+         case when dtl.chrg_typ_key = -1 then sum(dtl.PYMT_AMT) end PPAL_AMT_DUE,
+         case when dtl.chrg_typ_key in (select mt.TYP_SEQ from mw_typs mt where mt.TYP_ID = '0017' AND mt.CRNT_REC_FLG IN (1)) then sum(dtl.PYMT_AMT) end  TOT_CHRG_DUE
+    from mw_rcvry_trx trx    join mw_typs rcvry on rcvry.typ_seq = rcvry_typ_seq and rcvry.crnt_rec_flg = 1
+    join mw_rcvry_dtl dtl on dtl.rcvry_trx_seq = trx.rcvry_trx_seq and dtl.crnt_rec_flg = 1
+    join mw_pymt_sched_dtl psd on psd.pymt_sched_dtl_seq = dtl.pymt_sched_dtl_seq and psd.crnt_rec_flg = 1
+    join mw_pymt_sched_hdr psh on psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq and psh.crnt_rec_flg = 1
+    join mw_loan_app la on la.loan_app_seq = psh.loan_app_seq and la.crnt_rec_flg = 1
+    join mw_ref_cd_val val on val.ref_cd_seq = la.loan_app_sts and val.crnt_rec_flg = 1 and val.del_flg = 0
+    where trx.post_flg = 1
+    and trx.crnt_rec_flg = 1
+    and rcvry.typ_id ='0020'
+    --and dtl.chrg_typ_key=-1
+    --and la.clnt_seq = 9800060745
+    group by la.loan_app_seq,trx.pymt_dt,la.prd_seq,dtl.chrg_typ_key)sk
+group by sk.loan_app_seq,sk.pymt_dt,sk.prd_seq
+    ) adj on adj.loan_app_seq = ap.loan_app_seq --and adj.prd_seq=ap.prd_seq
+    --adj on ap.loan_app_seq = adj.loan_app_seq--and adj.prd_seq=ap.prd_seq
+where dth.crnt_rec_flg = 1
+  --and prt.BRNCH_SEQ in (98,12,238,248,141,178,352)
+--and dth.CLNT_SEQ = 16200000062
+and dth.DT_OF_DTH >=  trunc(hdr.DSBMT_DT)
+ and trunc(fnrl.CRTD_DT) >=  trunc(hdr.DSBMT_DT)
+and (trunc(jh.jv_dt) between to_date(:from_dt) and to_date(:to_dt)
+ or
+      trunc(pymt_dt) between to_date(:from_dt) and to_date(:to_dt)
+     )
+ and prt.brnch_seq = :brnch_cd

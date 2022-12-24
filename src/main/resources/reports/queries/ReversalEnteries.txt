@@ -1,0 +1,28 @@
+ select mjd.GL_ACCT_NUM,
+nvl((select max(mt.TYP_STR) from mw_typs mt where mt.GL_ACCT_NUM = mjd.GL_ACCT_NUM),
+(select max(mp.PRD_NM) from MW_PRD_ACCT_SET mpa, mw_prd mp where 
+mpa.PRD_SEQ = mp.prd_Seq
+and mpa.GL_ACCT_NUM = mjd.GL_ACCT_NUM and mpa.CRNT_REC_FLG = 1 and mpa.DEL_FLG=0)) TYP_STR, 
+get_voucher_type(mjh.ENTY_SEQ, MJH.ENTY_TYP, mjh.BRNCH_SEQ) JV_TYPE,   ---- new column
+get_clnt_seq(mjh.ENTY_SEQ, MJH.ENTY_TYP, mjh.BRNCH_SEQ) client_id,  ---- new column
+get_instr_num(mjh.ENTY_SEQ, MJH.ENTY_TYP, mjh.BRNCH_SEQ) instr_no,  ---- new column
+mjh.JV_DSCR,
+mjh.ENTY_TYP, 
+max((select max(mdt.JV_HDR_SEQ) from mw_jv_hdr mdt where mdt.JV_HDR_SEQ = mjh.PRNT_VCHR_REF and mdt.brnch_Seq = mjh.brnch_Seq)) actual_JV_HDR_SEQ,
+max((select max(mdt.ENTY_SEQ) from mw_jv_hdr mdt where mdt.JV_HDR_SEQ = mjh.PRNT_VCHR_REF and mdt.brnch_Seq = mjh.brnch_Seq)) actual_ref,
+to_char(max((select max(to_date(mdt.JV_dt,'dd-mm-rrrr')) from mw_jv_hdr mdt where mdt.JV_HDR_SEQ = mjh.PRNT_VCHR_REF and mdt.brnch_Seq = mjh.brnch_Seq)), 'dd-mm-yyyy') actual_value_dt,
+sum((select sum(mjd.amt) from mw_jv_dtl mdt where mdt.JV_HDR_SEQ = mjh.PRNT_VCHR_REF and mdt.GL_ACCT_NUM = mjd.GL_ACCT_NUM and mjd.amt = mdt.amt and mdt.CRDT_DBT_FLG = 1 )) actual_debit,
+sum((select sum(mjd.amt) from mw_jv_dtl mdt where mdt.JV_HDR_SEQ = mjh.PRNT_VCHR_REF and mdt.GL_ACCT_NUM = mjd.GL_ACCT_NUM and mjd.amt = mdt.amt and mdt.CRDT_DBT_FLG = 0 )) actual_credit, 
+mjh.JV_HDR_SEQ, mjh.ENTY_SEQ rev_ref_key,
+to_char(mjh.JV_DT, 'dd-mm-yyyy') reversal_dt,
+sum(case when mjd.CRDT_DBT_FLG = 1 then mjd.amt end) rev_DEBIT,
+sum(case when mjd.CRDT_DBT_FLG = 0 then mjd.amt end) rev_CREDIT
+from mw_jv_hdr mjh, mw_jv_dtl mjd
+where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+and mjh.PRNT_VCHR_REF is not null
+and trunc(mjh.JV_DT) between to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+and mjh.BRNCH_SEQ = :brnch
+group by mjd.GL_ACCT_NUM, mjh.ENTY_TYP, mjh.JV_DSCR, to_char(mjh.JV_DT),to_char(mjh.JV_DT, 'dd-mm-yyyy'),
+mjh.JV_HDR_SEQ, mjh.ENTY_SEQ, get_voucher_type(mjh.ENTY_SEQ, MJH.ENTY_TYP, mjh.BRNCH_SEQ),
+get_clnt_seq(mjh.ENTY_SEQ, MJH.ENTY_TYP, mjh.BRNCH_SEQ), get_instr_num(mjh.ENTY_SEQ, MJH.ENTY_TYP, mjh.BRNCH_SEQ)
+order by to_char(mjh.JV_DT), mjh.JV_HDR_SEQ, sum(case when mjd.CRDT_DBT_FLG = 1 then mjd.amt end)

@@ -1,0 +1,109 @@
+SELECT hlth_insr_memb_seq,
+       INS.eff_start_dt,
+       INS.member_cnic_num,
+       INS.member_nm,
+       TO_CHAR(INS.dob, 'dd-MM-yyyy') dob,
+       INS.gndr_key,
+       INS.rel_key,
+       INS.mrtl_sts_key,
+       INS.crtd_by,
+       INS.crtd_dt,
+       INS.last_upd_by,
+       INS.last_upd_dt,
+       INS.del_flg,
+       INS.eff_end_dt,
+       INS.crnt_rec_flg,
+       INS.loan_app_seq,
+       INS.member_id,
+       INS.sync_flg
+   FROM mw_hlth_insr_memb  INS JOIN MW_DSBMT_VCHR_HDR DSB ON INS.LOAN_APP_SEQ = DSB.LOAN_APP_SEQ
+        WHERE INS.loan_app_seq = :loanAppSeq
+              AND DSB.crnt_rec_flg = 1
+              AND INS.crnt_rec_flg = 1
+              and inst_agr_crtria (dob) = 1
+              AND REL_KEY =435 AND round(months_between(DSB.DSBMT_DT,DOB)/12,3) <24.998 ---SON <24yrs11mnth30days(12jan1997)
+
+       UNION
+
+  SELECT hlth_insr_memb_seq,
+       INS.eff_start_dt,
+       INS.member_cnic_num,
+       INS.member_nm,
+       TO_CHAR(INS.dob, 'dd-MM-yyyy') dob,
+       INS.gndr_key,
+       INS.rel_key,
+       INS.mrtl_sts_key,
+       INS.crtd_by,
+       INS.crtd_dt,
+       INS.last_upd_by,
+       INS.last_upd_dt,
+       INS.del_flg,
+       INS.eff_end_dt,
+       INS.crnt_rec_flg,
+       INS.loan_app_seq,
+       INS.member_id,
+       INS.sync_flg
+  FROM mw_hlth_insr_memb INS JOIN MW_DSBMT_VCHR_HDR DSB ON INS.LOAN_APP_SEQ = DSB.LOAN_APP_SEQ
+WHERE     ins.loan_app_seq = :loanAppSeq
+          AND ins.crnt_rec_flg = 1
+          and DSB.crnt_rec_flg = 1
+          AND inst_agr_crtria (dob) = 1
+          AND REL_KEY =436 AND round(months_between(DSB.DSBMT_DT,DOB)/12,3) <63.998---Daughter <63yrs11mnth30days
+
+       UNION
+SELECT *
+  FROM (
+ SELECT hlth_insr_memb_seq,
+       INS.eff_start_dt,
+       INS.member_cnic_num,
+       INS.member_nm,
+       TO_CHAR(INS.dob, 'dd-MM-yyyy') dob,
+       INS.gndr_key,
+       INS.rel_key,
+       INS.mrtl_sts_key,
+       INS.crtd_by,
+       INS.crtd_dt,
+       INS.last_upd_by,
+       INS.last_upd_dt,
+       INS.del_flg,
+       INS.eff_end_dt,
+       INS.crnt_rec_flg,
+       INS.loan_app_seq,
+       INS.member_id,
+       INS.sync_flg
+  FROM mw_hlth_insr_memb INS JOIN MW_DSBMT_VCHR_HDR DSB ON INS.LOAN_APP_SEQ = DSB.LOAN_APP_SEQ
+WHERE     ins.loan_app_seq = :loanAppSeq
+          AND ins.crnt_rec_flg = 1
+          and DSB.crnt_rec_flg = 1
+          AND inst_agr_crtria (dob) = 1
+          AND REL_KEY =434 AND round(months_between(DSB.DSBMT_DT,DOB)/12,3) <64.998---husband <64yrs11mnth30days
+
+       UNION
+
+SELECT rl.clnt_rel_seq,
+       rl.eff_start_dt,
+       rl.cnic_num,
+       rl.frst_nm || ' ' || rl.last_nm     member_nm,
+      TO_CHAR(rl.dob, 'dd-MM-yyyy') dob,
+       rl.gndr_key,
+       rl.rel_wth_clnt_key,
+       rl.mrtl_sts_key,
+       rl.crtd_by,
+       rl.crtd_dt,
+       rl.last_upd_by,
+       rl.last_upd_dt,
+       rl.del_flg,
+       rl.eff_end_dt,
+       rl.crnt_rec_flg,
+       rl.loan_app_seq,
+       ' '                   member_id,
+       rl.sync_flg
+  FROM mw_clnt_rel  rl
+       JOIN mw_ref_cd_val vl ON vl.ref_cd_seq = rl.rel_wth_clnt_key AND vl.crnt_rec_flg = 1
+       JOIN MW_DSBMT_VCHR_HDR DSB ON rl.LOAN_APP_SEQ = DSB.LOAN_APP_SEQ
+WHERE     rl.crnt_rec_flg = 1 and dsb.crnt_rec_flg = 1
+       AND rl.loan_app_seq = :loanAppSeq
+       AND vl.ref_cd = '0008'  ---HUSBAND
+       AND inst_agr_crtria (dob) = 1 AND round(months_between(DSB.DSBMT_DT,DOB)/12,3) <64.998 --<24yrs11mnth30days
+       )
+ WHERE ROWNUM = 1  ---GET HUSBAND ONCE

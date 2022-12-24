@@ -1,0 +1,25 @@
+select emp.emp_seq, emp.emp_nm,       c.frst_nm ||' '||c.last_nm name, 
+                     (select frst_nm||' '||last_nm from mw_clnt_rel where loan_app_seq=app.loan_app_seq and crnt_rec_flg=1 and rel_typ_flg=1) nom_nm, 
+                     c.clnt_id,       loan_cycl_num,       prd.prd_cmnt, 
+                     c.ph_num,'St. '||ad.strt||' H. '||ad.hse_num||' '||ad.oth_dtl||', '||city.city_nm addr, 
+                     app.aprvd_loan_amt lst_loan_amt,       to_char(lst_loan_cmpltn_dt(app.loan_app_seq),'dd-mm-yyyy') cmp_dt, 
+                     to_char(loan_app_sts_dt,'dd-mm-yyyy')loan_app_sts_dt,       TO_DATE(sysdate)-app.loan_app_sts_dt days_cmp, 
+                     get_od_info(app.loan_app_seq, to_date(:frm_dt,'dd-mm-yyyy' ),'i') od_inst,   
+                     (select 'Yes' From mw_clnt_tag_list tag where tag.del_flg=0 and tag.loan_app_seq=app.loan_app_seq) tag_sts 
+                 FROM mw_loan_app app    
+                 join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+                 JOIN mw_clnt c ON c.clnt_seq = app.clnt_seq AND c.crnt_rec_flg = 1 
+                 JOIN mw_ref_cd_val val ON val.ref_cd_seq = app.loan_app_sts AND val.crnt_rec_flg = 1 AND val.del_flg = 0  
+                 join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1  
+                 join mw_port p on p.port_seq = app.port_seq and p.crnt_rec_flg = 1  
+                 join mw_port_emp_rel per on per.port_seq=p.port_seq and per.crnt_rec_flg=1  
+                 join mw_emp emp on emp.emp_seq=per.emp_seq 
+                 join mw_addr_rel ar on ar.enty_key=c.clnt_seq and ar.crnt_rec_flg = 1 and ar.enty_typ='Client'  
+                 join mw_addr ad on ad.addr_seq = ar.addr_seq and ad.crnt_rec_flg = 1  
+                 join mw_city_uc_rel cur on cur.city_uc_rel_seq = ad.city_seq  
+                 join mw_city city on city.city_seq = cur.city_seq and city.crnt_rec_flg = 1  
+                 WHERE app.crnt_rec_flg=1
+                 and app.eff_start_dt = (select max(la.eff_start_dt) from mw_loan_app la where la.crnt_rec_flg=1 and la.loan_app_seq=app.loan_app_seq)
+                 and app.loan_cycl_num= (select max(la.loan_cycl_num) from mw_loan_app la where la.crnt_rec_flg=1 and la.clnt_seq=app.clnt_seq)
+                 and val.ref_cd = '0006' 
+                 and to_date(app.loan_app_sts_dt) between TO_DATE(:frm_dt,'dd-mm-yyyy' ) and TO_DATE(:to_dt,'dd-mm-yyyy' ) order by 2,13

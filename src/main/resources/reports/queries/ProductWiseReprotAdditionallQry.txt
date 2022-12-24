@@ -1,0 +1,10 @@
+select to_char(hdr.dsbmt_dt,'YY-Mon') months,          prd.prd_cmnt, 
+                                count(distinct hdr.loan_app_seq) clnt_cnt,          sum(amt) dsbmt_amt 
+                           from mw_dsbmt_vchr_hdr hdr 
+                           join mw_dsbmt_vchr_dtl dtl on dtl.dsbmt_hdr_seq=hdr.dsbmt_hdr_seq and dtl.crnt_rec_flg=1 
+                           join mw_typs ptyp on ptyp.typ_seq=dtl.pymt_typs_seq and ptyp.crnt_rec_flg=1 
+                           join mw_loan_app ap on ap.loan_app_seq=hdr.loan_app_seq and ap.crnt_rec_flg=1 
+                           join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 
+                           join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1   where hdr.crnt_rec_flg=1  
+                         and dsbmt_dt between to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy') and prt.brnch_seq=:brnch 
+                         group by to_char(hdr.dsbmt_dt,'YY-Mon'),prd.prd_cmnt   order by 1,2

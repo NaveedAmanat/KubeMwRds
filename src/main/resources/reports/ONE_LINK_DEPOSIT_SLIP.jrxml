@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="ONE_LINK_DEPOSIT_SLIP" columnCount="2" printOrder="Horizontal" pageWidth="595" pageHeight="842"
+              whenNoDataType="NoDataSection" columnWidth="277" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" uuid="b1dcf327-de67-46ba-ac5e-ef161a4420c3">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="MWX_KASHF_DEV"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="MUNSALIK_IMG" class="java.lang.String"/>
+    <parameter name="ONE_LINK_IMG" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <field name="CLNT_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_NM"/>
+    </field>
+    <field name="ONE_BILL_ID" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="ONE_BILL_ID"/>
+    </field>
+    <field name="DUE_DT" class="java.util.Date">
+        <property name="com.jaspersoft.studio.field.label" value="DUE_DT"/>
+    </field>
+    <field name="BRNCH_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="BRNCH_NM"/>
+    </field>
+    <field name="INST_NUM" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="INST_NUM"/>
+    </field>
+    <field name="AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="AMT"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <detail>
+        <band height="265">
+            <image>
+                <reportElement x="223" y="5" width="40" height="50" uuid="82b4aa33-fa1a-4742-acf0-08ca29a84609"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="85" y="15" width="110" height="30" uuid="c7f11144-3eec-4363-bae0-07183a36e0de"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[KASHF Foundation]]></text>
+            </staticText>
+            <image>
+                <reportElement x="8" y="13" width="65" height="29" uuid="32a02ce0-551e-4b7d-8914-ae4c424e1285"/>
+                <imageExpression><![CDATA[$P{MUNSALIK_IMG}]]></imageExpression>
+            </image>
+            <rectangle>
+                <reportElement x="5" y="65" width="260" height="60" uuid="dffa2c96-8f56-4af8-aaf5-8efa6ff10d85"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="5" y="125" width="260" height="45" uuid="37035002-1311-46d0-9365-ab1d117be940"/>
+            </rectangle>
+            <rectangle>
+                <reportElement x="5" y="170" width="260" height="75" uuid="f304e819-dc62-41bc-8ef7-a2813bf8bf82"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="11" y="65" width="90" height="15" uuid="0ff7f8c9-77a5-433a-bfb5-25c4b6fda875"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Client Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="11" y="80" width="90" height="15" uuid="d2118985-44a4-459d-8b0f-014a998120b4"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[1-Bill ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="11" y="95" width="90" height="15" uuid="fed39216-d1e0-4c6c-a4bf-23b096a860da"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Billing Month]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="11" y="110" width="90" height="15" uuid="1f6d82d4-70b8-44c7-b4f7-931e3bd2f198"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Branch Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="11" y="128" width="90" height="15" uuid="31dd1590-9e8c-4040-9c07-5899eb116c73"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Installment #]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="11" y="152" width="90" height="15" uuid="47305540-4e9d-4a75-8a47-178be994b938"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="11" y="220" width="34" height="15" uuid="e07d1b6c-2115-47a1-946e-549d51d79cc8"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Stamp]]></text>
+            </staticText>
+            <image>
+                <reportElement x="225" y="205" width="35" height="30" uuid="eae80b77-ac83-4de1-9802-108e17b19d0f"/>
+                <imageExpression><![CDATA[$P{ONE_LINK_IMG}]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="105" y="65" width="150" height="15" uuid="ce250f7b-6b0f-4500-8713-1a0901e7e60f"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="105" y="80" width="150" height="15" uuid="e9abd244-5d7c-476e-90ae-c02fcd8592ef"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ONE_BILL_ID}]]></textFieldExpression>
+            </textField>
+            <textField pattern="MMM-YYYY">
+                <reportElement x="105" y="95" width="150" height="15" uuid="741b279f-d5cd-439a-83e1-7e7e9b9551e1"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DUE_DT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="105" y="110" width="150" height="15" uuid="4d6859ba-d3bb-4d08-8f13-51827131693b"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{BRNCH_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="105" y="128" width="150" height="15" uuid="e4b2a3e8-bedb-4290-bd8b-173e6ea402d6"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{INST_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="105" y="152" width="150" height="15" uuid="fa488ef0-2082-4259-b657-22dbf11b61fa"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="9" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Rs. " + $F{AMT}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="45" y="220" width="170" height="15" uuid="38a612ff-06e4-45ca-be1c-fb5eaf0260f4"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[_________________________________________]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="246" width="277" height="14" uuid="36c809d2-60cb-4a44-9768-a647921ed5b7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[------------------------------------------------------------------------------------------------------------------------------------------------------------------------]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="12" y="184" width="68" height="15" uuid="d4a50c26-0c76-411f-8a04-07bea7f1c82e"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Payment Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="80" y="184" width="120" height="15" uuid="e06de95b-c2f4-4719-b7ef-3ab78151920d"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <text><![CDATA[_________________________________________]]></text>
+            </staticText>
+        </band>
+    </detail>
+    <noData>
+        <band height="109">
+            <staticText>
+                <reportElement x="30" y="71" width="210" height="30" uuid="fd81b6f0-9a2c-4a30-bc07-8b9b5c8c1a4a"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="9"/>
+                </textElement>
+                <text><![CDATA[1-Link Depository Slip: DATA NOT AVAILABLE]]></text>
+            </staticText>
+            <image>
+                <reportElement x="8" y="13" width="65" height="29" uuid="76b690ac-b93c-4164-bf82-069c045b7c67"/>
+                <imageExpression><![CDATA[$P{MUNSALIK_IMG}]]></imageExpression>
+            </image>
+            <image>
+                <reportElement x="223" y="5" width="40" height="50" uuid="6fdeb5d9-7897-46e0-bc8a-4b398f8528e6"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="85" y="15" width="110" height="30" uuid="0026f41b-2f49-43f1-b5ee-a450c76de909"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="11" isBold="true"/>
+                </textElement>
+                <text><![CDATA[KASHF Foundation]]></text>
+            </staticText>
+        </band>
+    </noData>
+</jasperReport>

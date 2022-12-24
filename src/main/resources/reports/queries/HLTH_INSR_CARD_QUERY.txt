@@ -1,0 +1,64 @@
+SELECT card.card_num,
+       get_KZSB_maturity_dt (app.loan_app_seq)     card_expiry_dt,
+       clnt.clnt_id,
+       clnt.frst_nm,
+       clnt.last_nm,
+       clnt.dob,
+       clnt.fthr_frst_nm,
+       clnt.fthr_last_nm,
+       clnt.clnt_seq,
+       clnt.cnic_num,
+       port.port_nm,
+       brnch.brnch_nm,
+       plan.max_plcy_amt,
+       plan.PLAN_ID,    --13
+       case when app.prd_seq = 51
+       then
+           (select dsh.DSBMT_DT
+                from MW_DSBMT_VCHR_HDR dsh
+                where dsh.loan_app_seq = (select app1.loan_app_seq from
+                mw_loan_app app1 where app1.CLNT_SEQ = app.clnt_seq
+                and app1.LOAN_APP_STS = 703 and app1.CRNT_REC_FLG = 1
+                and app1.loan_app_seq = app1.prnt_loan_app_seq
+                and app1.PRD_SEQ != app.PRD_SEQ
+                )
+            and dsh.CRNT_REC_FLG = 1
+            ) + 365 ||' to '||add_months((select dsh.DSBMT_DT
+                from MW_DSBMT_VCHR_HDR dsh
+                where dsh.loan_app_seq = (select app1.loan_app_seq from
+                mw_loan_app app1 where app1.CLNT_SEQ = app.clnt_seq
+                and app1.LOAN_APP_STS = 703 and app1.CRNT_REC_FLG = 1
+                and app1.loan_app_seq = app1.prnt_loan_app_seq
+                and app1.PRD_SEQ != app.PRD_SEQ
+                )
+            and dsh.CRNT_REC_FLG = 1
+            ) + 365,6)
+        else
+            dvh.DSBMT_DT ||' to '||get_KZSB_maturity_dt (app.loan_app_seq)
+        end  "DSBMT_DT+365",     --14
+       NVL (TO_CHAR (nvl(dvh.DSBMT_DT,sysdate), 'yyyy'), TO_CHAR (SYSDATE, 'yyyy')) as DSBMT_DT, --15
+       app.LOAN_APP_STS, --16
+       case when TO_CHAR (nvl(dvh.DSBMT_DT,sysdate), 'yyyy') <= 2019 and (plan.PLAN_ID in ('0001','0003','1323','1324')) then
+            'General Ward C-Section Limit : 20,000'
+       when TO_CHAR (nvl(dvh.DSBMT_DT,sysdate), 'yyyy') > 2019 and (plan.PLAN_ID in ('0001','0003','1323','1324')) then
+            'C-Section Rs. 25,000/ Normal Delivery Rs. 6,000'
+       else
+            'General Ward'
+       end as roomLimitDsc  --17,
+  FROM mw_loan_app  app
+       JOIN mw_clnt clnt
+           ON app.clnt_seq = clnt.clnt_seq AND clnt.crnt_rec_flg = 1
+       JOIN mw_port port
+           ON port.port_seq = app.port_seq AND port.crnt_rec_flg = 1
+       JOIN mw_brnch brnch
+           ON brnch.brnch_seq = port.brnch_seq AND brnch.crnt_rec_flg = 1
+       LEFT OUTER JOIN mw_clnt_hlth_insr_card card
+           ON card.loan_app_seq = app.loan_app_seq AND card.crnt_rec_flg = 1
+       JOIN mw_clnt_hlth_insr insr
+           ON insr.loan_app_seq = app.loan_app_seq AND insr.crnt_rec_flg = 1
+       JOIN mw_hlth_insr_plan plan
+           ON     plan.hlth_insr_plan_seq = insr.hlth_insr_plan_seq
+              AND plan.crnt_rec_flg = 1
+       JOIN MW_DSBMT_VCHR_HDR dvh
+           ON dvh.LOAN_APP_SEQ = app.LOAN_APP_SEQ AND dvh.CRNT_REC_FLG = 1
+WHERE app.crnt_rec_flg = 1 AND app.LOAN_APP_SEQ = :loanAppSeq

@@ -1,0 +1,28 @@
+select prd.prd_cmnt  trans_type,mdvh.crtd_dt crtd_dt, mc.clnt_seq,upper(mc.frst_nm||' '||mc.last_nm) name, mdvd.instr_num,null reciept, sum(nvl(mdvd.amt,0)) payment, '' dscr 
+                          from mw_dsbmt_vchr_hdr mdvh  
+                          join mw_jv_hdr mjh on mjh.enty_seq = mdvh.dsbmt_hdr_seq
+                          join mw_dsbmt_vchr_dtl mdvd on mdvd.dsbmt_hdr_seq=mdvh.dsbmt_hdr_seq and mdvd.crnt_rec_flg=1   
+                          join mw_loan_app mla on mla.loan_app_seq = mdvh.loan_app_seq and mla.crnt_rec_flg = 1  
+                          join mw_prd prd on prd.prd_seq=mla.prd_seq and prd.crnt_rec_flg=1 
+                          join mw_clnt mc on mc.clnt_seq = mla.clnt_seq and mc.crnt_rec_flg = 1 
+                          join mw_port mp on mc.port_key = mp.port_seq and mp.crnt_rec_flg = 1  
+                          join mw_typs mt on mdvd.pymt_typs_seq = mt.typ_seq and mt.typ_id=:typId and mt.typ_ctgry_key in :IDS and mt.crnt_rec_flg = 1
+                          where to_date (mdvh.crtd_dt) between to_date(:FROM_DATE,'MM/dd/yyyy') and to_date(:TO_DATE,'MM/dd/yyyy') 
+                                and not exists( select 1 from RPTB_PORT_TRF_DETAIL trf where trf.ENTY_SEQ = mjh.ENTY_SEQ)
+                                group by prd.prd_cmnt,mdvh.crtd_dt, mc.clnt_seq, mc.frst_nm||' '||mc.last_nm, mdvd.instr_num     
+                          union all    select ' RECOVERY'  trans_type, mrt.crtd_dt crtd_dt, mc.clnt_seq, 
+                          upper(mc.frst_nm||' '||mc.last_nm) name, mrt.instr_num, sum(nvl(mrt.pymt_amt,0)) reciept, null payment,'' dscr 
+                          from mw_rcvry_trx mrt, mw_clnt mc, mw_port mp, mw_typs mt where mrt.crnt_rec_flg = 1 
+                          and mrt.pymt_ref = mc.clnt_seq and mc.port_key = mp.port_seq and mp.crnt_rec_flg = 1 
+                          and mrt.rcvry_typ_seq = mt.typ_seq and mt.typ_id=:typId and mt.typ_ctgry_key in :IDS and mt.crnt_rec_flg = 1 
+                          and mrt.post_flg = 1  
+                          and to_date (mrt.crtd_dt) between to_date(:FROM_DATE,'MM/dd/yyyy') and to_date(:TO_DATE,'MM/dd/yyyy') 
+                          group by mrt.crtd_dt, mc.clnt_seq, mc.frst_nm||' '||mc.last_nm, mrt.instr_num     union all 
+                          select upper(' '||mt1.typ_str) trans_type, me.crtd_dt, null clnt_seq, null name, me.instr_num, 
+                          case when nvl(me.pymt_rct_flg,1)=2 then expns_amt else 0 end reciept, 
+                          case when nvl(me.pymt_rct_flg,1)=1 then expns_amt else 0 end payment,me.expns_dscr dscr 
+                          from mw_exp me, mw_typs mt1, 
+                          mw_typs mt2 where me.crnt_rec_flg = 1 and mt1.crnt_rec_flg = 1 and mt2.crnt_rec_flg = 1 and me.POST_FLG=1 
+                          and me.expns_typ_seq = mt1.typ_seq and me.pymt_typ_seq = mt2.typ_seq  and mt2.typ_id=:typId and mt2.TYP_CTGRY_KEY in :IDS  
+                          and to_date (me.crtd_dt) between to_date(:FROM_DATE,'MM/dd/yyyy') and to_date(:TO_DATE,'MM/dd/yyyy') 
+                          order by crtd_dt

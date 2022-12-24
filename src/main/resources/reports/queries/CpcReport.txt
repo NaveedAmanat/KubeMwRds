@@ -1,0 +1,12 @@
+select clnt.frst_nm||' '||clnt.last_nm clnt_nm,clnt.clnt_id, emp.emp_nm bdo_nm,pg.prd_grp_nm clnt_ctgry,srvy.crtd_dt dt_of_vst,qst.qst_str,ans.answr_str,srvy.cmnt
+from mw_adt_vst_srvy srvy
+join mw_loan_app ap on ap.loan_app_seq=srvy.enty_seq and srvy.enty_typ_flg=1 and ap.crnt_rec_flg=1 and ap.loan_app_sts=703
+join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1
+join mw_prd_grp pg on pg.prd_grp_seq=prd.prd_grp_seq and pg.crnt_rec_flg=1
+join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1
+join mw_port_emp_rel erl on erl.port_seq=clnt.port_key and erl.crnt_rec_flg=1
+join mw_emp emp on emp.emp_seq=erl.emp_seq
+join mw_qst qst on qst.qst_seq=srvy.qst_seq and qst.crnt_rec_flg=1
+join mw_answr ans on ans.answr_seq=srvy.answr_seq and ans.crnt_rec_flg=1
+where srvy.crnt_rec_flg=1
+and srvy.adt_vst_seq=:vstseq

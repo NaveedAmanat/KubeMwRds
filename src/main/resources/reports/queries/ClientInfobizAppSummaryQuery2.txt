@@ -1,0 +1,2 @@
+select tot_fee,sch_biz_exp,sch_prm_incm,sch_sec_incm,sch_hsld_exp,sch_profit+sch_prm_incm+sch_sec_incm - sch_hsld_exp ndi
+                           from vw_loan_app where loan_app_seq =:loanAppSeq

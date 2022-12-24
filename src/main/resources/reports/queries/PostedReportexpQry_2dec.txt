@@ -1,0 +1,53 @@
+select ptyp.typ_str pymt_mod,
+                (case when etyp.typ_id='0005' and etyp.BRNCH_SEQ=0 then (select distinct tr.PYMT_REF from  mw_rcvry_trx tr where tr.RCVRY_TRX_SEQ = exp.EXP_REF) 
+                      when etyp.typ_id='0343' then (select clnt_id from mw_clnt_hlth_insr_clm clm join mw_clnt cl on cl.clnt_seq=clm.clnt_seq and cl.crnt_rec_flg=1
+                                    where  clm.clnt_hlth_clm_seq=exp.exp_ref)
+		when etyp.typ_id='0501' then (select lpad(max(ap.clnt_seq),12,'0') from mw_loan_app ap join mw_clnt cl on cl.clnt_seq=ap.clnt_seq and ap.crnt_rec_flg=1
+                                    where ap.loan_app_seq=exp.exp_ref)
+                else exp.EXP_REF end) clnt_id,
+                 etyp.typ_str lgr_acty,  
+                    exp.expns_dscr, exp.instr_num,       
+                    case when exp.pymt_rct_flg=1 then expns_amt else 0 end pymts,  
+                    case when exp.pymt_rct_flg=2 then expns_amt else 0 end rcpts,exp.EXP_SEQ EXP_SEQ   
+                from mw_exp exp  
+                join mw_jv_hdr jh on jh.enty_seq=exp.exp_seq and jh.enty_typ='Expense' and jh.PRNT_VCHR_REF is null 
+                join mw_typs ptyp on ptyp.typ_seq=exp.pymt_typ_seq and ptyp.crnt_rec_flg=1  
+                join mw_typs etyp on etyp.typ_seq=exp.expns_typ_seq and etyp.crnt_rec_flg=1  
+                join MW_BRNCH_EMP_REL ber on ber.BRNCH_SEQ = exp.BRNCH_SEQ and ber.CRNT_REC_FLG = 1   and ber.del_flg=0
+                join mw_emp e on e.EMP_SEQ = ber.EMP_SEQ  
+                where exp.crnt_rec_flg=1 and exp.post_flg=1 and exp.del_flg=0 and exp.BRNCH_SEQ=:branch 
+                and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.enty_seq = exp.EXP_SEQ)
+                and (((ptyp.typ_id='0001' or ptyp.typ_id='0008' or ptyp.typ_id='0420') and ptyp.typ_ctgry_key=6)
+                 or ((ptyp.typ_id='0007' or ptyp.typ_id='0004' or ptyp.typ_id='0001' or ptyp.typ_id='0008') and ptyp.typ_ctgry_key=3))  
+                and trunc(jh.jv_dt) = to_date(:reportdate,'MM-dd-yyyy')
+   union  
+                select pmod.typ_str pymt_mod,trx.PYMT_REF clnt_id, rtyp.typ_str lgr_acty, 
+                rtyp.typ_str expns_dscr, trx.instr_num, sum(rdtl.pymt_amt) pymts, sum(0) rcpts,trx.RCVRY_TRX_SEQ EXP_SEQ 
+                from mw_rcvry_dtl rdtl  join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1 
+                join mw_rcvry_trx trx on trx.rcvry_trx_seq=rdtl.rcvry_trx_seq and trx.crnt_rec_flg=1
+                join mw_jv_hdr jh on jh.enty_seq=trx.rcvry_trx_seq and enty_typ='EXCESS RECOVERY' and jh.PRNT_VCHR_REF is null 
+                join mw_typs pmod on pmod.typ_seq=trx.rcvry_typ_seq and pmod.crnt_rec_flg=1 
+                join mw_clnt clnt on clnt.clnt_seq=trx.pymt_ref and clnt.crnt_rec_flg=1 
+                join mw_port prt on prt.port_seq=clnt.port_key and prt.crnt_rec_flg=1 
+                join mw_brnch_emp_rel brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+                join mw_exp e on e.exp_ref=trx.rcvry_trx_seq and e.crnt_rec_flg=1 and e.del_flg=0 
+                join mw_emp emp on emp.emp_seq=brnch.emp_seq where rdtl.crnt_rec_flg=1 
+                and rdtl.pymt_sched_dtl_seq is null and e.BRNCH_SEQ=:branch 
+                and trunc(jh.jv_dt) = to_date(:reportdate,'MM-dd-yyyy') 
+                and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.enty_seq = e.EXP_SEQ)
+                group by pmod.typ_str,trx.PYMT_REF,rtyp.typ_str,rtyp.typ_str,trx.instr_num,trx.RCVRY_TRX_SEQ 
+            union
+                select rtyp.typ_str pymt_mod,clnt.clnt_id,typ.typ_str,jh.jv_dscr,trx.instr_num,0,rdl.pymt_amt rcts,trx.rcvry_trx_seq pymts
+                from mw_rcvry_trx trx
+                join mw_rcvry_dtl rdl on rdl.rcvry_trx_seq=trx.rcvry_trx_seq and rdl.crnt_rec_flg=1
+                join mw_typs typ on typ.typ_seq=rdl.chrg_typ_key and typ.crnt_rec_flg=1
+                join mw_clnt clnt on clnt.clnt_seq=trx.pymt_ref and clnt.crnt_rec_flg=1
+                join mw_port prt on prt.port_seq=clnt.port_key and prt.crnt_rec_flg=1
+                join mw_jv_hdr jh on jh.enty_seq=trx.rcvry_trx_seq and enty_typ='EXCESS RECOVERY'
+                join mw_typs rtyp on rtyp.typ_seq=trx.rcvry_typ_seq and rtyp.crnt_rec_flg=1
+                and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.enty_seq = trx.rcvry_trx_seq)
+                where trx.crnt_rec_flg=1
+               -- and trx.rcvry_trx_seq=13738179
+                and rdl.chrg_typ_key=241
+                and prt.brnch_seq=:branch 
+                and trunc(jh.jv_dt) = to_date(:reportdate,'MM-dd-yyyy') 

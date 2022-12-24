@@ -1,0 +1,57 @@
+select PRD_GRP_NM, Region_Name, Area_Name, Branch_Name, PRODUCT_CODE, LISTAGG(PAR_DATE1) WITHIN GROUP (ORDER BY PAR_DATE1) "PAR_DATE1", LISTAGG(PAR_DATE2) WITHIN GROUP (ORDER BY PAR_DATE2) "PAR_DATE2", LISTAGG(PAR_DATE3) WITHIN GROUP (ORDER BY PAR_DATE3) "PAR_DATE3",
+sum(nvl(target1,0)) target1, sum(nvl(target2,0)) target2, sum(nvl(target3,0)) target3,
+sum(nvl(Achievement1,0)) Achievement1, sum(nvl(Achievement2,0)) Achievement2, sum(nvl(Achievement3,0)) Achievement3,
+sum(nvl(Target_clt1,0)) Target_clt1, sum(nvl(Target_clt2,0)) Target_clt2, sum(nvl(Target_clt3,0)) Target_clt3,
+sum(nvl(Achievement_clts1,0)) Achievement_clts1, sum(nvl(Achievement_clts2,0)) Achievement_clts2, sum(nvl(Achievement_clts3,0)) Achievement_clts3
+from
+(
+select PRD_GRP_NM, Region_Name, Area_Name, Branch_Name, PRODUCT_CODE,
+
+case when to_char(trunc((trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1),'month')-1,'RRRRMM') = Flag1 then Target end as target1,
+case when to_char(trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1,'RRRRMM') = Flag1 then Target end as target2,
+case when to_char(to_date(:asOfDate, 'dd-MM-yyyy'),'RRRRMM') = Flag1 then Target end as target3,
+
+case when to_char(trunc((trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1),'month')-1,'RRRRMM') = Flag1 then Achievement end as Achievement1,
+case when to_char(trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1,'RRRRMM') = Flag1 then Achievement end as Achievement2,
+case when to_char(to_date(:asOfDate, 'dd-MM-yyyy'),'RRRRMM') = Flag1 then Achievement end as Achievement3,
+
+case when to_char(trunc((trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1),'month')-1,'RRRRMM') = Flag1 then Target_clta end as Target_clt1,
+case when to_char(trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1,'RRRRMM') = Flag1 then Target_clta end as Target_clt2,
+case when to_char(to_date(:asOfDate, 'dd-MM-yyyy'),'RRRRMM') = Flag1 then Target_clta end as Target_clt3,
+
+case when to_char(trunc((trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1),'month')-1,'RRRRMM') = Flag1 then Achievement_clts end as Achievement_clts1,
+case when to_char(trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1,'RRRRMM') = Flag1 then Achievement_clts end as Achievement_clts2,
+case when to_char(to_date(:asOfDate, 'dd-MM-yyyy'),'RRRRMM') = Flag1 then Achievement_clts end as Achievement_clts3,
+
+case when to_char(trunc((trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1),'month')-1,'RRRRMM') = Flag1 then PAR_DATE end as PAR_DATE1,
+case when to_char(trunc(to_date(:asOfDate, 'dd-MM-yyyy'),'month')-1,'RRRRMM') =  Flag1 then PAR_DATE end as PAR_DATE2,
+case when to_char(to_date(:asOfDate, 'dd-MM-yyyy'),'RRRRMM') =  Flag1 then PAR_DATE end as PAR_DATE3
+from
+(
+SELECT initcap(PD.PRD_GRP_NM) PRD_GRP_NM, initcap(r.reg_nm) Region_Name, initcap(a.area_nm) Area_Name, initcap(b.brnch_nm) Branch_Name,
+TA.TRG Target ,  TA.ACH Achievement, TA.PERC_TRG P_Tag, TA.VAR Var,
+TA.TAR_CLTS Target_clta, TA.ACH_CLTS Achievement_clts, TA.PERC_CLTS P_Tag_clts, TA.VAR_CLTS,
+TO_CHAR(TA.PAR_DATE,'Mon-YYYY') PAR_DATE,
+to_number(TO_CHAR(TA.PAR_DATE,'MM')) Flag,
+to_number(TO_CHAR(TA.PAR_DATE,'RRRRMM')) Flag1,
+(case when pd.PRD_GRP_SEQ = 1 then 1
+     when pd.PRD_GRP_SEQ = 13 then 2
+     when pd.PRD_GRP_SEQ = 6 then 3
+     when pd.PRD_GRP_SEQ = 9 then 4
+     when pd.PRD_GRP_SEQ = 4 then 5
+     when pd.PRD_GRP_SEQ = 10 then 6
+     when pd.PRD_GRP_SEQ = 5 then 7
+     when pd.PRD_GRP_SEQ = 11 then 8
+     when pd.PRD_GRP_SEQ = 8 then 9
+     else pd.PRD_GRP_SEQ
+  end) PRODUCT_CODE
+FROM TARGET_ACHIEVEMENTS@link_to_testmwc TA, mw_brnch B, mw_AREA A, mw_REG R, mw_prd_grp PD
+WHERE TA.BRANCH_CD = B.BRNCH_CD and B.CRNT_REC_FLG = 1
+AND B.AREA_SEQ = A.AREA_SEQ and A.CRNT_REC_FLG = 1
+and A.REG_SEQ = R.REG_SEQ and R.CRNT_REC_FLG = 1
+and TA.PRODUCT_CODE = PD.PRD_GRP_SEQ and PD.CRNT_REC_FLG = 1
+and  ta.PRODUCT_CODE <> 8
+and TO_cHAR(ta.PAR_DATE,'MM') between (TO_NUMBER(TO_cHAR(to_date(:asOfDate, 'dd-MM-yyyy'),'MM'))- 2) and trim(to_number(to_char(to_date(:asOfDate, 'dd-MM-yyyy'),'MM')))
+))
+group by PRD_GRP_NM, Region_Name, Area_Name, Branch_Name, PRODUCT_CODE
+order by PRODUCT_CODE, Region_Name, Area_Name, Branch_Name

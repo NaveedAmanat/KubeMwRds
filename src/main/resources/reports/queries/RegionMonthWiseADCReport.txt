@@ -1,0 +1,43 @@
+SELECT    mr.REG_NM,    ma.area_nm,    mb.brnch_nm,  
+                 mt.typ_str Channel,    COUNT (DISTINCT trx.RCVRY_TRX_SEQ) trx_cnt,    SUM (trx.pymt_amt) rcvrd_amt, 
+                 max(tot_adc_trx) tot_adc_trx,   max(tot_adc_amt) tot_adc_amt, 
+                 max(lst_act_clnts) actv_clnts_last_mnth,    max(due_amt) due_last_mnth, 
+                 max(tot_adc_trx)/max(tot_trx)*100 adc_trx_per,   max(tot_adc_amt)/max(tot_amt)*100 adc_amt_per, 
+                 max(tot_amt),   max(csh_trx)csh_trx,   max(csh_amt)csh_amt, 
+                 max(csh_trx)/max(tot_trx)*100 csh_trx_per,   max(csh_amt)/max(tot_amt)*100 csh_amt_per 
+                 FROM mw_rcvry_trx trx 
+                 join mw_loan_app ap ON ap.clnt_seq=trx.pymt_ref and ap.crnt_rec_flg = 1 and (loan_app_sts=703  
+                      or (ap.loan_app_sts=704 and ap.loan_app_sts_dt between to_date(:frmDt,'dd-MM-yyyy') AND to_date(:toDt,'dd-MM-yyyy'))) 
+                      and ap.prnt_loan_app_seq=ap.loan_app_seq 
+                 join mw_typs mt on mt.TYP_SEQ=trx.RCVRY_TYP_SEQ and mt.CRNT_REC_FLG = 1  
+                 join mw_port mp on ap.PORT_SEQ = mp.PORT_SEQ AND mp.CRNT_REC_FLG = 1  
+                 join mw_brnch mb on mp.BRNCH_SEQ = mb.BRNCH_SEQ AND mb.CRNT_REC_FLG = 1  
+                 join mw_area ma on ma.area_seq=mb.area_seq and ma.crnt_rec_flg=1  
+                 join mw_reg mr on mr.reg_seq=ma.reg_seq and mr.crnt_rec_flg=1    left outer join ( 
+                     select brnch_seq, 
+                     count(distinct case when trx.rcvry_typ_seq=161 then trx.rcvry_trx_seq else null end) csh_trx, 
+                     sum(distinct case when trx.rcvry_typ_seq=161 then pymt_amt else 0 end) csh_amt,    
+                     count(distinct case when trx.rcvry_typ_seq<>161 then trx.rcvry_trx_seq else null end) tot_adc_trx, 
+                     sum(case when trx.rcvry_typ_seq<>161 then pymt_amt else 0 end) tot_adc_amt,  
+                     count(trx.rcvry_trx_seq) tot_trx,       sum(pymt_amt) tot_amt       FROM mw_rcvry_trx trx 
+                     join mw_loan_app ap ON ap.clnt_seq=trx.pymt_ref and ap.crnt_rec_flg = 1 and (loan_app_sts=703  
+                          or (ap.loan_app_sts=704 and ap.loan_app_sts_dt between to_date(:frmDt,'dd-MM-yyyy') AND to_date(:toDt,'dd-MM-yyyy'))) 
+                          and ap.prnt_loan_app_seq=ap.loan_app_seq 
+                     join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1       where trx.crnt_rec_flg=1      
+                       AND trx.pymt_dt BETWEEN to_date(:frmDt,'dd-MM-yyyy') AND to_date(:toDt,'dd-MM-yyyy')  
+                     group by prt.brnch_seq    ) csh on csh.brnch_seq=mb.brnch_seq   join ( 
+                     select  mp.BRNCH_SEQ,count(ap.loan_app_seq) lst_act_clnts, 
+                     sum(loan_app_ost( ap.loan_app_seq,to_date(:frmDt,'dd-MM-yyyy')-1,'ps')) due_amt       from mw_loan_app ap 
+                     join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1, 
+                     mw_port mp, MW_DSBMT_VCHR_HDR dvh 
+                     where ( (asts.ref_cd='0005' and to_date(ap.loan_app_sts_dt) <= to_date(:frmDt,'dd-MM-yyyy')-1 and ap.crnt_rec_flg=1) --toDate 
+                     or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date(:frmDt,'dd-MM-yyyy')-1 and to_date(dvh.DSBMT_DT) <= to_date(:frmDt,'dd-MM-yyyy')-1)  
+                     or (asts.ref_cd='1245' and to_date(ap.loan_app_sts_dt) > to_date(:frmDt,'dd-MM-yyyy')-1))  
+                     and loan_app_ost(ap.loan_app_seq,to_date(:frmDt,'dd-MM-yyyy')-1) > 0       and ap.port_seq = mp.port_seq 
+                     and dvh.LOAN_APP_SEQ = ap.LOAN_APP_SEQ  
+                     and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.loan_app_seq = ap.LOAN_APP_SEQ and ctl.EFF_START_DT <= to_date(:frmDt,'dd-MM-yyyy')-1)  
+                     and dvh.CRNT_REC_FLG = 1       and ap.CRNT_REC_FLG = 1       and mp.CRNT_REC_FLG = 1 
+                     group by mp.brnch_seq   ) pmnth on pmnth.brnch_seq=mt.brnch_seq   WHERE trx.crnt_rec_flg = 1  
+                 AND trx.pymt_dt BETWEEN to_date(:frmDt,'dd-MM-yyyy') AND to_date(:toDt,'dd-MM-yyyy')  
+                 and trx.rcvry_typ_seq<>161   GROUP BY RCVRY_TYP_SEQ, mr.REG_NM, ma.area_nm, mb.brnch_nm, mt.typ_str 
+                 order by 1,2,3

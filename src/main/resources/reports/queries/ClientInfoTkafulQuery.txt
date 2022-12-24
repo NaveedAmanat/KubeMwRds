@@ -1,0 +1,5 @@
+select sum(psc.amt) amt   from mw_pymt_sched_hdr psh 
+                     join mw_pymt_sched_dtl psd on psh.pymt_sched_hdr_seq=psd.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                     left outer join mw_pymt_sched_chrg psc on psd.pymt_sched_dtl_seq = psc.pymt_sched_dtl_seq and psc.crnt_rec_flg=1  
+                     left outer join mw_typs t on t.TYP_SEQ= psc.CHRG_TYPS_SEQ and t.TYP_ID='0018'  
+                     where psh.loan_app_seq=:loanAppSeq and psh.crnt_rec_flg=1

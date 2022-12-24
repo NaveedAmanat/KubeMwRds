@@ -1,0 +1,86 @@
+/* Formatted on 11/21/2022 11:25:24 AM (QP5 v5.326) 
+PORTFOLIO_MONITORING_BDO
+CREATED BY AISHA KHAN */
+  SELECT emp_nm,
+         last_upd_dt,
+         SUM (NVL (trgt_clnt, 0))             trgt_clnt,
+         SUM (NVL (achvd_in_perd, 0))         achvd_in_perd,
+         SUM (NVL (trgt_amt, 0))              trgt_amt,
+         SUM (NVL (achvd_in_perd_amt, 0))     achvd_in_perd_amt
+    FROM (  SELECT grp.prd_grp_nm                       prd_nm,
+                   emp.emp_nm,
+                   erl.last_upd_dt,
+                   MAX (NVL (tgt.trgt_clnt, 0))         trgt_clnt,
+                   SUM (NVL (achvd_in_perd, 0))         achvd_in_perd,
+                   MAX (NVL (tgt.trgt_amt, 0))          trgt_amt,
+                   SUM (NVL (achvd_in_perd_amt, 0))     achvd_in_perd_amt
+              FROM mw_brnch      brnch,
+                   mw_port       prt,
+                   mw_port_emp_rel erl,
+                   mw_emp        emp,
+                   mw_brnch_prd_rel prl,
+                   mw_prd        prd,
+                   mw_prd_grp    grp,
+                   (  SELECT prd_seq,
+                             ptg.port_seq,
+                             SUM (
+                                 CASE
+                                     WHEN tgt.prd_seq <> 19
+                                     THEN
+                                         NVL (ptg.trgt_clnts, 0)
+                                 END)
+                                 trgt_clnt,
+                             SUM (NVL (ptg.trgt_amt, 0))
+                                 trgt_amt
+                        FROM mw_brnch_trgt tgt, mw_port_trgt ptg
+                       WHERE     ptg.brnch_trgts_seq = tgt.brnch_targets_seq
+                             AND ptg.del_flg = 0
+                             AND tgt.del_flg = 0
+                             AND tgt.prd_seq != 8
+                             AND tgt.trgt_perd =
+                                 TO_CHAR (TO_DATE ( :todt), 'YYYYMM')
+                             AND tgt.brnch_seq = :branch
+                    GROUP BY tgt.prd_seq, ptg.port_seq) tgt,
+                   (  SELECT ap.prd_seq,
+                             ap.port_seq,
+                             COUNT (
+                                 CASE
+                                     WHEN ap.prd_seq <> 29 THEN (ap.loan_app_seq)
+                                 END)
+                                 achvd_in_perd,
+                             SUM (ap.aprvd_loan_amt)
+                                 achvd_in_perd_amt
+                        FROM mw_loan_app ap, mw_dsbmt_vchr_hdr dvh
+                       WHERE     ap.crnt_rec_flg = 1
+                             AND (   :p_type = 1
+                                  OR ( :p_type = 2 AND ap.rs_filter_seq > 0)
+                                  OR ( :p_type = 3 AND ap.rs_filter_seq = 0))
+                             AND ap.loan_app_seq = dvh.loan_app_seq
+                             AND dvh.crnt_rec_flg = 1
+                             AND ap.BRNCH_SEQ = :branch
+                             AND dvh.crnt_rec_flg = 1
+                             AND TRUNC (dvh.dsbmt_dt) BETWEEN TO_DATE ( :frmdt)
+                                                          AND TO_DATE ( :todt)
+                    GROUP BY ap.prd_seq, ap.port_seq) achvd
+             WHERE     prt.brnch_seq = brnch.brnch_seq
+                   AND prt.crnt_rec_flg = 1
+                   AND erl.port_seq = prt.port_seq
+                   AND erl.crnt_rec_flg = 1
+                   AND emp.emp_seq = erl.emp_seq
+                   AND prl.brnch_seq = brnch.brnch_seq
+                   AND prl.crnt_rec_flg = 1
+                   AND prd.prd_seq = prl.prd_seq
+                   AND prd.crnt_rec_flg = 1
+                   AND grp.prd_grp_seq = prd.prd_grp_seq
+                   AND grp.crnt_rec_flg = 1
+                   AND tgt.prd_seq(+) = grp.prd_grp_seq
+                   AND tgt.port_seq(+) = prt.port_seq
+                   AND achvd.prd_seq(+) = prd.prd_seq
+                   AND achvd.port_seq(+) = prt.port_seq
+                   AND prt.brnch_seq = :branch
+          GROUP BY grp.prd_grp_seq,
+                   grp.prd_grp_nm,
+                   emp.emp_nm,
+                   erl.last_upd_dt)
+GROUP BY emp_nm, last_upd_dt
+ORDER BY emp_nm

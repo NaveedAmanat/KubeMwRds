@@ -1,0 +1,182 @@
+/* Formatted on 10/27/2022 3:08:23 PM (QP5 v5.326) */
+/* P_TYPE TOTAL = 1 RESCHEDULED = 2 NONRESCHEDULED = 3*/
+SELECT CASE
+           WHEN dsbmt_dt < '30-apr-2020' THEN 'Old Portfolio'
+           ELSE 'New Portfolio'
+       END
+           port_typ,
+       emp_seq,
+       emp_nm,
+       clnt_id,
+       name,
+       nom_nm,
+       ph_num,
+       addr,
+       inst_num,
+       loan_cycl_num,
+       prd_cmnt,
+       inst_amt,
+       TO_CHAR (due_dt, 'dd-mm-yyyy')
+           due_dt,
+       get_od_info (blk.loan_app_seq, SYSDATE, 'i')
+           od_inst,
+       get_od_info (blk.loan_app_seq, SYSDATE, 'd')
+           od_days,
+       blk.pdc_hldr_nm,
+       blk.pdc_hldr_phn,
+       TO_NUMBER (TO_CHAR (DUE_DT, 'yyyyMMdd'))
+           srt
+  FROM (  SELECT dsbmt_dt,
+                 la.port_seq
+                     emp_seq,
+                 get_port_bdo (la.port_Seq)
+                     emp_nm,
+                 mc.clnt_id,
+                 mc.frst_nm || ' ' || mc.last_nm
+                     name,
+                 loan_cycl_num,
+                 (SELECT MAX (frst_nm || ' ' || last_nm)
+                    FROM mw_clnt_rel
+                   WHERE     loan_app_seq = la.loan_app_seq
+                         AND crnt_rec_flg = 1
+                         AND rel_typ_flg = 1)
+                     nom_nm,
+                    mc.fthr_frst_nm
+                 || CASE
+                        WHEN mc.fthr_last_nm IS NOT NULL
+                        THEN
+                            ' ' || mc.fthr_last_nm
+                    END
+                 || (CASE
+                         WHEN     mc.fthr_frst_nm IS NOT NULL
+                              AND mc.spz_frst_nm IS NOT NULL
+                         THEN
+                             '/'
+                     END)
+                 || mc.spz_frst_nm
+                 || ' '
+                 || mc.spz_last_nm
+                     fs_nm,
+                 mc.ph_num,
+                    GET_CLNT_ADDR (la.LOAN_APP_SEQ)
+                 || ', '
+                 || get_clnt_city (la.LOAN_APP_SEQ)
+                     addr,
+                 psd.DUE_DT,
+                 prd.prd_cmnt,
+                 psd.inst_num,
+                   (  NVL (psd.PPAL_AMT_DUE, 0)
+                    + NVL (psd.TOT_CHRG_DUE, 0)
+                    + NVL (
+                          (SELECT SUM (psc.amt)
+                             FROM mw_pymt_sched_chrg psc
+                            WHERE     psc.PYMT_SCHED_DTL_SEQ =
+                                      psd.PYMT_SCHED_DTL_SEQ
+                                  AND psc.crnt_rec_flg = 1),
+                          0))
+                 - NVL (
+                       MAX (
+                           (SELECT SUM (NVL (rdtl.PYMT_AMT, 0))     rec
+                              FROM mw_rcvry_dtl rdtl, mw_rcvry_trx trx
+                             WHERE     rdtl.PYMT_SCHED_DTL_SEQ =
+                                       psd.PYMT_SCHED_DTL_SEQ
+                                   AND rdtl.CRNT_REC_FLG = 1
+                                   AND rdtl.RCVRY_TRX_SEQ = trx.RCVRY_TRX_SEQ
+                                   AND trx.CRNT_REC_FLG = 1
+                                   AND trx.PYMT_REF = la.clnt_seq)),
+                       0)
+                     inst_amt,
+                 la.prd_seq,
+                 la.LOAN_APP_SEQ,
+                 CASE
+                     WHEN mc.slf_pdc_flg = 1
+                     THEN
+                         mc.frst_nm || ' ' || mc.last_nm
+                     WHEN mc.co_bwr_san_flg = 1
+                     THEN
+                         (SELECT MAX (frst_nm || ' ' || last_nm)
+                            FROM mw_clnt_rel
+                           WHERE     loan_app_seq = la.loan_app_seq
+                                 AND crnt_rec_flg = 1
+                                 AND rel_typ_flg = 1)
+                     ELSE
+                         (SELECT MAX (frst_nm || ' ' || last_nm)
+                            FROM mw_clnt_rel
+                           WHERE     loan_app_seq = la.loan_app_seq
+                                 AND crnt_rec_flg = 1
+                                 AND rel_typ_flg = 3)
+                 END
+                     pdc_hldr_nm,
+                 CASE
+                     WHEN mc.slf_pdc_flg = 1
+                     THEN
+                         mc.ph_num
+                     WHEN mc.co_bwr_san_flg = 1
+                     THEN
+                         (SELECT MAX (ph_num)
+                            FROM mw_clnt_rel
+                           WHERE     loan_app_seq = la.loan_app_seq
+                                 AND crnt_rec_flg = 1
+                                 AND rel_typ_flg = 1)
+                     ELSE
+                         (SELECT MAX (mc.ph_num)
+                            FROM mw_clnt_rel
+                           WHERE     loan_app_seq = la.loan_app_seq
+                                 AND crnt_rec_flg = 1
+                                 AND rel_typ_flg = 3)
+                 END
+                     pdc_hldr_phn
+            FROM mw_loan_app      la,
+                 mw_pymt_sched_hdr psh,
+                 mw_pymt_sched_dtl psd,
+                 mw_clnt          mc,
+                 mw_prd           prd,
+                 mw_port          mp,
+                 -- mw_acl           acl,
+                 mw_dsbmt_vchr_hdr dvh
+           WHERE     la.LOAN_APP_SEQ = psh.LOAN_APP_SEQ
+                 AND la.CRNT_REC_FLG = 1
+                 AND dvh.loan_app_seq = la.loan_app_seq
+                 AND dvh.crnt_rec_flg = 1
+                 AND psh.loan_app_seq = la.loan_app_seq
+                 AND psh.crnt_rec_flg = 1
+                 -- AND acl.port_seq = la.port_seq
+                 --                   AND acl.user_id = :user_id
+                 AND mp.brnch_seq = :brnch_seq
+                 AND psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq
+                 AND psd.crnt_rec_flg = 1
+                 AND la.LOAN_APP_STS = 703
+                 AND (:P_TYPE = 1 or (:P_TYPE = 2 and la.rs_filter_seq > 0) or (:P_TYPE = 3 and la.rs_filter_seq = 0))
+                 AND mc.CLNT_SEQ = la.CLNT_SEQ
+                 AND mc.CRNT_REC_FLG = 1
+                 AND prd.prd_seq = la.prd_seq
+                 AND prd.crnt_rec_flg = 1
+                 AND la.PORT_SEQ = mp.PORT_SEQ
+                 AND mp.CRNT_REC_FLG = 1
+                 AND psd.DUE_DT BETWEEN TO_DATE ( :frm_dt, 'dd-mm-rrrr')
+                                    AND TO_DATE ( :to_dt, 'dd-mm-rrrr')
+        GROUP BY dsbmt_dt,
+                 get_port_bdo (la.port_Seq),
+                 mc.clnt_id,
+                 la.prd_seq,
+                 la.LOAN_APP_SEQ,
+                 psd.DUE_DT,
+                 psd.inst_num,
+                 psd.PPAL_AMT_DUE,
+                 psd.TOT_CHRG_DUE,
+                 mc.spz_last_nm,
+                 mc.spz_frst_nm,
+                 mc.fthr_last_nm,
+                 mc.fthr_frst_nm,
+                 mc.last_nm,
+                 mc.frst_nm,
+                 la.port_seq,
+                 mc.ph_num,
+                 prd.prd_cmnt,
+                 loan_cycl_num,
+                 mc.slf_pdc_flg,
+                 mc.co_bwr_san_flg,
+                 psd.PYMT_SCHED_DTL_SEQ) blk
+ WHERE blk.inst_amt > 0
+
+ORDER BY 1, 3, 18

@@ -1,0 +1,30 @@
+select PRD_GRP_NM, 
+    sum(days_30) days_30, 
+    sum(days_1_7) days_1_7,
+    --sum(days_1_7)  / sum(days_30) * 100 ,2 %1-7days
+    sum(days_8_15) days_8_15, sum(days_16_22) days_16_22,  sum(days_23_30) days_23_30
+    from (  
+                 select grp.PRD_GRP_NM,
+--                 trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) days,  
+                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) <=30 then 1 else 0 end days_30,
+                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) between 0 and 7 then 1 else 0 end days_1_7,  
+                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) between 8 and 15 then 1 else 0 end days_8_15,  
+                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) between 16 and 22 then 1 else 0 end days_16_22,  
+                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) between 23 and 30 then 1 else 0 end days_23_30
+--                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) > 15 then 1 else 0 end ovr_15,  
+--                 case when trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) >=0 then  1 else 0 end tot_tr_clnt, 
+--                 trunc(trunc(jv_dt)-lst_loan_cmpltn_dt(ap.loan_app_seq)) tot_days    
+                 from mw_loan_app ap  
+                 join mw_dsbmt_vchr_hdr vdh on vdh.loan_app_seq=ap.loan_app_seq and vdh.crnt_rec_flg=1  
+                 join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+                 join mw_prd prd on prd.PRD_SEQ = ap.PRD_SEQ and prd.CRNT_REC_FLG=1
+                 join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1 
+                 join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1  
+                 join mw_emp emp on emp.emp_seq=erl.emp_seq join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1  
+                 join mw_jv_hdr jh on jh.enty_seq=vdh.dsbmt_hdr_seq and enty_typ='Disbursement'  
+                 join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1 where ap.crnt_rec_flg=1
+                 and ap.CRNT_REC_FLG = 1 AND ap.prd_seq not in (2,3,5,13,14,29)   
+                 and trunc(jv_dt) between to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt, 'dd-MM-yyyy') 
+--                 and ap.prd_seq=10
+        )     
+    group by PRD_GRP_NM

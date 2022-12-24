@@ -1,0 +1,29 @@
+select distinct emp.emp_nm bdo_nm,  
+             clnt.clnt_id, clnt.frst_nm||' '||clnt.last_nm clnt_nm,  
+             nvl(fthr_frst_nm,spz_frst_nm)||' '|| nvl(fthr_last_nm,spz_last_nm) fthr_spz_nm,    clnt.ph_num cntct_num,  
+             (case when hse_num is not null then 'H No '||hse_num||', ' else null end)|| (case when strt is not null then 'St No '||strt||', ' else null end) ||  
+             (case when oth_dtl is not null then oth_dtl||', ' else null end) ||  
+             (case when vlg is not null then vlg||', ' else null end) || city_nm addr,  
+             nvl(lu.ref_cd_dscr,lu.ref_cd_dscr) loan_usr, ap.loan_cycl_num,    ap.aprvd_loan_amt, cmp_dt, prd.prd_cmnt 
+             from mw_loan_app ap   join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1 
+             join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1  
+             join mw_port_emp_rel prl on prl.port_seq=prt.port_seq and prl.crnt_rec_flg=1  
+             join mw_emp emp on emp.emp_seq=prl.emp_seq  
+             join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1  
+             join mw_addr_rel adrl on adrl.enty_key=clnt.clnt_seq and adrl.crnt_rec_flg=1 and adrl.enty_typ='Client'  
+             join mw_addr adr on adr.addr_seq=adrl.addr_seq and adr.crnt_rec_flg=1  
+             join mw_city_uc_rel crel on crel.city_uc_rel_seq=adr.city_seq and crel.crnt_rec_flg=1  
+             join mw_city cty on cty.city_seq=crel.city_seq and cty.crnt_rec_flg=1  
+             left outer join (mw_biz_aprsl ba join mw_ref_cd_val lu on lu.ref_cd_seq=ba.prsn_run_the_biz and lu.crnt_rec_flg=1) on ba.loan_app_seq=ap.loan_app_seq and ba.crnt_rec_flg=1  
+             left outer join (mw_sch_aprsl sa join mw_ref_cd_val su on su.ref_cd_seq=sa.rel_wth_own_key and su.crnt_rec_flg=1) on sa.loan_app_seq=ap.loan_app_seq and ba.crnt_rec_flg=1  
+             join (
+		select psh.loan_app_seq,max(psd.due_dt) cmp_dt 
+		from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+		join mw_loan_app ap1
+		ON psh.loan_app_Seq = ap1.loan_app_Seq and ap1.crnt_rec_flg = 1
+		join mw_port mp1 on mp1.port_seq = ap1.port_seq and mp1.crnt_rec_flg = 1 and mp1.brnch_seq = :brnch 
+             	where psh.crnt_rec_flg=1 group by psh.loan_app_seq
+		) pymt on pymt.loan_app_seq=ap.loan_app_seq  
+             where ap.crnt_rec_flg=1 and ap.loan_app_sts=703  
+             and pymt.cmp_dt between to_date(:frmDt,'dd-MM-yyyy') and to_date(:toDt,'dd-MM-yyyy')  
+             and ap.prnt_loan_app_seq=ap.loan_app_seq   and prt.brnch_seq=:brnch order by bdo_nm,prd_cmnt desc,cmp_dt

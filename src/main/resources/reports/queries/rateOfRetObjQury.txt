@@ -1,0 +1,37 @@
+select mnth cmpltd_mnth,   mnth_ordr, 
+                 cmpltd_loans,month01,month02,month03,month04,month05,month06,month07,month08,month09,month10,month11,month12 
+                 from   ( 
+                         select to_char(trunc(cap.loan_app_sts_dt),'Mon-YYYY') mnth, to_char(trunc(cap.loan_app_sts_dt),'YYYYMM') mnth_ordr, 
+                         count(distinct cap.loan_app_seq) cmpltd_loans           from mw_loan_app cap 
+                         join mw_port prt on prt.port_seq= cap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq=:brnchSeq 
+                         join mw_ref_cd_val lsts on lsts.ref_cd_seq=cap.loan_app_sts and lsts.crnt_rec_flg=1 
+                         where cap.crnt_rec_flg=1           and lsts.ref_cd='0006'  
+                         and to_number(to_char(to_date(cap.loan_app_sts_dt),'YYYYMM')) between to_number(to_char(add_months(sysdate,-12),'YYYYMM')) and to_number(to_char(add_months(sysdate,-1),'YYYYMM')) 
+                         group by to_char(trunc(cap.loan_app_sts_dt),'Mon-YYYY'), to_char(trunc(cap.loan_app_sts_dt),'YYYYMM') 
+                 ) cmp   left outer join    (           select  cclnt.c_mnth, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-12),'YYYYMM') then ap.loan_app_seq else null end) month01, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-11),'YYYYMM') then ap.loan_app_seq else null end) month02, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-10),'YYYYMM') then ap.loan_app_seq else null end) month03, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-09),'YYYYMM') then ap.loan_app_seq else null end) month04, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-08),'YYYYMM') then ap.loan_app_seq else null end) month05, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-07),'YYYYMM') then ap.loan_app_seq else null end) month06, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-06),'YYYYMM') then ap.loan_app_seq else null end) month07, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-05),'YYYYMM') then ap.loan_app_seq else null end) month08, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-04),'YYYYMM') then ap.loan_app_seq else null end) month09, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-03),'YYYYMM') then ap.loan_app_seq else null end) month10, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-02),'YYYYMM') then ap.loan_app_seq else null end) month11, 
+                                 count(distinct case when to_char(dvh.dsbmt_dt,'YYYYMM')=to_char(add_months(sysdate,-01),'YYYYMM') then ap.loan_app_seq else null end) month12 
+                         from mw_loan_app ap 
+                         join mw_port prt on prt.port_seq= ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq=:brnchSeq 
+                         join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=ap.loan_app_seq and dvh.crnt_rec_flg=1           join  
+                         ( select to_char(cmp.loan_app_sts_dt,'YYYYMM') c_mnth,cmp.clnt_seq 
+                                 from mw_loan_app cmp 
+                                 join mw_port prt on prt.port_seq= cmp.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq=:brnchSeq 
+                                 join mw_ref_cd_val lsts on lsts.ref_cd_seq=cmp.loan_app_sts and lsts.crnt_rec_flg=1 
+                                 where cmp.crnt_rec_flg=1                   --and cmp.clnt_seq=ap.clnt_seq 
+                 --                and to_char(cmp.loan_app_sts_dt,'YYYYMM')=201805                   and lsts.ref_cd='0006'  
+                                 and to_number(to_char(to_date(cmp.loan_app_sts_dt),'YYYYMM')) between to_number(to_char(add_months(sysdate,-12),'YYYYMM')) and to_number(to_char(add_months(sysdate,-1),'YYYYMM')) 
+                         ) cclnt on cclnt.clnt_seq=ap.clnt_seq           where ap.crnt_rec_flg=1 
+                         and ap.loan_app_sts=703   --        and to_char(dvh.dsbmt_dt,'YYYYMM')=201805 
+                         and to_number(to_char(to_date(ap.loan_app_sts_dt),'YYYYMM')) between to_number(to_char(add_months(sysdate,-12),'YYYYMM')) and to_number(to_char(add_months(sysdate,-1),'YYYYMM')) 
+                     group by cclnt.c_mnth   ) rtnd on rtnd.c_mnth=mnth_ordr   order by 2

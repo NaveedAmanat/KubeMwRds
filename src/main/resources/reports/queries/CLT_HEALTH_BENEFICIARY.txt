@@ -1,0 +1,100 @@
+select distinct la.CLNT_SEQ, 
+     initcap(c.FRST_NM||' '||c.LAST_NM) client_name,       (c.SPZ_FRST_NM||' '||c.SPZ_LAST_NM) husband_name, 
+     (c.FTHR_FRST_NM||' '||c.FTHR_LAST_NM) father_name,       c.CNIC_NUM, 
+     initcap(pln.PLAN_NM) plan,pln.ANL_PREM_AMT,la.CLNT_SEQ HLTH_INSR_MEMB_SEQ, 
+     initcap(c.FRST_NM||' '||c.LAST_NM) MEMBER_NM, 
+     trunc(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(c.DOB,'DDMMYYYY'),'DDMMYYYY'))/12)||' Years '||trunc(mod(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(c.DOB,'DDMMYYYY'),'DDMMYYYY')),12))||' Months '|| trunc(sysdate-add_months(TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'),trunc(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'))/12)*12+trunc(mod(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY')),12))))||' Days' Age_at_insurace_time, 
+     (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = c.MRTL_STS_KEY and val.CRNT_REC_FLG = 1 )marital_status, 
+     'Self' relation, 
+     (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = c.GNDR_KEY and val.CRNT_REC_FLG = 1 )Gender, 
+     trunc(to_date(ldm.EFF_START_DT))enrollment_date,       trunc(to_date(ldm.DSBMT_DT))insurance_date, 
+     trunc(to_date(ldm.DSBMT_DT)+365) maturity_date,       hl.CARD_NUM, 
+     (select dt_of_dth from mw_dth_rpt dr where dr.crnt_rec_flg=1 and dr.clnt_seq=c.clnt_seq) dth_dt   
+ from 
+ mw_loan_app la,mw_clnt c,   MW_CLNT_HLTH_INSR_CARD hl,MW_HLTH_INSR_PLAN pln, 
+ MW_CLNT_HLTH_INSR ins,MW_DSBMT_VCHR_HDR ldm,mw_port mp   where la.CLNT_SEQ = c.CLNT_SEQ and la.CRNT_REC_FLG = 1 
+ and la.LOAN_APP_STS = 703 and c.CRNT_REC_FLG = 1   and la.PORT_SEQ = mp.PORT_SEQ 
+ and la.LOAN_APP_SEQ = hl.LOAN_APP_SEQ   and hl.LOAN_APP_SEQ = ins.LOAN_APP_SEQ 
+ and ins.HLTH_INSR_PLAN_SEQ = pln.HLTH_INSR_PLAN_SEQ 
+ and ins.CRNT_REC_FLG = 1 and pln.CRNT_REC_FLG = 1
+--and la.CLNT_SEQ = 33004343574
+AND hl.CRNT_REC_FLG = 1
+and ins.HLTH_INSR_PLAN_SEQ != 1223
+and la.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ and mp.BRNCH_SEQ = :brnch_cd 
+ and to_date(ldm.DSBMT_DT) between to_date(:from_dt,'dd-mm-rrrr') and to_date(:to_dt,'dd-mm-rrrr')   
+UNION
+SELECT distinct la.CLNT_SEQ,initcap(c.FRST_NM||' '||c.LAST_NM) client_name, 
+ (select distinct nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'') from mw_clnt_rel rel1 join mw_ref_cd_val val on rel1.rel_wth_clnt_key=val.ref_cd_seq and val.crnt_rec_flg=1 and ref_cd='0008' 
+        where rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1   )husband_name, 
+ (select nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'') from mw_clnt_rel rel1 join mw_ref_cd_val val on rel1.rel_wth_clnt_key=val.ref_cd_seq and val.crnt_rec_flg=1 and ref_cd='0001' 
+ where rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1   )father_name,   
+ rel.CNIC_NUM, 
+ initcap(pln.PLAN_NM) plan,pln.ANL_PREM_AMT,   ins.CLNT_HLTH_INSR_SEQ HLTH_INSR_MEMB_SEQ, 
+ initcap(rel.FRST_NM||' '||rel.LAST_NM) MEMBER_NM, 
+ trunc(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(rel.DOB,'DDMMYYYY'),'DDMMYYYY'))/12)||' Years '||trunc(mod(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(rel.DOB,'DDMMYYYY'),'DDMMYYYY')),12))||' Months '|| trunc(sysdate-add_months(TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'),trunc(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'))/12)*12+trunc(mod(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY')),12))))||' Days' Age_at_insurace_time, 
+ (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = c.MRTL_STS_KEY and val.CRNT_REC_FLG = 1 ) marital_status, 
+ (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = rel.REL_WTH_CLNT_KEY and val.CRNT_REC_FLG = 1 )relation, 
+ (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = rel.GNDR_KEY and val.CRNT_REC_FLG = 1 )Gender, 
+ trunc(to_date(ldm.EFF_START_DT))enrollment_date,   trunc(to_date(ldm.DSBMT_DT))insurance_date, 
+ trunc(to_date(ldm.DSBMT_DT)+365) maturity_date,   hl.CARD_NUM, 
+ (select dt_of_dth from mw_dth_rpt dr where dr.crnt_rec_flg=1 and dr.clnt_seq=c.clnt_seq) dth_dt   from 
+ mw_loan_app la,mw_clnt_rel rel,mw_clnt c,   MW_CLNT_HLTH_INSR_CARD hl,MW_HLTH_INSR_PLAN pln, 
+ MW_CLNT_HLTH_INSR ins,MW_DSBMT_VCHR_HDR ldm,mw_port mp 
+ where la.LOAN_APP_SEQ = rel.loan_app_seq and la.CRNT_REC_FLG = 1 
+ and la.CLNT_SEQ = c.CLNT_SEQ and c.CRNT_REC_FLG = 1 and rel.CRNT_REC_FLG = 1 
+ and rel.REL_WTH_CLNT_KEY in (421,584,440,545,567,17,966,188,556,1005,434)   and la.LOAN_APP_SEQ = hl.LOAN_APP_SEQ 
+ and la.LOAN_APP_SEQ = ins.LOAN_APP_SEQ and ins.CRNT_REC_FLG = 1   and la.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ 
+ and ins.HLTH_INSR_PLAN_SEQ = pln.HLTH_INSR_PLAN_SEQ and pln.CRNT_REC_FLG = 1   and la.PORT_SEQ = mp.PORT_SEQ
+and ins.CRNT_REC_FLG = 1  and hl.CRNT_REC_FLG = 1 
+ and rel.CNIC_NUM not in (select mem1.MEMBER_CNIC_NUM from MW_HLTH_INSR_MEMB mem1 where mem1.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ and mem1.MEMBER_CNIC_NUM is not null)
+and ins.HLTH_INSR_PLAN_SEQ != 1223 and pln.CRNT_REC_FLG = 1
+--and la.CLNT_SEQ = 33004343574
+and la.LOAN_APP_STS = 703   and mp.BRNCH_SEQ = :brnch_cd 
+ and TO_CHAR(floor(MONTHS_BETWEEN(to_date(ldm.DSBMT_DT),rel.DOB)/12))<= 64
+and to_date(ldm.DSBMT_DT) between to_date(:from_dt,'dd-mm-rrrr') and to_date(:to_dt,'dd-mm-rrrr') 
+ UNION
+Select distinct la.CLNT_SEQ,initcap(c.FRST_NM||' '||c.LAST_NM) client_name,
+(select nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'') from mw_clnt_rel rel1 where rel1.REL_WTH_CLNT_KEY IN (421,584,440,545,567,17,966,188,556,1005,434) 
+     and rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1 )husband_name, 
+ (select distinct nvl(initcap(rel1.FRST_NM||' '||rel1.LAST_NM),'')    from mw_clnt_rel rel1 
+  join mw_ref_cd_val vl on vl.ref_cd_seq=rel1.rel_wth_clnt_key and vl.crnt_rec_flg=1 and vl.ref_cd='0001' 
+ where rel1.loan_app_seq = la.loan_app_seq and rel1.CRNT_REC_FLG = 1   ) father_name,   
+ mem.MEMBER_CNIC_NUM, 
+ initcap(pln.PLAN_NM) plan,pln.ANL_PREM_AMT,   mem.HLTH_INSR_MEMB_SEQ,   initcap(mem.MEMBER_NM), 
+ trunc(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(mem.DOB,'DDMMYYYY'),'DDMMYYYY'))/12)||' Years '||trunc(mod(months_between(to_date(ldm.DSBMT_DT),TO_DATE(TO_CHAR(mem.DOB,'DDMMYYYY'),'DDMMYYYY')),12))||' Months '|| trunc(sysdate-add_months(TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'),trunc(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY'))/12)*12+trunc(mod(months_between(sysdate,TO_DATE(TO_CHAR(to_date(ldm.DSBMT_DT),'DDMMYYYY'),'DDMMYYYY')),12))))||' Days' Age_at_insurace_time, 
+ (select initcap(val.REF_CD_DSCR)   from MW_REF_CD_VAL val   where val.REF_CD_SEQ = mem.MRTL_STS_KEY 
+ and val.CRNT_REC_FLG = 1   )marital_status, 
+ (select initcap(val.REF_CD_DSCR) from MW_REF_CD_VAL val where val.REF_CD_SEQ = mem.REL_KEY and val.CRNT_REC_FLG = 1 )relation,
+decode(mem.REL_KEY,435,'Male',436,'Female',434,'Male','Male') Gender, 
+ trunc(to_date(ldm.EFF_START_DT))enrollment_date,   trunc(to_date(ldm.DSBMT_DT))insurance_date, 
+ trunc(to_date(ldm.DSBMT_DT)+365) maturity_date,   hl.CARD_NUM, 
+ (select dt_of_dth from mw_dth_rpt dr where dr.crnt_rec_flg=1 and dr.clnt_seq=c.clnt_seq) dth_dt   from 
+ mw_loan_app la,   mw_clnt c,   MW_HLTH_INSR_MEMB mem, 
+ MW_CLNT_HLTH_INSR_CARD hl,MW_HLTH_INSR_PLAN pln,   MW_CLNT_HLTH_INSR ins,MW_DSBMT_VCHR_HDR ldm,mw_port mp 
+ where mem.LOAN_APP_SEQ = hl.LOAN_APP_SEQ   and hl.LOAN_APP_SEQ = ins.LOAN_APP_SEQ 
+ and la.LOAN_APP_SEQ = mem.LOAN_APP_SEQ 
+ and ins.HLTH_INSR_PLAN_SEQ = pln.HLTH_INSR_PLAN_SEQ and pln.CRNT_REC_FLG = 1 
+ and la.CLNT_SEQ = c.CLNT_SEQ and c.CRNT_REC_FLG = 1   and la.LOAN_APP_STS = 703 and la.CRNT_REC_FLG = 1 
+ and ins.CRNT_REC_FLG = 1  and hl.CRNT_REC_FLG = 1 and pln.CRNT_REC_FLG = 1
+and ins.HLTH_INSR_PLAN_SEQ != 1223 and mem.CRNT_REC_FLG = 1
+--and la.CLNT_SEQ = 900000265
+and la.PORT_SEQ = mp.PORT_SEQ   and la.LOAN_APP_SEQ = ldm.LOAN_APP_SEQ 
+ and mem.REL_KEY in (   582,423,467,435,1008,569,547,189,969,557,438 
+ ,570,437,548,1105,466,422,558,436,190,1009,970 
+ ,421,584,440,545,567,17,966,188,556,1005,434)   and mp.BRNCH_SEQ = :brnch_cd 
+ and to_date(ldm.DSBMT_DT) between to_date(:from_dt,'dd-mm-rrrr') and to_date(:to_dt,'dd-mm-rrrr') 
+ and mem.HLTH_INSR_MEMB_SEQ not in  (SELECT mem1.HLTH_INSR_MEMB_SEQ
+                                      FROM MW_HLTH_INSR_MEMB mem1, MW_REF_CD_VAL val1
+                                     WHERE     mem1.REL_KEY = val1.REF_CD_SEQ
+                                           AND val1.REF_CD = '0013'
+                                           AND val1.CRNT_REC_FLG = 1
+                                           AND (   TO_CHAR (
+                                                       FLOOR (
+                                                           MONTHS_BETWEEN (TO_DATE (ldm.DSBMT_DT), mem1.DOB) / 12)) > 25
+                                                OR mem1.MRTL_STS_KEY = 22))
+and mem.HLTH_INSR_MEMB_SEQ not in  (SELECT mem1.HLTH_INSR_MEMB_SEQ
+                                      FROM MW_HLTH_INSR_MEMB mem1, MW_REF_CD_VAL val1
+                                     WHERE     mem1.REL_KEY = val1.REF_CD_SEQ
+                                           AND val1.REF_CD = '0008'
+                                           AND val1.CRNT_REC_FLG = 1
+                                           AND TO_CHAR (FLOOR (MONTHS_BETWEEN (TO_DATE (ldm.DSBMT_DT), mem1.DOB) / 12)) > 64)

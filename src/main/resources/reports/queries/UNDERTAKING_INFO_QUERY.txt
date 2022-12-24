@@ -1,0 +1,12 @@
+select app.loan_id,clnt.frst_nm, clnt.last_nm,clnt.fthr_frst_nm||clnt.spz_frst_nm,clnt.fthr_last_nm||clnt.spz_last_nm, clnt.clnt_id, clnt.cnic_num,   
+             port.port_nm, brnch.brnch_nm, area.area_nm, reg.reg_nm,p.prd_id,sect.BIZ_SECT_NM,ba.BIZ_DTL_STR   
+             from mw_loan_app app    join mw_prd p on p.prd_seq=app.prd_seq and p.crnt_rec_flg=1    
+             join mw_clnt clnt on app.clnt_seq=clnt.clnt_seq and clnt.crnt_rec_flg=1  
+             left outer join MW_BIZ_APRSL ba on ba.LOAN_APP_SEQ=app.LOAN_APP_SEQ and ba.CRNT_REC_FLG = 1 
+             left outer join MW_BIZ_ACTY acty on acty.BIZ_ACTY_SEQ=ba.ACTY_KEY and acty.CRNT_REC_FLG = 1  
+             left outer join mw_biz_sect sect on acty.BIZ_SECT_SEQ=sect.BIZ_SECT_SEQ and sect.CRNT_REC_FLG = 1   
+             join mw_port port on port.port_seq=app.port_seq and port.crnt_rec_flg=1   
+             join mw_brnch brnch on brnch.brnch_seq=port.brnch_seq and brnch.crnt_rec_flg=1   
+             join mw_area area on area.area_seq=brnch.area_seq and area.crnt_rec_flg=1   
+             join mw_reg reg on reg.reg_seq=area.reg_seq and reg.crnt_rec_flg=1   
+             where app.crnt_rec_flg=1 AND app.LOAN_APP_SEQ  =:loanAppSeq

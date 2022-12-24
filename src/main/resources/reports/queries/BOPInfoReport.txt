@@ -1,0 +1,24 @@
+SELECT TO_CHAR(TO_DATE(SYSDATE),'dd-MON-YYYY') VDATE,   
+                 to_char(DH.LOAN_APP_SEQ) LOAN_APP_SEQ,  + "    to_char(MC.CNIC_NUM) CNIC_NUM, 
+                 to_date(MC.CNIC_EXPRY_DT) CNIC_EXPRY_DT,  + "    to_char(MC.CLNT_SEQ) CLNT_SEQ, 
+                 MC.FRST_NM||' '||MC.LAST_NM NAME,  + "    'KASHF FOUNDATION '||B.BRNCH_NM as BR_NAME, 
+                 dd.AMT DISB_AMOUNT,      + "    RV.REF_CD_DSCR BANK,  + "    BST.IBAN BANK_CODE,     
+                 BST.BANK_BRNCH,  + "    PRD.PRD_NM,  + "    TY.TYP_STR  + "    FROM MW_REG R, 
+                      MW_AREA A,  + "         MW_BRNCH B,  + "         MW_BRNCH_ACCT_SET BST, 
+                      MW_REF_CD_VAL RV,  + "         MW_PORT P,  + "         MW_LOAN_APP LA, 
+                      MW_DSBMT_VCHR_HDR DH,  + "         MW_DSBMT_VCHR_DTL DD,  + "         MW_PRD PRD, 
+                      MW_TYPS TY,  + "         MW_CLNT MC  + "   WHERE     R.REG_SEQ = A.REG_SEQ 
+                      AND A.AREA_SEQ = B.AREA_SEQ  + "         AND B.BRNCH_SEQ = BST.BRNCH_SEQ 
+                      AND BST.BANK_NM = RV.REF_CD  + "         AND RV.REF_CD_GRP_KEY = 178 
+                      AND B.BRNCH_SEQ = P.BRNCH_SEQ  + "         AND P.PORT_SEQ = LA.PORT_SEQ 
+                      AND LA.LOAN_APP_SEQ = DH.LOAN_APP_SEQ  + "         AND DH.DSBMT_HDR_SEQ = DD.DSBMT_HDR_SEQ 
+                      AND LA.PRD_SEQ = PRD.PRD_SEQ                            + "         AND DD.PYMT_TYPS_SEQ = TY.TYP_SEQ 
+                      AND TY.TYP_SEQ in (221)        + "         AND B.BRNCH_SEQ = 98  + "         AND B.CRNT_REC_FLG = 1 
+                      AND MC.CLNT_SEQ = LA.CLNT_SEQ  + "         --AND JH.ENTY_SEQ = 2058 
+                      AND TO_DATE(DH.DSBMT_DT)  BETWEEN to_date(:frm_dt,'dd-mm-yyyy') and to_date(:to_dt,'dd-mm-yyyy') 
+                      AND B.CRNT_REC_FLG = A.CRNT_REC_FLG           AND R.CRNT_REC_FLG = A.CRNT_REC_FLG 
+                      AND R.CRNT_REC_FLG = BST.CRNT_REC_FLG           AND R.CRNT_REC_FLG = RV.CRNT_REC_FLG 
+                      AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG           AND R.CRNT_REC_FLG = P.CRNT_REC_FLG 
+                      AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG           AND R.CRNT_REC_FLG = DH.CRNT_REC_FLG 
+                      AND R.CRNT_REC_FLG = DD.CRNT_REC_FLG           AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG 
+                      AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG  

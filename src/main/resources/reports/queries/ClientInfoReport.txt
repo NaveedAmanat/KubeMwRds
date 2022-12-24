@@ -1,0 +1,21 @@
+select app.loan_id,prd.prd_id,prd.prd_cmnt,app.loan_cycl_num,app.rqstd_loan_amt,app.aprvd_loan_amt,mrtl.ref_cd_dscr mrtl,occ.ref_cd_dscr occ,res.ref_cd_dscr res,clnt.yrs_res,clnt.hse_hld_memb,clnt.num_of_chldrn,clnt.num_of_erng_memb,clnt.frst_nm, clnt.last_nm, clnt.clnt_id, clnt.cnic_num,port.port_nm,brnch.brnch_cd,brnch.brnch_nm, area.area_nm, reg.reg_nm,e.emp_nm,to_char(app.crtd_dt,'dd-MM-yyyy') crtd_dt,be.emp_nm bm_name,clnt.clnt_seq,clnt.MNTHS_RES,app.TBL_SCRN_FLG,clnt.biz_dtl  
+                         ,case when (trunc(vh.dsbmt_dt) = to_date(to_char('01-01-1901'), 'dd-MM-yyyy')) then to_char(sysdate,'dd-MM-yyyy') else to_char(vh.dsbmt_dt,'dd-MM-yyyy') end dt ,cs.crdt_rsk_ctgry,(case when brnch.CS_FLG=1 and prd.CS_FLG=1 then 1 else 0 end) cs_flg,   
+                          clnt.fthr_frst_nm || clnt.spz_frst_nm FTHR_FRST_NM,
+                          clnt.fthr_last_nm || clnt.spz_last_nm FTHR_LAST_NM
+                          from mw_loan_app app   
+                          join mw_dsbmt_vchr_hdr vh on vh.LOAN_APP_SEQ=app.LOAN_APP_SEQ and vh.CRNT_REC_FLG = 1  
+                          join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1 and prd.del_flg=0   
+                          join mw_clnt clnt on app.clnt_seq=clnt.clnt_seq and clnt.crnt_rec_flg=1   
+                          join mw_ref_cd_val mrtl on clnt.mrtl_sts_key=mrtl.ref_cd_seq and mrtl.crnt_rec_flg=1 and mrtl.del_flg=0   
+                          join mw_ref_cd_val occ on clnt.occ_key=occ.ref_cd_seq and occ.crnt_rec_flg=1 and occ.del_flg=0   
+                          join mw_ref_cd_val res on clnt.res_typ_key=res.ref_cd_seq and res.crnt_rec_flg=1 and res.del_flg=0    
+                          join mw_port port on port.port_seq=app.port_seq and port.crnt_rec_flg=1     
+                          join mw_port_emp_rel per on per.port_seq=port.port_seq and per.crnt_rec_flg=1    
+                          join MW_EMP e on e.EMP_SEQ=per.EMP_SEQ    
+                          join mw_brnch brnch on brnch.brnch_seq=port.brnch_seq and brnch.crnt_rec_flg=1   
+                          join mw_brnch_emp_rel ber on brnch.brnch_seq=ber.brnch_seq and ber.crnt_rec_flg=1  and ber.del_flg=0  
+                          join MW_EMP be on be.EMP_SEQ=ber.EMP_SEQ    
+                          join mw_area area on area.area_seq=brnch.area_seq and area.crnt_rec_flg=1      
+                          join mw_reg reg on reg.reg_seq=area.reg_seq and reg.crnt_rec_flg=1    
+                         left outer join mw_loan_app_crdt_scr cs on  cs.LOAN_APP_SEQ = app.LOAN_APP_SEQ and cs.CRNT_REC_FLG = 1   
+                          where app.crnt_rec_flg=1 and app.loan_app_seq =:loanAppSeq and vh.DSBMT_VCHR_TYP=:vchrTyp

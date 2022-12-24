@@ -1,0 +1,94 @@
+SELECT
+    mpg.prd_grp_nm,
+    mr.reg_nm,
+    outs_apr20.loans loans,
+    outs_apr20.outs_apr20 outs_apr20,
+    rsch_loans.loans rsch_loans,
+    rsch_loans.outs rsch_outs_apr20,
+    SUM(nvl(NVL(DUE_AMOUNT,0)+NVL(DUE_AMOUNT_SC,0), 0)) + SUM(nvl(NVL(OVERDUE_AMOUNT_OP,0)+NVL(OVERDUE_AMOUNT_SC_OP,0), 0)) due_crnt,
+    SUM(nvl(NVL(RECOVERED_AMOUNT_FMTO,0)+NVL(RECOVERED_AMOUNT_FMTO_SC,0), 0)) rec_crnt,
+    case when (SUM(nvl(NVL(DUE_AMOUNT,.01)+NVL(DUE_AMOUNT_SC,.01), 1)) + SUM(nvl(NVL(OVERDUE_AMOUNT_OP,0)+NVL(OVERDUE_AMOUNT_SC_OP,0), 0))) > 0 then
+        round((SUM(nvl(NVL(RECOVERED_AMOUNT_FMTO,.01)+NVL(RECOVERED_AMOUNT_FMTO_SC,.01),.01)) / (SUM(nvl(NVL(DUE_AMOUNT,.01)+NVL(DUE_AMOUNT_SC,.01), 1))+SUM(nvl(NVL(OVERDUE_AMOUNT_OP,0)+NVL(OVERDUE_AMOUNT_SC_OP,0), 0))) ) * 100, 2) 
+    else 0
+    end rec_crnt_prcnt,
+    SUM(nvl(NVL(DUE_AMOUNT_CUM,0)+NVL(DUE_AMOUNT_SC_CUM,0), 0)) + SUM(nvl(NVL(OVERDUE_AMOUNT_OP_APR20,0)+NVL(OVERDUE_AMOUNT_SC_OP_APR20,0), 0)) due_cum,
+    SUM(nvl(NVL(RECOVERED_AMOUNT_FMTO_CUM,0)+NVL(RECOVERED_AMOUNT_FMTO_SC_CUM,0), 0)) rec_cum,
+    case when (SUM(nvl(NVL(DUE_AMOUNT_CUM,.01)+NVL(DUE_AMOUNT_SC_CUM,.01), 1)) + SUM(nvl(NVL(OVERDUE_AMOUNT_OP_APR20,0)+NVL(OVERDUE_AMOUNT_SC_OP_APR20,0), 0))) > 0
+    then
+        round((SUM(nvl(NVL(RECOVERED_AMOUNT_FMTO_CUM,.01)+NVL(RECOVERED_AMOUNT_FMTO_SC_CUM,.01),.01)) / (SUM(nvl(NVL(DUE_AMOUNT_CUM,.01)+NVL(DUE_AMOUNT_SC_CUM,.01), 1))+SUM(nvl(NVL(OVERDUE_AMOUNT_OP_APR20,0)+NVL(OVERDUE_AMOUNT_SC_OP_APR20,0), 0)))  ) * 100, 2)
+    else 0 
+    end rec_cum_prcnt,
+    outs_apr20.loans - outs_crnt.loans compl_loans_crnt,
+    outs_crnt.loans loans_crnt,
+    outs_crnt.outs outs_crnt,
+    mpg.prd_grp_seq,
+    mr.reg_seq
+    FROM con_mon_asofdate_rschd_daily@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+    mw_area ma, mw_reg mr,mw_prd_grp mpg,
+    (      
+    select mr.REG_SEQ, apr.PRD_GRP_SEQ, count(apr.LOAN_APP_SEQ) loans, sum(nvl(apr.OUTS_PRN_APR20,0) + nvl(apr.OUTS_SC_APR20,0)) outs_apr20,
+    sum(nvl(apr.OVERDUE_AMOUNT,0) + nvl(apr.OVERDUE_AMOUNT_SC,0)) od_apr20
+        from PRE_COVID_APR20_OUTS_LOAN_APPS apr, mw_brnch mb, 
+        mw_area ma, mw_reg mr
+        where apr.BRNCH_SEQ = mb.BRNCH_SEQ and mb.crnt_rec_flg=1
+        and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+        and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1  
+        and not exists (select * from mw_loan_app ap where ap.loan_app_seq = apr.loan_app_seq and ap.loan_app_sts = 1285
+        and ap.last_upd_dt > '30-apr-2020')      
+        group by mr.REG_SEQ , apr.PRD_GRP_SEQ                     
+    ) outs_apr20,
+    (   
+        select mr.REG_SEQ, cp.PRODUCT_ID prd_grp_seq, 
+        count(loan_cycle_id) loans, sum(NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) outs
+        from con_mon_asofdate_rschd_daily@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr
+         where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+            and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+            and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1  
+            and disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+            and (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+            and (cp.GRACE_PERD is not null)            
+            and product_id <> 8
+         group by mr.REG_SEQ, cp.PRODUCT_ID
+         union all
+        select 23, '10', 0,0
+        from dual        
+    ) rsch_loans,
+    (
+        select mr.REG_SEQ, cp.PRODUCT_ID prd_grp_seq, 
+        count(loan_cycle_id) loans, sum(NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) outs
+        from con_mon_asofdate_rschd_daily@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr
+         where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+            and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+            and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1  
+            AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+            AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0            
+            and product_id <> 8
+         group by mr.REG_SEQ, cp.PRODUCT_ID
+    ) outs_crnt
+  where cp.branch_ID = mb.brnch_cd and mb.crnt_rec_flg=1
+   and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+    and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1  
+    and cp.PRODUCT_ID = mpg.PRD_GRP_SEQ and mpg.crnt_rec_flg=1
+    and mr.REG_SEQ = outs_apr20.REG_SEQ
+    and cp.PRODUCT_ID = outs_apr20.PRD_GRP_SEQ
+    and mr.REG_SEQ = rsch_loans.REG_SEQ
+    and cp.PRODUCT_ID = rsch_loans.PRD_GRP_SEQ
+    and mr.REG_SEQ = outs_crnt.REG_SEQ
+    and cp.PRODUCT_ID = outs_crnt.PRD_GRP_SEQ    
+    AND cp.disbursed_date between to_date('01-may-2005') and '30-apr-2020'
+    and cp.product_id <> 8
+GROUP BY
+    mpg.prd_grp_nm,
+    mpg.prd_grp_seq,
+    mr.reg_nm,
+    mr.reg_seq,
+    outs_apr20.loans,
+    outs_apr20.outs_apr20,
+    rsch_loans.loans,
+    rsch_loans.outs,
+    outs_crnt.loans,
+    outs_crnt.outs 
+ORDER BY
+    mpg.prd_grp_seq,mr.reg_nm

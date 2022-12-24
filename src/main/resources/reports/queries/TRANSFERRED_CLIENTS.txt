@@ -1,0 +1,23 @@
+select    prd.prd_nm, clnt.clnt_id,  
+             ap.loan_app_seq,clnt.frst_nm||' '||clnt.last_nm clnt_nm,  
+             (select emp_nm from mw_emp emp join mw_port_emp_rel pr on pr.emp_seq=emp.emp_seq and pr.crnt_rec_flg=1 and pr.port_seq=trns.from_port) frm_bdo,  
+             (select emp_nm from mw_emp emp join mw_port_emp_rel pr on pr.emp_seq=emp.emp_seq and pr.crnt_rec_flg=1 and pr.port_seq=trns.to_port) to_bdo,  
+             (select brnch_nm from mw_brnch brnch join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1  
+                              and prt.port_seq=trns.from_port where brnch.crnt_rec_flg=1) from_branch, 
+             (select brnch_nm from mw_brnch brnch join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1  
+                              and prt.port_seq=trns.to_port where brnch.crnt_rec_flg=1) to_branch, 
+             ap.loan_app_sts_dt, ap.aprvd_loan_amt,    (select count(psd.pymt_sched_dtl_seq)  
+                 from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1  
+                 where psh.crnt_rec_flg=1 and psd.pymt_sts_key=945 and psh.loan_app_seq=ap.loan_app_seq) inst_num,  
+             loan_app_ost(ap.loan_app_seq,trns.trns_dt,'p') ost_pr,  
+             loan_app_ost(ap.loan_app_seq,trns.trns_dt,'s') ost_sc, 0 KSZB_ost, 0 doc_fee_ost,    0 trn_ost,  
+             0 ins_ost,    0 ex_rcvry    from mw_loan_app ap  
+             join mw_loan_app_trns trns on trns.loan_app_seq=ap.loan_app_seq and trns.crnt_rec_flg=1 
+             join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1  
+             join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1  
+             join ( select reg_nm, area_nm, brnch_nm, prt.port_seq  
+                 from mw_reg rg join mw_area ar on ar.reg_seq=rg.reg_seq and ar.crnt_rec_flg=1  
+                 join mw_brnch br on br.area_seq=ar.area_seq and br.crnt_rec_flg=1  
+                 join mw_port prt on prt.brnch_seq=br.brnch_seq and prt.crnt_rec_flg=1 where rg.crnt_rec_flg=1  
+             ) fi on fi.port_seq=trns.from_port    where ap.crnt_rec_flg=1 
+             and to_date(trns.trns_dt) between to_date(:frmDt,'dd-MM-yyyy') and to_date(:toDt,'dd-MM-yyyy') order by 1

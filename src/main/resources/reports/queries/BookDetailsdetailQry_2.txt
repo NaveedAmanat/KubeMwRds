@@ -1,0 +1,37 @@
+select crtd_dt, 
+rownum sr_no, clnt_seq,reference_col,
+ledger_head,instr_num, NAR_NO,
+reciept, payment
+from
+(
+select TO_DATE (MJH.JV_DT) crtd_dt,
+get_clnt_seq (MJH.ENTY_SEQ, MJH.ENTY_TYP, MJH.BRNCH_SEQ)  clnt_seq,  
+mjh.ENTY_SEQ reference_col,
+(case when initcap (mjh.enty_typ) = 'Expense' then get_EXP_LEDGER(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)
+               when initcap (mjh.enty_typ) = 'Disbursement' then get_disb_prd(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)
+               else initcap (mjh.enty_typ)
+          end) ledger_head,
+get_instr_num(MJH.ENTY_SEQ, MJH.ENTY_TYP, MJH.BRNCH_SEQ) instr_num,   
+ (CASE WHEN initcap (mjh.enty_typ) = 'Expense' THEN get_EXP_TYP(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)                
+          ELSE mjh.jv_dscr END) NAR_NO,  
+nvl(sum(NVL((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN NVL(MJD.AMT,0) END),0)),0) reciept,    
+nvl(sum(NVL((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN NVL(MJD.AMT,0) END),0)),0) payment
+from mw_jv_hdr mjh, mw_jv_dtl mjd    
+where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ and BRNCH_SEQ =:BRNCH_SEQ  
+and not exists( select 1 from RPTB_PORT_TRF_DETAIL trf where trf.ENTY_SEQ = MJH.ENTY_SEQ )  
+AND MJD.GL_ACCT_NUM = (
+                    select t.GL_ACCT_NUM 
+                      from mw_typs t where t.CRNT_REC_FLG =  1 
+                      and t.TYP_ID =:typId and t.TYP_CTGRY_KEY=3 
+                      and t.BRNCH_SEQ=:branchAcc                      
+ )     
+and to_date(mjh.JV_DT) BETWEEN to_date(:frmdt,'MM/dd/yyyy') AND to_date(:todt,'MM/dd/yyyy')  
+group by get_EXP_LEDGER(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq) ,TO_DATE (MJH.JV_DT) ,    
+get_clnt_seq (MJH.ENTY_SEQ, MJH.ENTY_TYP, MJH.BRNCH_SEQ),     
+initcap (mjh.enty_typ), mjh.ENTY_SEQ ,mjh.jv_dscr,
+get_disb_prd(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq),
+get_instr_num(MJH.ENTY_SEQ, MJH.ENTY_TYP, MJH.BRNCH_SEQ),  
+get_EXP_TYP(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)
+order by 1
+)                                     
+ORDER BY 1 ,2

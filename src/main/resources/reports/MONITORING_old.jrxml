@@ -1,0 +1,1688 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="MONITORING" pageWidth="842" pageHeight="595" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" isFloatColumnFooter="true" uuid="649c6d5f-b991-4b1c-a5fb-957bf3498abc">
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <scriptlet name="Scriptlet_1" class="net.sf.jasperreports.engine.JRDefaultScriptlet"/>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <field name="PRD_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PRD_NM"/>
+    </field>
+    <field name="PORT_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PORT_NM"/>
+    </field>
+    <field name="OST_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OST_CLNTS"/>
+    </field>
+    <field name="OST_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OST_AMT"/>
+    </field>
+    <field name="PERIOD_DUE_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PERIOD_DUE_CLNTS"/>
+    </field>
+    <field name="PERIOD_DUE_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PERIOD_DUE_AMT"/>
+    </field>
+    <field name="PERIOD_PAID_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PERIOD_PAID_CLNTS"/>
+    </field>
+    <field name="PERIOD_PAID_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="PERIOD_PAID_AMT"/>
+    </field>
+    <field name="TRGT_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TRGT_CLNTS"/>
+    </field>
+    <field name="ACHIV_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ACHIV_CLNTS"/>
+    </field>
+    <field name="TRGT_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TRGT_AMT"/>
+    </field>
+    <field name="ACHIV_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ACHIV_AMT"/>
+    </field>
+    <field name="OD_LOANS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OD_LOANS"/>
+    </field>
+    <field name="OD_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OD_AMT"/>
+    </field>
+    <field name="DAY_1_OD_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAY_1_OD_CLNTS"/>
+    </field>
+    <field name="DAY_1_OD_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAY_1_OD_AMT"/>
+    </field>
+    <field name="DAY_30_OD_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAY_30_OD_CLNTS"/>
+    </field>
+    <field name="DAY_30_OD_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DAY_30_OD_AMT"/>
+    </field>
+    <field name="BP_OD_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="BP_OD_CLNTS"/>
+    </field>
+    <field name="BP_OD_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="BP_OD_AMT"/>
+    </field>
+    <field name="CMPLTD_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CMPLTD_CLNTS"/>
+    </field>
+    <field name="PORT_HANDEL_DT" class="java.lang.String"/>
+    <variable name="TTL_OST_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_OST_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_DUE_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_DUE_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_DUE_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_DUE_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_PAID_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_PAID_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_PAID_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_PAID_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_TRGT_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{TRGT_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_ACHIV_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{ACHIV_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_TRGT_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{TRGT_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_ACHIV_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{ACHIV_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_OD_LOANS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_LOANS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_OD_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_1_OD_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_1_OD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_1_OD_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_1_OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_30_OD_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_30_OD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_30_OD_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_30_OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_CMPLTD_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup"
+              calculation="Sum">
+        <variableExpression><![CDATA[$F{CMPLTD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_BP_OD_CLNTS" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_LOANS}-$F{BP_OD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_BP_OD_AMT" class="java.lang.Long" resetType="Group" resetGroup="prdnmGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_AMT}-$F{BP_OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="Count" class="java.lang.Integer" incrementType="Group" incrementGroup="prdnmGroup"
+              calculation="Count">
+        <variableExpression><![CDATA[$V{Count}+1]]></variableExpression>
+        <initialValueExpression><![CDATA[1]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OST_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_OST_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_DUE_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_DUE_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_DUE_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_DUE_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_PAID_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_PAID_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_PERIOD_PAID_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{PERIOD_PAID_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_TRGT_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{TRGT_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_ACHIV_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{ACHIV_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_TRGT_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{TRGT_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_ACHIV_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{ACHIV_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_OD_LOANS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_LOANS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_OD_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_1_OD_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_1_OD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_1_OD_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_1_OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_30_OD_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_30_OD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_DAY_30_OD_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DAY_30_OD_AMT}]]></variableExpression>
+    </variable>
+    <variable name="TTL_CMPLTD_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CMPLTD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_BP_OD_CLNTS_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_LOANS}-$F{BP_OD_CLNTS}]]></variableExpression>
+    </variable>
+    <variable name="TTL_BP_OD_AMT_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OD_AMT}-$F{BP_OD_AMT}]]></variableExpression>
+    </variable>
+    <group name="prdnmGroup" isReprintHeaderOnEachPage="true">
+        <groupExpression><![CDATA[$F{PRD_NM}]]></groupExpression>
+        <groupHeader>
+            <band height="42">
+                <textField>
+                    <reportElement mode="Opaque" x="0" y="0" width="802" height="12" backcolor="#DEDCDC"
+                                   uuid="57730911-571f-437c-b8e2-68fa7680828d"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{PRD_NM}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="12" width="40" height="30" uuid="a7f80824-ca5b-4dff-a128-15f7b7e445f6">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                    </reportElement>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[BDO Name]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="40" y="12" width="38" height="30" uuid="873d94c1-662c-48e3-901a-ee509be4374f"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Portfolio Handling Date]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="78" y="30" width="36" height="12" uuid="ea1d0c16-86f7-4316-a073-c822d33f7caf"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Clients]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="78" y="12" width="76" height="18" uuid="9cae5d17-56b3-4ebc-8b31-6af279e47f77"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Outstanding]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="114" y="30" width="40" height="12" uuid="023ce376-7315-407b-bdcc-05c32c6805a2"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="154" y="30" width="32" height="12" uuid="f9de1223-770a-43f3-84c4-ae833bc91191"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Due No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="154" y="12" width="153" height="18" uuid="77b7b610-3bac-41de-9025-f4290943ac3c"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Due & Recovered]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="186" y="30" width="40" height="12" uuid="4be5ad3c-9e92-4c4b-bec8-105fb3e72168"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Due Amt]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="226" y="30" width="39" height="12" uuid="6806c9b5-8dee-4896-aa60-e3bf8dfca987"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Recv. No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="265" y="30" width="42" height="12" uuid="18661692-6aa6-4e44-bd7e-33df81686187"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Recv. Amt]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="307" y="30" width="46" height="12" uuid="2c342207-e5d3-491f-94bd-7c4ea1b0fc4b"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Targets No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="307" y="12" width="208" height="18" uuid="b682f41f-4bd1-4ff3-9269-83f49e40fd6b"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Disb. Targets v/s Achievements (curr. Month)]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="353" y="30" width="38" height="12" uuid="6c8ba9cf-b652-44a3-8e7b-eb02f5ff3624"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Achv. No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="409" y="30" width="46" height="12" uuid="a7279a0a-46d6-41ea-9eba-ae094f57f03e"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Target Amt]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="455" y="30" width="42" height="12" uuid="34e1f774-169e-441b-963f-46c182e7c0c2"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Disb. Amt]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="497" y="30" width="18" height="12" uuid="93a9ca9e-caa0-4133-892e-8b78ca549411"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[%]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="515" y="30" width="20" height="12" uuid="a99ea953-3db3-44ca-8ac5-74a4233a8e44"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="535" y="30" width="32" height="12" uuid="c5dbe531-c0ea-4f16-a122-e2c80b0f5987"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="515" y="12" width="52" height="18" uuid="1efd02d1-4820-445f-99b3-a077dee72c0f"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Overdue Loans]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="567" y="30" width="20" height="12" uuid="4be4da88-e49e-4035-b523-9b0443ba83a8"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="587" y="30" width="36" height="12" uuid="5db93a99-a573-453f-9003-c1c60cfe8c20"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="623" y="30" width="18" height="12" uuid="729e51ce-b8dc-4c76-af09-3d199808981c"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[%]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="567" y="12" width="74" height="18" uuid="40742f7c-baa0-4808-add8-71112e62c8ee"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[PAR Above 1 Day]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="641" y="30" width="20" height="12" uuid="3cbee751-ee3d-408c-904c-1ca58611bbf5"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="661" y="30" width="36" height="12" uuid="fec5874c-5731-469c-805a-b891acede944"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="697" y="30" width="18" height="12" uuid="eabd277a-a353-4e6b-8fe8-0024a2fc4b48"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[%]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="641" y="12" width="74" height="18" uuid="61c06950-099a-4499-868e-205ff5722fef"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[PAR Above 30 Days]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="715" y="12" width="37" height="30" uuid="05419431-ee14-470e-bc93-d4b782ca9c9c"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Loans Completed]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="752" y="30" width="18" height="12" uuid="5fefbbe1-91fd-4717-9c58-02699e6a92f7"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="770" y="30" width="32" height="12" uuid="83c72bf9-bd47-4bc8-b3dd-627981acea60"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="752" y="12" width="50" height="18" uuid="13ff93e7-b816-4e71-b151-b94aa5ab978d"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Addition in Overdue]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="391" y="30" width="18" height="12" uuid="e8618890-2896-4e94-90c1-f40f22196c91"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="7" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[%]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="10">
+                <textField>
+                    <reportElement x="78" y="0" width="36" height="10" printWhenGroupChanges="prdnmGroup"
+                                   uuid="d0df0885-28b3-42b8-9127-eb878c86e980"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_OST_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="114" y="0" width="40" height="10" uuid="721860a9-b8ca-4088-b08b-a41be6565936"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OST_AMT})]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="0" y="0" width="78" height="10" uuid="1aa84589-6444-4d6b-b884-0abca76e56a1">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                        <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                        <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[Total: ]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="154" y="0" width="32" height="10" uuid="d9d8220b-e5d1-465f-9af3-d2ec8416181e"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_PERIOD_DUE_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="186" y="0" width="40" height="10" uuid="d2c915bf-ddb2-4387-896d-021adb9e8b61"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_PERIOD_DUE_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="226" y="0" width="39" height="10" uuid="737ab39d-9391-40e1-a0ca-530a85899b40"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_PERIOD_PAID_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="265" y="0" width="42" height="10" uuid="8e72fbbc-9d81-4fe8-8871-53d446be6593"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_PERIOD_PAID_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="307" y="0" width="46" height="10" uuid="ea586aa0-fbc7-41bd-9f49-d5d295ef75ae"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_TRGT_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="353" y="0" width="38" height="10" uuid="c25ee9ad-6632-4571-aca6-3cd14126d108"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_ACHIV_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="409" y="0" width="46" height="10" uuid="404ade01-8804-4ae5-b56b-d262bfcda899"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_TRGT_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="455" y="0" width="42" height="10" uuid="269a3228-880c-46ff-9deb-53e3bd026aca"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_ACHIV_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="515" y="0" width="20" height="10" uuid="e474e8ad-cdba-4d0c-9bfb-13bd2cef6801"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_OD_LOANS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="535" y="0" width="32" height="10" uuid="1e2e7efc-623f-4e31-ab67-85c591366320"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OD_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="567" y="0" width="20" height="10" uuid="2edfbeb0-b1f6-49c1-b8bd-94733e42aad2"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAY_1_OD_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="587" y="0" width="36" height="10" uuid="27d0683d-a97b-4d1d-b800-fe8c0f406d21"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DAY_1_OD_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="641" y="0" width="20" height="10" uuid="5e703553-f135-41fa-8b11-7f4f46f58924"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAY_30_OD_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="661" y="0" width="36" height="10" uuid="baa94c79-1fd9-4ae6-91d3-fd6ffc016727"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DAY_30_OD_AMT})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="715" y="0" width="37" height="10" uuid="6576f9db-c92f-44ff-9462-07ac11c5a3ba"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_CMPLTD_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="752" y="0" width="18" height="10" uuid="e09ab329-0d04-48e3-b036-d7f451dd108b"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Center">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_BP_OD_CLNTS}]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="770" y="0" width="32" height="10" uuid="eae95ec6-ddf6-41c7-ac23-a97d1c7bf152"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_BP_OD_AMT})]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="497" y="0" width="18" height="10" uuid="2b2d4071-93a1-438f-b3fa-d3f0fec5016c"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <text><![CDATA[]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="391" y="0" width="18" height="10" uuid="01f046ce-0297-4fdc-b8a3-8c4b531af864"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_ACHIV_CLNTS}.floatValue()!=0&& $V{TTL_TRGT_CLNTS}.floatValue()!=0?
+new BigDecimal($V{TTL_ACHIV_CLNTS}.floatValue()/$V{TTL_TRGT_CLNTS}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="497" y="0" width="18" height="10" uuid="45ba0984-caa1-4675-8564-e5f7384e4190"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_ACHIV_AMT}.floatValue()!=0 && $V{TTL_TRGT_AMT}.floatValue()!=0?
+new BigDecimal($V{TTL_ACHIV_AMT}.floatValue()/ $V{TTL_TRGT_AMT}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="623" y="0" width="18" height="10" uuid="0b1b3f06-3003-4a58-a13d-297a9ea22ffb"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAY_1_OD_AMT}.floatValue()!=0&& $V{TTL_OST_AMT}.floatValue()!=0?
+new BigDecimal($V{TTL_DAY_1_OD_AMT}.floatValue()/$V{TTL_OST_AMT}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="697" y="0" width="18" height="10" uuid="0c3c9a37-7650-40bf-947b-4f2c552498b9"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.5"/>
+                    </box>
+                    <textElement textAlignment="Right">
+                        <font size="6" isBold="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$V{TTL_DAY_30_OD_AMT}.floatValue()!=0 && $V{TTL_OST_AMT}.floatValue()!=0?
+new BigDecimal($V{TTL_DAY_30_OD_AMT}.floatValue()/$V{TTL_OST_AMT}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupFooter>
+    </group>
+    <title>
+        <band height="79" splitType="Stretch">
+            <textField>
+                <reportElement x="170" y="60" width="80" height="12" uuid="231c9c97-16c7-4945-94c8-017144d21897"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="570" y="60" width="35" height="12" uuid="2af2a823-dac6-4820-ae0a-80415e5ba664"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[From :]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="60" width="67" height="12" uuid="067172ea-c225-4537-b742-ce07d4519d1e"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Name:]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="710" y="8" width="90" height="12"
+                               uuid="11efc0c3-1934-4f5f-a43d-c2c92115f990"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="650" y="20" width="60" height="12"
+                               uuid="54d2fb69-5b49-43ed-b832-7d847e3db6e7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="605" y="60" width="80" height="12" uuid="6ed8f031-d2d9-4048-be40-26e609d70222"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{from_dt}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="60" width="80" height="12" uuid="08be6132-8f23-4f00-b942-521d09d1c79f"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="710" y="20" width="90" height="12"
+                               uuid="c593c6f0-c119-419e-b21b-3dd4da6aba54"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="47" y="4" width="127" height="20"
+                               uuid="96f9ed64-fcdd-4350-b544-1646c21fc452"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <image>
+                <reportElement positionType="Float" x="5" y="4" width="40" height="50"
+                               uuid="c026861a-9fdb-4b52-99c1-4edff0d39590"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="327" y="60" width="92" height="12" uuid="c6e748d5-6e5a-4a56-b1d7-6f1e6e54da42"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="140" y="60" width="30" height="12" uuid="53ea5367-b722-48d3-86bf-4d20f3f56f5c"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="650" y="8" width="36" height="12"
+                               uuid="d02d7f2f-63cf-4a7c-9962-79a24d7f7bb7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[User:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="500" y="60" width="42" height="12" uuid="cbbbe55c-9ea0-4f3b-93a6-b78484207137"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_cd}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="430" y="60" width="70" height="12" uuid="19847a57-907f-4b59-9052-4722d3723449"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Code:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="10" y="60" width="39" height="12" uuid="ca144006-d062-48cd-b861-8ca5d50251f1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="180" y="24" width="420" height="24"
+                               uuid="27abb5b4-7844-4a9e-ab4f-8b6a2f06fbf4"/>
+                <textElement textAlignment="Center">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Portfolio Monitoring Report]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="710" y="60" width="80" height="12" uuid="60812219-aad1-49f8-a1e0-8a359d4cf763"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{to_dt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="690" y="60" width="20" height="12" uuid="dc7621f8-9a5f-4f1b-9538-db180583fe0d"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[To :]]></text>
+            </staticText>
+        </band>
+    </title>
+    <detail>
+        <band height="10" splitType="Stretch">
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0" width="40" height="10"
+                               uuid="3c86ecf6-393e-4faf-938c-9ac97815f453">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                </reportElement>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PORT_NM}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="78" y="0" width="36" height="10"
+                               uuid="ec5f5ef3-0217-4963-be59-2bf0eba5d785"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{OST_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="114" y="0" width="40"
+                               height="10" uuid="a4641db4-efc3-4f87-8868-bb52a75c7d1d"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{OST_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="154" y="0" width="32"
+                               height="10" uuid="edeee79b-e8ad-478d-80c1-b52fc1a86b4e"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PERIOD_DUE_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="186" y="0" width="40"
+                               height="10" uuid="cf541319-0a93-4d8e-b2cb-bc1341014c25"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{PERIOD_DUE_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="226" y="0" width="39"
+                               height="10" uuid="3d7b9b0b-d2ae-472e-9191-3ac9d7de0e40"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PERIOD_PAID_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="265" y="0" width="42"
+                               height="10" uuid="e83b2a8b-4617-4238-9b0e-c45f57a3ad0f"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{PERIOD_PAID_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="307" y="0" width="46"
+                               height="10" uuid="e12d5a5c-0c70-4ade-b8c7-09b970aa6160"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TRGT_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="353" y="0" width="38"
+                               height="10" uuid="aa5d5406-acda-4da2-98c4-130d3f723de5"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ACHIV_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="409" y="0" width="46"
+                               height="10" uuid="74d4b4e2-cc8c-49bd-a783-241f9a340c36"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{TRGT_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="455" y="0" width="42"
+                               height="10" uuid="0d4c28b4-2d4d-44fa-b9e4-574d9532effd"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{ACHIV_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="497" y="0" width="18"
+                               height="10" uuid="bec5e694-73bd-4e37-b963-b03729271c15"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ACHIV_AMT}.floatValue()!=0&&$F{TRGT_AMT}.floatValue()!=0?
+new BigDecimal($F{ACHIV_AMT}.floatValue()/$F{TRGT_AMT}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="515" y="0" width="20"
+                               height="10" uuid="7295159c-47e0-49dc-baec-246cd0c272e2"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{OD_LOANS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="535" y="0" width="32"
+                               height="10" uuid="461eb3ef-6171-4e0d-87d9-1be946555cfe"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{OD_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="567" y="0" width="20"
+                               height="10" uuid="ca07d865-fbe2-4dd2-9b86-31bbd515a841"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAY_1_OD_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="587" y="0" width="36"
+                               height="10" uuid="3cc927cb-2168-4a77-b21f-29eb5be1b0b6"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DAY_1_OD_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="641" y="0" width="20"
+                               height="10" uuid="d7f5e86e-7263-4205-b6f0-3d1e55d6f06f"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAY_30_OD_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="661" y="0" width="36"
+                               height="10" uuid="b3ec5e04-465a-49be-920e-e4113ecf901c"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DAY_30_OD_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="715" y="0" width="37"
+                               height="10" uuid="c992dd3c-3b10-4490-873f-448a7974539d"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CMPLTD_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="752" y="0" width="18"
+                               height="10" uuid="8dda904e-308c-4894-9c13-03eba4d4fd94"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{OD_LOANS}-$F{BP_OD_CLNTS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="770" y="0" width="32"
+                               height="10" uuid="59866c1f-de79-40e1-bae1-884b69bef244"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format(($F{OD_AMT}-$F{BP_OD_AMT}))]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="391" y="0" width="18"
+                               height="10" uuid="57c236ce-cdc6-4b98-96d2-7e5548deeca2"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ACHIV_CLNTS}.floatValue()!=0 && $F{TRGT_CLNTS}.floatValue()!=0?
+new BigDecimal($F{ACHIV_CLNTS}.floatValue()/$F{TRGT_CLNTS}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="623" y="0" width="18"
+                               height="10" uuid="00e8b9d0-431e-4c3f-9785-1ba44a3c12b9"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAY_1_OD_AMT}.floatValue()!=0&&$F{OST_AMT}.floatValue()!=0?
+new BigDecimal($F{DAY_1_OD_AMT}.floatValue()/$F{OST_AMT}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="697" y="0" width="18"
+                               height="10" uuid="093ceada-1f65-46aa-af62-c387fe3f5231"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DAY_30_OD_AMT}.floatValue()!=0&&$F{OST_AMT}.floatValue()!=0?
+new BigDecimal($F{DAY_30_OD_AMT}.floatValue()/$F{OST_AMT}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="40" y="0" width="38" height="10"
+                               uuid="aa0b003e-33a5-4138-ae56-8976fc5a6109"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PORT_HANDEL_DT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="12">
+            <textField>
+                <reportElement x="705" y="0" width="52" height="12" uuid="ab3f97fd-77fa-4fbb-ad77-3c64e3a35594"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="757" y="0" width="45" height="12" uuid="8772738e-daac-4204-9739-d0e3a4f790da"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="105" splitType="Stretch">
+            <staticText>
+                <reportElement positionType="Float" x="220" y="22" width="109" height="24"
+                               uuid="68ac0364-645d-4b6c-bc53-148382d22e40"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="220" y="85" width="110" height="1"
+                               uuid="9aa76fc3-fc2e-4f16-bdf8-7c32973b6df6"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="381" y="22" width="109" height="24"
+                               uuid="d30be39f-05c2-4d78-b3d3-7e7cf5a54713"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="672" y="43" width="110" height="19"
+                               uuid="8b1626bd-de77-491a-bbcb-f7a0f16ccaca"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Branch Manager Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="672" y="42" width="110" height="1"
+                               uuid="7fde6869-af71-4161-acef-cc8c8e757d46"/>
+            </line>
+            <line>
+                <reportElement positionType="Float" x="220" y="65" width="110" height="1"
+                               uuid="27acd7bb-ee5c-43a4-a7f5-be2591099457"/>
+            </line>
+            <line>
+                <reportElement positionType="Float" x="220" y="104" width="110" height="1"
+                               uuid="e80d3d3b-a379-4da4-88f9-067907768441"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="210" y="54" width="10" height="14"
+                               uuid="c62e4c06-00b0-4f92-80fc-e30337ccf783"/>
+                <text><![CDATA[1.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="210" y="74" width="10" height="14"
+                               uuid="779720ce-dfdb-4e46-b418-85ced65ff618"/>
+                <text><![CDATA[2.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="210" y="91" width="10" height="14"
+                               uuid="39196425-63b6-4c5b-9183-b8654403ff3a"/>
+                <text><![CDATA[3.]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="390" y="85" width="110" height="1"
+                               uuid="97155193-7de6-416d-954f-db659f20d596"/>
+            </line>
+            <line>
+                <reportElement positionType="Float" x="390" y="65" width="110" height="1"
+                               uuid="93be53c8-7bda-41cb-abcb-aa68044e549d"/>
+            </line>
+            <line>
+                <reportElement positionType="Float" x="390" y="104" width="110" height="1"
+                               uuid="747d9437-bf75-4c5d-95e2-5edb19ce1437"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="380" y="54" width="10" height="14"
+                               uuid="89390e77-efd8-4756-b8ed-6adea71de91e"/>
+                <text><![CDATA[4.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="380" y="74" width="10" height="14"
+                               uuid="b39a3c58-51e3-4930-b652-70fc9ddfc895"/>
+                <text><![CDATA[5.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="380" y="91" width="10" height="14"
+                               uuid="acebf6f0-4758-42b6-8530-ca4a2779c9a9"/>
+                <text><![CDATA[6.]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="715" y="0" width="37" height="10"
+                               uuid="30a1c4fa-d91e-4de1-acb2-67428f2b2d88"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_CMPLTD_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="265" y="0" width="42" height="10"
+                               uuid="e60db2c6-7e4c-4ebb-baed-4f203236ad00"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_PERIOD_PAID_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="154" y="0" width="32" height="10"
+                               uuid="b86ee28c-6f89-41d6-b794-29adf2bfa3b7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_PERIOD_DUE_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="567" y="0" width="20" height="10"
+                               uuid="f5f20279-5847-44da-b79d-d29356f3bca8"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_DAY_1_OD_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="752" y="0" width="18" height="10"
+                               uuid="27aee510-5b76-4a69-9e1d-fd708b3b62dc"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_BP_OD_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="78" y="0" width="36" height="10"
+                               printWhenGroupChanges="prdnmGroup" uuid="998475b0-62a4-4c14-a88f-be72c8ffc91f"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_OST_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="641" y="0" width="20" height="10"
+                               uuid="7d3e9f0e-321a-41fd-8ddd-5d29dabb087f"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_DAY_30_OD_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="409" y="0" width="46" height="10"
+                               uuid="80a61f8c-c0db-4dd0-98ff-601787e15255"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_TRGT_AMT_1})]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="0" y="0" width="78" height="10"
+                               uuid="05e039a9-1c88-4725-95e2-ed96f75d1ca9">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Grand Total: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="353" y="0" width="38" height="10"
+                               uuid="6692ebe2-fc70-4d54-a968-1ed88ea14ff5"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_ACHIV_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="455" y="0" width="42" height="10"
+                               uuid="0f9992b8-317c-4b3e-9984-e0ab1ef6613b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_ACHIV_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="661" y="0" width="36" height="10"
+                               uuid="ded974d0-e773-4a23-a047-17e94e85d4bb"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DAY_30_OD_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="770" y="0" width="32" height="10"
+                               uuid="5b88757e-b741-432e-8ac8-222bf18478fc"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_BP_OD_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="587" y="0" width="36" height="10"
+                               uuid="6b068ba6-6fe3-4dd3-b721-086ac9cc300d"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DAY_1_OD_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="226" y="0" width="39" height="10"
+                               uuid="d5308f73-3da0-4c8d-a020-93636aa843c3"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_PERIOD_PAID_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="307" y="0" width="46" height="10"
+                               uuid="b2ec2353-7b53-4782-b4a4-7b570ab83056"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_TRGT_CLNTS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="535" y="0" width="32" height="10"
+                               uuid="cdb69cb8-eeb6-43a6-8ad7-5b1b0c0b6265"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OD_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="186" y="0" width="40" height="10"
+                               uuid="99d83bc1-5b66-40b2-9fe7-4ed2c95df3fc"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_PERIOD_DUE_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="515" y="0" width="20" height="10"
+                               uuid="ae56f4ee-0338-4186-ac9c-2b9d2490af4c"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_OD_LOANS_1}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="114" y="0" width="40" height="10"
+                               uuid="d6bb9112-3556-4171-a160-bb3d33f3f276"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OST_AMT_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="391" y="0" width="18" height="10" uuid="afd741eb-509c-4084-aa37-d2ea39df6700"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_ACHIV_CLNTS_1}!=0L && $V{TTL_TRGT_CLNTS_1}!=0L?
+new BigDecimal($V{TTL_ACHIV_CLNTS_1}.floatValue()/$V{TTL_TRGT_CLNTS_1}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="497" y="0" width="18" height="10" uuid="067ab736-07d1-448a-8d67-c39f461b444e"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_ACHIV_AMT_1}!=0L && $V{TTL_TRGT_AMT_1}!=0L?
+new BigDecimal($V{TTL_ACHIV_AMT_1}.floatValue()/$V{TTL_TRGT_AMT_1}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="623" y="0" width="18" height="10" uuid="6d92a8d9-2b2c-472b-9af5-d0e12e9ab4a7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_DAY_1_OD_AMT_1}!=0L&& $V{TTL_OST_AMT_1}!=0L?
+new BigDecimal($V{TTL_DAY_1_OD_AMT_1}.floatValue()/$V{TTL_OST_AMT_1}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue():0]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="697" y="0" width="18" height="10" uuid="3c850820-a626-44da-8bee-dd77b45f7211"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new BigDecimal($V{TTL_DAY_30_OD_AMT_1}.floatValue()/$V{TTL_OST_AMT_1}.floatValue()*100).setScale(2, BigDecimal.ROUND_HALF_UP).floatValue()]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

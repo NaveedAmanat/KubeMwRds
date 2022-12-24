@@ -1,0 +1,61 @@
+SELECT clnt_seq CLIENT_PARTY_ID, NULL AS invoice_id, clnt_name NAME, brnch_nm branch_desc, 
+     TO_CHAR (TO_DATE (:todt, 'dd-MM-yyyy'), 'dd-MM-yyyy') billing_month, SUM(next_due) RECOVERY_AMOUNT, 0 SAVING_AMOUNT,
+     SUM(next_due) total_amount, SUM(next_due)  payable_amount_aft_due_date,
+     TO_CHAR ((TO_DATE (:todt,'dd-MM-yyyy') + 25), 'dd-MM-yyyy') due_date
+  FROM (
+        SELECT loan_disb.clnt_seq, loan_disb.loan_app_seq, loan_disb.dsbmt_dt,
+            loan_disb.reg_nm, loan_disb.area_nm, loan_disb.brnch_nm,  loan_disb.brnch_cd,  
+            loan_disb.cnic_num,  loan_disb.clnt_name,  loan_disb.spz_name,
+                NVL((SELECT NVL (psd.PPAL_AMT_DUE, 0) + NVL (psd.TOT_CHRG_DUE, 0) + 
+                    NVL((SELECT sum(AMT) FROM MW_PYMT_SCHED_CHRG psc WHERE psc.pymt_sched_dtl_seq = psd.pymt_sched_dtl_seq AND crnt_rec_flg = 1),0) total
+                FROM MW_PYMT_SCHED_HDR  psh
+                    INNER JOIN MW_PYMT_SCHED_DTL psd
+                        ON psh.PYMT_SCHED_HDR_SEQ = psd.PYMT_SCHED_HDR_SEQ
+                WHERE     psh.CRNT_REC_FLG = 1
+                    AND psd.CRNT_REC_FLG = 1
+                    AND psh.loan_app_seq = loan_disb.loan_app_seq
+                    AND psd.PYMT_SCHED_DTL_SEQ =
+                        (SELECT MIN (innpsd.PYMT_SCHED_DTL_SEQ)
+                            FROM MW_PYMT_SCHED_HDR innpsh, MW_PYMT_SCHED_DTL innpsd
+                            WHERE     innpsh.PYMT_SCHED_HDR_SEQ = innpsd.PYMT_SCHED_HDR_SEQ
+                                AND innpsh.PYMT_SCHED_HDR_SEQ = psh.PYMT_SCHED_HDR_SEQ
+                                AND innpsh.loan_app_seq = psh.loan_app_seq
+                                AND innpsh.CRNT_REC_FLG = 1
+                                AND innpsd.CRNT_REC_FLG = 1
+                                AND innpsd.PYMT_STS_KEY = 945)),0) next_due,
+                (SELECT MAX (psd.due_dt)
+                FROM MW_PYMT_SCHED_HDR  psh
+                    INNER JOIN MW_PYMT_SCHED_DTL psd ON psh.PYMT_SCHED_HDR_SEQ = psd.PYMT_SCHED_HDR_SEQ
+                WHERE psd.CRNT_REC_FLG = 1
+                    AND psd.PYMT_STS_KEY = 945 AND psh.LOAN_APP_SEQ = loan_disb.loan_app_seq) LOAN_END_DATE
+        FROM (
+                SELECT mr.reg_nm,
+                    ma.area_nm,
+                    mb.brnch_nm,
+                    mb.brnch_cd,
+                    ap.clnt_seq,
+                    ap.loan_app_seq,
+                    mc.frst_nm || ' ' || mc.last_nm AS CLNT_NAME,
+                    cnic_num,
+                    (mc.spz_frst_nm || ' ' || mc.spz_last_nm) AS SPZ_NAME,
+                    dvh.dsbmt_dt dsbmt_dt
+                FROM mw_loan_app  ap
+                    INNER JOIN mw_clnt mc ON ap.clnt_seq = mc.clnt_seq
+                    INNER JOIN mw_dsbmt_vchr_hdr dvh ON dvh.loan_app_seq = ap.loan_app_seq
+                    INNER JOIN mw_port mp ON mp.port_seq = ap.port_seq
+                    INNER JOIN mw_brnch mb ON mb.brnch_seq = mp.brnch_seq
+                    INNER JOIN mw_area ma ON ma.area_seq = mb.area_seq
+                    INNER JOIN mw_reg mr ON mr.reg_seq = ma.reg_seq
+                WHERE     ap.crnt_rec_flg = 1
+                    AND dvh.crnt_rec_flg = 1
+                    AND mp.crnt_rec_flg = 1
+                    AND mb.crnt_rec_flg = 1
+                    AND ma.crnt_rec_flg = 1
+                    AND mr.crnt_rec_flg = 1 
+                    --AND BRNCH_CD = 1
+                    AND ap.loan_app_sts = 703
+                    AND trunc (dvh.dsbmt_dt) <= to_date(:todt, 'dd-MM-yyyy')) loan_disb
+        )
+        where next_due > 0
+group by reg_nm, area_nm, brnch_nm, brnch_cd, cnic_num, clnt_name, clnt_seq, SPZ_NAME, dsbmt_dt
+order by reg_nm, area_nm, brnch_nm, brnch_cd, clnt_name

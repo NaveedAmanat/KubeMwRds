@@ -1,0 +1,168 @@
+select c.clnt_seq seq,
+       cnic_num,
+       cnic_expry_dt,
+       frst_nm,
+       last_nm,
+       ph_num,
+       dob,
+       gndr.ref_cd_dscr gndr,
+       'Client' rel_typ,
+       0 rel_typ_flg,
+       'SELF' rel,
+       (case
+         when hse_num is not null then
+          'H No ' || hse_num || ', '
+         else
+          null
+       end) || (case
+         when strt is not null then
+          'St No ' || strt || ', '
+         else
+          null
+       end) || (case
+         when oth_dtl is not null then
+          oth_dtl || ', '
+         else
+          null
+       end) || (case
+         when vlg is not null then
+          vlg || ', '
+         else
+          null
+       end) || city_nm addr,
+       '' FTHR_NM,
+       case
+         when la.prd_seq in (41, 42, 43) then
+          0
+         else
+          c.co_bwr_san_flg
+       end co_bwr_san_flg,
+       case
+         when la.prd_seq in (41, 42, 43) then
+          0
+         else
+          c.slf_pdc_flg
+       end slf_pdc_flg,
+       0 CO_BWR_ADDR_AS_CLNT_FLG
+  from mw_clnt c
+  join mw_loan_app la on la.clnt_seq = c.clnt_seq
+                     and c.crnt_rec_flg = 1
+  left outer join mw_ref_cd_val gndr on c.gndr_key = gndr.ref_cd_seq
+                                    and gndr.crnt_rec_flg = 1
+                                    and gndr.del_flg = 0
+  left outer join mw_addr_rel addrrel on addrrel.enty_key = c.clnt_seq
+                                     and addrrel.crnt_rec_flg = 1
+                                     and addrrel.del_flg = 0
+                                     and addrrel.enty_typ = 'Client'
+  left outer JOIN mw_addr addr ON addr.addr_seq = addrrel.addr_seq
+                              AND addr.crnt_rec_flg = 1
+                              AND addr.del_flg = 0
+  left outer join mw_city_uc_rel rel on rel.city_uc_rel_seq = addr.city_seq
+  left outer JOIN mw_city city ON rel.city_seq = city.city_seq
+                              AND city.crnt_rec_flg = 1
+  left outer join mw_uc uc on uc.uc_seq = rel.uc_seq
+                          and uc.crnt_rec_flg = 1
+  left outer JOIN mw_thsl thsl ON thsl.thsl_seq = uc.thsl_seq
+                              AND thsl.crnt_rec_flg = 1
+  left outer JOIN mw_dist dist ON dist.dist_seq = thsl.dist_seq
+                              AND dist.crnt_rec_flg = 1
+  left outer join mw_st st on st.st_seq = dist.st_seq
+                          AND st.crnt_rec_flg = 1
+  left outer JOIN mw_cntry cntry ON cntry.cntry_seq = st.st_seq
+                                AND cntry.crnt_rec_flg = 1
+ where la.loan_app_seq = :loanAppSeq
+   and la.crnt_rec_flg = 1
+union
+select cr.clnt_rel_seq seq,
+       cnic_num,
+       cnic_expry_dt,
+       frst_nm,
+       last_nm,
+       ph_num,
+       dob,
+       gndr.ref_cd_dscr gndr,
+       decode(cr.rel_typ_flg,
+              '1',
+              'Nominee',
+              '3',
+              'Co-Borrower',
+              '2',
+              'Next of Kin') rel_typ,
+       cr.rel_typ_flg,
+       rel.ref_cd_dscr rel,
+       max((case
+             when hse_num is not null then
+              'H No ' || hse_num || ', '
+             else
+              null
+           end) || (case
+             when strt is not null then
+              'St No ' || strt || ', '
+             else
+              null
+           end) || (case
+             when oth_dtl is not null then
+              oth_dtl || ', '
+             else
+              null
+           end) || (case
+             when vlg is not null then
+              vlg || ', '
+             else
+              null
+           end) || city_nm) addr,
+       cr.FTHR_FRST_NM || ' ' || cr.FTHR_LAST_NM FTHR_NM,
+       0 co_bwr_san_flg,
+       0 slf_pdc_flg,
+       app.CO_BWR_ADDR_AS_CLNT_FLG
+  from mw_clnt_rel cr
+  join mw_ref_cd_val gndr on cr.gndr_key = gndr.ref_cd_seq
+                         and gndr.crnt_rec_flg = 1
+                         and gndr.del_flg = 0
+  join mw_ref_cd_val rel on cr.rel_wth_clnt_key = rel.ref_cd_seq
+                        and rel.crnt_rec_flg = 1
+                        and rel.del_flg = 0
+  left outer join mw_addr_rel addrrel on addrrel.enty_key = cr.clnt_rel_seq
+                                     and enty_typ =
+                                         (case when cr.rel_typ_flg = 1 then
+                                          'Nominee' when cr.rel_typ_flg = 3 then
+                                          'CoBorrower' else '' end)
+                                     and addrrel.crnt_rec_flg = 1
+                                     and addrrel.del_flg = 0
+  left outer JOIN mw_addr addr ON addr.addr_seq = addrrel.addr_seq
+                              AND addr.crnt_rec_flg = 1
+                              AND addr.del_flg = 0
+  left outer join mw_city_uc_rel rel on rel.city_uc_rel_seq = addr.city_seq
+                                    and rel.crnt_rec_flg = 1
+  left outer join mw_city city on rel.city_seq = city.city_seq
+                              and city.crnt_rec_flg = 1
+  left outer join mw_uc uc on uc.uc_seq = rel.uc_seq
+                          and uc.crnt_rec_flg = 1
+  left outer join mw_thsl thsl on thsl.thsl_seq = uc.thsl_seq
+                              and thsl.crnt_rec_flg = 1
+  left outer join mw_dist dist on dist.dist_seq = thsl.dist_seq
+                              and dist.crnt_rec_flg = 1
+  left outer join mw_st st on st.st_seq = dist.st_seq
+                          and st.crnt_rec_flg = 1
+  left outer join mw_cntry cntry on cntry.cntry_seq = st.st_seq
+                                and cntry.crnt_rec_flg = 1
+  join mw_loan_app app on app.loan_app_seq = cr.loan_app_seq
+                      and app.crnt_rec_flg = 1
+ where cr.loan_app_seq = :loanAppSeq
+   and cr.crnt_rec_flg = 1
+   and (cr.rel_typ_flg = 1 or cr.rel_typ_flg = 2 or cr.rel_typ_flg = 3)
+ group by cr.clnt_rel_seq,
+          cnic_num,
+          cnic_expry_dt,
+          frst_nm,
+          last_nm,
+          ph_num,
+          dob,
+          gndr.ref_cd_dscr,
+          cr.rel_typ_flg,
+          cr.rel_typ_flg,
+          rel.ref_cd_dscr,
+          cr.FTHR_FRST_NM,
+          cr.FTHR_LAST_NM,
+          app.CO_BWR_ADDR_AS_CLNT_FLG
+ order by rel_typ_flg

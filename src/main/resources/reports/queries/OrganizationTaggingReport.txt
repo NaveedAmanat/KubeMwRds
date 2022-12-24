@@ -1,0 +1,26 @@
+select reg.reg_nm,ara.area_nm,mb.BRNCH_NM, cl.CLNT_SEQ, cl.FRST_NM||' '||cl.LAST_NM clnt_name, ap.loan_app_seq,  
+                                                     (case when mpg.PRD_GRP_SEQ = 9 then 'SCHOOL' 
+                                                                       when mpg.PRD_GRP_SEQ in (13,19,2) then 'DOMESTIC' 
+                                                                       else nvl(get_app_sect(ap.loan_app_seq),'OTHERS') 
+                                                      end) biz_sect, mpg.PRD_GRP_NM, ap.LOAN_CYCL_NUM,  
+                                                      (case when mt.TYP_ID = '0008' THEN 'BANK' ELSE MT.TYP_STR END) TYP_STR,  
+                                                       to_char(dvh.DSBMT_DT,'dd-mm-yyyy') disb_dt,  
+                                                                   ap.aprvd_loan_amt disb_amt , to_char( cl.DOB,'dd-mm-yyyy') ,  
+                                                                   (select REF_CD_DSCR from mw_ref_cd_val vl where vl.REF_CD_seq = cl.GNDR_KEY) gndr 
+                                                                   from mw_loan_app ap, MW_DSBMT_VCHR_HDR dvh, MW_DSBMT_VCHR_DTL dvd, mw_port mp, mw_acl ma, mw_typs mt, 
+                                                                   mw_clnt cl, mw_prd mprd, mw_prd_grp mpg, mw_brnch mb, mw_area ara, mw_reg reg 
+                                                                   where ap.crnt_rec_flg=1  
+                                                                   and ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ 
+                                                                   and dvh.DSBMT_HDR_SEQ = dvd.DSBMT_HDR_SEQ 
+                                                                   and dvd.PYMT_TYPS_SEQ = mt.TYP_SEQ 
+                                                                   and ap.clnt_seq = cl.clnt_seq 
+                                                                   and mp.BRNCH_SEQ = mb.BRNCH_SEQ                     and cl.CRNT_REC_FLG = 1 
+                                                                   and ara.area_seq=mb.area_seq and ara.crnt_rec_flg=1 
+                                                                   and reg.reg_seq=ara.reg_seq and reg.crnt_rec_flg=1 
+                                                                   and mb.CRNT_REC_FLG = 1                     and mprd.CRNT_REC_FLG = 1 
+                                                                   and mt.TYP_CTGRY_KEY = 3                      and dvd.CRNT_REC_FLG = 1  
+                                                                   and dvh.crnt_rec_flg=1                      and dvh.crnt_rec_flg=1  
+                                                                   and ap.PORT_SEQ = mp.PORT_SEQ                     and ap.PORT_SEQ = ma.PORT_SEQ 
+                                                                   and ap.prd_seq = mprd.PRD_SEQ 
+                                                                   and mprd.PRD_GRP_SEQ = mpg.PRD_GRP_SEQ 
+                                                                   and to_date(dvh.DSBMT_DT) between to_date(:frmdt,'dd-mm-yyyy') and to_date(:todt,'dd-mm-yyyy')

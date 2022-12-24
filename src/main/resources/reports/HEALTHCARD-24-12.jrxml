@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="HEALTHCARD" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="d631f17f-13a9-4666-8a13-9546428e27ff">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <subDataset name="Dataset" uuid="87e86c01-6548-45dc-91b2-1b4da2a351fd">
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+        <queryString>
+            <![CDATA[]]>
+        </queryString>
+        <field name="memberNm" class="java.lang.String"/>
+        <field name="dob" class="java.time.Instant"/>
+    </subDataset>
+    <parameter name="CARD_NO" class="java.lang.String"/>
+    <parameter name="CLNT_NM" class="java.lang.String"/>
+    <parameter name="MEMB_OF" class="java.lang.String"/>
+    <parameter name="CNIC_NUM" class="java.math.BigDecimal"/>
+    <parameter name="CERT_NUM" class="java.lang.String"/>
+    <parameter name="PLCY_NUM" class="java.lang.String"/>
+    <parameter name="CUST_NO" class="java.lang.String"/>
+    <parameter name="DOB" class="java.sql.Timestamp"/>
+    <parameter name="CARD_EXPIRY_DT" class="java.sql.Timestamp"/>
+    <parameter name="BRNCH_NM" class="java.lang.String"/>
+    <parameter name="DATASET" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <parameter name="MAX_PLCY_AMT" class="java.math.BigDecimal"/>
+    <parameter name="ROOM_LIMT" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <background>
+        <band height="174" splitType="Stretch">
+            <rectangle>
+                <reportElement x="2" y="38" width="554" height="136" uuid="4eb399ef-9e4e-49c6-98b4-546194216621"/>
+            </rectangle>
+        </band>
+    </background>
+    <title>
+        <band height="29"/>
+    </title>
+    <columnHeader>
+        <band height="145" splitType="Stretch">
+            <staticText>
+                <reportElement x="14" y="69" width="70" height="10" uuid="c4a9afbd-cdc2-4943-935f-dacd3b71da52"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Customer No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="79" width="70" height="10" uuid="39f86ad9-60a9-4526-96d0-f6f9b4d5bf26"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Date Of Birth]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="89" width="70" height="10" uuid="842f8508-429c-48c5-ae36-d0025bc90fa2"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Valid Upto]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="99" width="70" height="10" uuid="966fc7ee-f9be-4c3e-bbf1-956ad33b50f1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Branch Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="39" width="70" height="10" uuid="0c378283-c69b-40ab-a2a5-9807d405bcd1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[CNIC No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="9" width="70" height="10" uuid="b1b9eae1-7423-420b-acba-f124573ac4fe"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Card No]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="19" width="70" height="10" uuid="76addd69-db42-4f6d-9275-e268a9a9b12a"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Insured Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="29" width="70" height="10" uuid="5e574789-5dcc-405d-ba0a-038346882d30"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Member Of]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="59" width="70" height="10" uuid="d9929909-aca4-40bc-b1a9-d6e66b029d9b"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Policy No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="49" width="70" height="10" uuid="15444ba3-2ae7-43a5-a30d-e7449519b5f1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Certificate No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="123" width="70" height="10" uuid="bb32d79b-0028-4739-a049-cd8022acb478"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Hospitalization]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="134" width="70" height="10" uuid="38079494-69de-461b-bb14-f0953321a0bb"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <text><![CDATA[Room Limit]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="14" y="111" width="106" height="10" uuid="93dd3b3f-9327-46b4-ba6a-21bfc6345413"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+                    <font fontName="SansSerif" size="6" isBold="true" isUnderline="true"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <text><![CDATA[Benifits Covered:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="90" y="9" width="120" height="10" uuid="aae816f2-86ee-49c5-af82-3ec10e4b4ab1"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CARD_NO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="19" width="120" height="10" uuid="a07a3c71-57a7-43cf-a534-3bb4d3f3b37c"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CLNT_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="90" y="29" width="120" height="10"
+                               uuid="6178e224-85f5-4c2d-882c-049b4f2d4d34"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{MEMB_OF}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="39" width="120" height="10" uuid="5d904729-8ce2-45c9-888d-ffd77c03ed59"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CNIC_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="49" width="120" height="10" uuid="5ab09534-7a5b-4c06-bc9a-2fa9a14f3412"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CERT_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="58" width="120" height="10" uuid="8b224e73-010e-458e-a464-4c41242b16bf"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{PLCY_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="68" width="120" height="10" uuid="6a58befd-e8a5-4af3-bbd6-b685bb3b4e8d"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{CUST_NO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="78" width="120" height="10" uuid="211c0a46-20ca-48b0-9a2d-0c65331eb4cc"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yyyy").format($P{DOB})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="88" width="120" height="10" uuid="f5a84bc3-9ed4-4693-81b9-21ad8615554b"/>
+                <textElement>
+                    <font size="6"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yyyy").format($P{CARD_EXPIRY_DT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="98" width="120" height="10" uuid="de6227ae-be0b-4443-b31e-b098baffe94b"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{BRNCH_NM}]]></textFieldExpression>
+            </textField>
+            <componentElement>
+                <reportElement x="280" y="19" width="200" height="10" uuid="63e4f722-4995-481c-8918-651d8f7f4988"/>
+                <jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                         xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd"
+                         printOrder="Vertical">
+                    <datasetRun subDataset="Dataset" uuid="2d93f23c-d3b6-4a52-902a-8544af922afb">
+                        <dataSourceExpression><![CDATA[$P{DATASET}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:listContents height="10" width="200">
+                        <textField>
+                            <reportElement x="0" y="0" width="100" height="10"
+                                           uuid="53c4ebb3-8b47-41ed-a888-bbfc0ce824e1"/>
+                            <textElement>
+                                <font size="6"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$F{memberNm}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="100" y="0" width="100" height="10"
+                                           uuid="31922d7e-932f-4e8b-989c-329b9fc3d550"/>
+                            <textElement>
+                                <font size="6"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[new SimpleDateFormat("dd-MM-yyyy").format(Date.from($F{dob}))]]></textFieldExpression>
+                        </textField>
+                    </jr:listContents>
+                </jr:list>
+            </componentElement>
+            <staticText>
+                <reportElement x="280" y="9" width="200" height="10" uuid="19d7a3c8-0c77-4eb2-ac3d-9afe37e9d2cb"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle" markup="styled">
+                    <font fontName="SansSerif" size="6" isBold="true" isUnderline="true"/>
+                    <paragraph lineSpacing="Single"/>
+                </textElement>
+                <text><![CDATA[List of Covered Dependents:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="90" y="134" width="184" height="10" uuid="08ca74de-4813-4ec8-8ce0-a0e37c637dfb"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{ROOM_LIMT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="123" width="120" height="10" uuid="bee8c03a-4f2d-4478-8e30-03fa1b4f156f"/>
+                <textElement>
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{MAX_PLCY_AMT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="480" y="7" width="75" height="10"
+                               uuid="f7d78df1-9d5f-433a-a98e-9465af525323"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="6"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+        </band>
+    </columnHeader>
+</jasperReport>

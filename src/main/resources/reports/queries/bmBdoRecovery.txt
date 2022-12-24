@@ -1,0 +1,329 @@
+SELECT brnch_nm
+                 branch,
+             emp_nm
+                 bdo_name,
+             SUM (CASE WHEN due_recovery <> 0 THEN 1 ELSE 0 END)
+                 AS due_recovery_count,
+             SUM (due_recovery)
+                 AS monthly_due_amount,
+             SUM (CASE WHEN due_recovered <> 0 THEN 1 ELSE 0 END)
+                 AS due_recovered_count,
+             SUM (due_recovered)
+                 AS due_recovered,
+             SUM (CASE WHEN overdue_recovered <> 0 THEN 1 ELSE 0 END)
+                 AS overdue_recovered_count,
+             SUM (overdue_recovered)
+                 AS overdue_recovered,
+             SUM (CASE WHEN advance_recovered <> 0 THEN 1 ELSE 0 END)
+                 AS advance_recovered_count,
+             SUM (advance_recovered)
+                 AS advance_recovered,
+             SUM (
+                 CASE
+                     WHEN    due_recovered <> 0
+                          OR overdue_recovered <> 0
+                          OR advance_recovered <> 0
+                     THEN
+                         1
+                     ELSE
+                         0
+                 END)
+                 AS total_recovered_count,
+               SUM (due_recovered)
+             + SUM (overdue_recovered)
+             + SUM (advance_recovered)
+                 AS total_recovered_amount,
+             ROUND (
+                   (  (  SUM (due_recovered)
+                       + SUM (overdue_recovered)
+                       + SUM (advance_recovered))
+                    / NVL (NULLIF (SUM (due_recovery), 0), 1))
+                 * 100,
+                 2)
+                 AS recovered_vs_monthly_due
+        FROM (  SELECT brnch_nm,
+                       emp_nm,
+                       loan_app.loan_App_seq,
+                       SUM (
+                             NVL (
+                                 (SELECT   NVL (SUM (psd.ppal_amt_due), 0)
+                                         - SUM (
+                                               NVL (
+                                                   (  SELECT SUM (
+                                                                 NVL (
+                                                                     rdtl.pymt_amt,
+                                                                     0))
+                                                        FROM mw_rcvry_dtl rdtl
+                                                             INNER JOIN
+                                                             mw_rcvry_trx trx
+                                                                 ON trx.rcvry_trx_seq =
+                                                                    rdtl.rcvry_trx_seq
+                                                       WHERE     trx.crnt_rec_flg =
+                                                                 1
+                                                             AND rdtl.crnt_rec_flg =
+                                                                 1
+                                                             AND rdtl.chrg_typ_key =
+                                                                 -1
+                                                             AND 
+                                                                     TRUNC(trx.pymt_dt) <=
+                                                                 (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS')) - 1
+                                                             AND rdtl.pymt_sched_dtl_seq =
+                                                                 psd.pymt_sched_dtl_seq
+                                                    GROUP BY rdtl.pymt_sched_dtl_seq),
+                                                   0))
+                                         + NVL (SUM (tot_chrg_due), 0)
+                                         - SUM (
+                                               NVL (
+                                                   (  SELECT SUM (
+                                                                 NVL (
+                                                                     rdtl.pymt_amt,
+                                                                     0))
+                                                        FROM mw_rcvry_dtl rdtl
+                                                             INNER JOIN
+                                                             mw_rcvry_trx trx
+                                                                 ON trx.rcvry_trx_seq =
+                                                                    rdtl.rcvry_trx_seq
+                                                       WHERE     trx.crnt_rec_flg =
+                                                                 1
+                                                             AND rdtl.crnt_rec_flg =
+                                                                 1
+                                                             AND 
+                                                                    TRUNC( trx.pymt_dt) <=
+                                                                 (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS')) - 1
+                                                             AND rdtl.pymt_sched_dtl_seq =
+                                                                 psd.pymt_sched_dtl_seq
+                                                             AND (rdtl.chrg_typ_key IN
+                                                                      (SELECT mt.typ_seq
+                                                                         FROM mw_typs
+                                                                              mt
+                                                                        WHERE     mt.typ_id =
+                                                                                  '0017'
+                                                                              AND mt.crnt_rec_flg =
+                                                                                  1))
+                                                    GROUP BY rdtl.pymt_sched_dtl_seq),
+                                                   0))
+                                         + NVL (
+                                               SUM (
+                                                   (SELECT SUM (amt)
+                                                      FROM mw_pymt_sched_chrg psc
+                                                     WHERE     psc.pymt_sched_dtl_seq =
+                                                               psd.pymt_sched_dtl_seq
+                                                           AND crnt_rec_flg = 1)),
+                                               0)
+                                         - SUM (
+                                               NVL (
+                                                   (  SELECT SUM (
+                                                                 NVL (
+                                                                     rdtl.PYMT_AMT,
+                                                                     0))
+                                                        FROM mw_rcvry_dtl rdtl
+                                                             INNER JOIN
+                                                             mw_rcvry_trx trx
+                                                                 ON trx.RCVRY_TRX_SEQ =
+                                                                    rdtl.RCVRY_TRX_SEQ
+                                                       WHERE     trx.crnt_rec_flg =
+                                                                 1
+                                                             AND rdtl.crnt_rec_flg =
+                                                                 1
+                                                             AND 
+                                                                     trunc(trx.pymt_dt) <=
+                                                                 (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS')) - 1
+                                                             AND rdtl.pymt_sched_dtl_seq =
+                                                                 psd.pymt_sched_dtl_seq
+                                                             AND rdtl.CHRG_TYP_KEY NOT IN
+                                                                     (-1,
+                                                                      416,
+                                                                      413,
+                                                                      418,
+                                                                      419,
+                                                                      383,
+                                                                      414,
+                                                                      17,
+                                                                      415,
+                                                                      417,
+                                                                      412,
+                                                                      410,
+                                                                      411)
+                                                    GROUP BY rdtl.pymt_sched_dtl_seq),
+                                                   0))
+                                             overdue_amount
+                                    FROM mw_loan_app ap
+                                         INNER JOIN mw_pymt_sched_hdr psh
+                                             ON psh.loan_app_seq =
+                                                ap.loan_app_seq
+                                         INNER JOIN mw_pymt_sched_dtl psd
+                                             ON psd.pymt_sched_hdr_seq =
+                                                psh.pymt_sched_hdr_seq
+                                         INNER JOIN mw_ref_cd_val vl
+                                             ON vl.ref_cd_seq = psd.pymt_sts_key
+                                   WHERE     (   psd.pymt_sts_key IN
+                                                     ('0945', '1145')
+                                              OR (    psd.pymt_sts_key = '0948'
+                                                  AND (SELECT MAX (trx.pymt_dt)
+                                                         FROM mw_rcvry_dtl rdtl
+                                                              INNER JOIN
+                                                              mw_rcvry_trx trx
+                                                                  ON trx.rcvry_trx_seq =
+                                                                     rdtl.rcvry_trx_seq
+                                                        WHERE     trx.crnt_rec_flg =
+                                                                  1
+                                                              AND rdtl.pymt_sched_dtl_seq =
+                                                                  psd.pymt_sched_dtl_seq) >
+                                                      (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS')) - 1))
+                                         AND ap.crnt_rec_flg = 1
+                                         AND vl.crnt_rec_flg = 1
+                                         AND psd.due_dt <= (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS')) - 1
+                                         AND psd.crnt_rec_flg = 1
+                                         AND psh.crnt_rec_flg = 1
+                                         AND ap.prd_seq NOT IN (13, 14)
+                                         AND ap.loan_app_seq =
+                                             loan_app.loan_app_seq),
+                                 0)
+                           + (SELECT NVL (
+                                           NVL (SUM (NVL (psd.ppal_amt_due, 0)),
+                                                0)
+                                         + NVL (SUM (NVL (psd.tot_chrg_due, 0)),
+                                                0)
+                                         + NVL (
+                                               SUM (
+                                                   (SELECT SUM (NVL (amt, 0))
+                                                      FROM mw_pymt_sched_chrg
+                                                           chrg
+                                                     WHERE     chrg.pymt_sched_dtl_seq =
+                                                               psd.pymt_sched_dtl_seq
+                                                           AND chrg.crnt_rec_flg =
+                                                               1)),
+                                               0),
+                                         0)
+                                         DUE_AMOUNT
+                                FROM mw_pymt_sched_hdr psh
+                                     INNER JOIN mw_pymt_sched_dtl psd
+                                         ON psh.loan_app_seq =
+                                            loan_app.loan_app_seq
+                               WHERE     psh.crnt_rec_flg = 1
+                                     AND psd.crnt_rec_flg = 1
+                                     AND psh.pymt_sched_hdr_seq =
+                                         psd.pymt_sched_hdr_seq
+                                     AND TRUNC (psd.due_dt) BETWEEN (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                                                   AND (TO_DATE((TO_CHAR(:todt)||' 23:59:59'),'DD-MON-RRRR HH24:MI:SS'))
+                                     AND psd.pymt_sts_key IN ('0945',
+                                                              '0946',
+                                                              '0947',
+                                                              '0948',
+                                                              '1145')))
+                           DUE_RECOVERY,
+                       SUM (
+                           NVL (
+                               (SELECT SUM (rdtl.pymt_amt)     AS samemonth
+                                  FROM mw_loan_app ap
+                                       INNER JOIN mw_pymt_sched_hdr psh
+                                           ON psh.loan_app_seq = ap.loan_app_seq
+                                       INNER JOIN mw_pymt_sched_dtl psd
+                                           ON psd.pymt_sched_hdr_seq =
+                                              psh.pymt_sched_hdr_seq
+                                       INNER JOIN mw_rcvry_dtl rdtl
+                                           ON rdtl.pymt_sched_dtl_seq =
+                                              psd.pymt_sched_dtl_seq
+                                       INNER JOIN mw_rcvry_trx rht
+                                           ON rht.rcvry_trx_seq =
+                                              rdtl.rcvry_trx_seq
+                                 WHERE     AP.loan_app_seq =
+                                           loan_App.loan_app_seq
+                                       AND TRUNC (rht.pymt_dt) BETWEEN (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                                                   AND (TO_DATE((TO_CHAR(:todt)||' 23:59:59'),'DD-MON-RRRR HH24:MI:SS'))
+                                       AND TRUNC (psd.due_dt) BETWEEN (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                                                  AND (TO_DATE((TO_CHAR(:todt)||' 23:59:59'),'DD-MON-RRRR HH24:MI:SS'))
+                                       AND psd.PYMT_STS_KEY NOT IN
+                                               ('0949', '0950', '1500')
+                                       AND ap.crnt_rec_flg = 1
+                                       AND psh.crnt_rec_flg = 1
+                                       AND psd.crnt_rec_flg = 1
+                                       AND rdtl.crnt_rec_flg = 1
+                                       AND rht.crnt_rec_flg = 1),
+                               0))
+                           DUE_RECOVERED,
+                       SUM (
+                           NVL (
+                               (SELECT SUM (rdtl.pymt_amt)     AS overdue
+                                  FROM mw_loan_app ap
+                                       INNER JOIN mw_pymt_sched_hdr psh
+                                           ON psh.loan_app_seq = ap.loan_app_seq
+                                       INNER JOIN mw_pymt_sched_dtl psd
+                                           ON psd.pymt_sched_hdr_seq =
+                                              psh.pymt_sched_hdr_seq
+                                       INNER JOIN mw_rcvry_dtl rdtl
+                                           ON rdtl.pymt_sched_dtl_seq =
+                                              psd.pymt_sched_dtl_seq
+                                       INNER JOIN mw_rcvry_trx rht
+                                           ON rht.rcvry_trx_seq =
+                                              rdtl.rcvry_trx_seq
+                                 WHERE     AP.loan_app_seq =
+                                           loan_App.loan_app_seq
+                                       AND TRUNC (rht.pymt_dt) BETWEEN (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                                                   AND (TO_DATE((TO_CHAR(:todt)||' 23:59:59'),'DD-MON-RRRR HH24:MI:SS'))
+                                       AND TRUNC (psd.due_dt) < (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                       AND psd.PYMT_STS_KEY NOT IN
+                                               ('0949', '0950', '1500')
+                                       AND ap.crnt_rec_flg = 1
+                                       AND psh.crnt_rec_flg = 1
+                                       AND psd.crnt_rec_flg = 1
+                                       AND rdtl.crnt_rec_flg = 1
+                                       AND rht.crnt_rec_flg = 1),
+                               0))
+                           OVERDUE_RECOVERED,
+                       SUM (
+                           NVL (
+                               (SELECT SUM (rdtl.pymt_amt)     AS ADVANCE
+                                  FROM mw_loan_app ap
+                                       INNER JOIN mw_pymt_sched_hdr psh
+                                           ON psh.loan_app_seq = ap.loan_app_seq
+                                       INNER JOIN mw_pymt_sched_dtl psd
+                                           ON psd.pymt_sched_hdr_seq =
+                                              psh.pymt_sched_hdr_seq
+                                       INNER JOIN mw_rcvry_dtl rdtl
+                                           ON rdtl.pymt_sched_dtl_seq =
+                                              psd.pymt_sched_dtl_seq
+                                       INNER JOIN mw_rcvry_trx rht
+                                           ON rht.rcvry_trx_seq =
+                                              rdtl.rcvry_trx_seq
+                                 WHERE     AP.loan_app_seq =
+                                           loan_App.loan_app_seq
+                                       AND TRUNC (rht.pymt_dt) BETWEEN (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                                                   AND (TO_DATE((TO_CHAR(:todt)||' 23:59:59'),'DD-MON-RRRR HH24:MI:SS'))
+                                       AND TRUNC (rht.pymt_dt) <
+                                           TRUNC (psd.due_dt)
+                                       AND TRUNC (psd.due_dt) > (TO_DATE((TO_CHAR(:frmdt)||' 00:00:01'),'DD-MON-RRRR HH24:MI:SS'))
+                                       AND psd.PYMT_STS_KEY NOT IN
+                                               ('0949', '0950', '1500')
+                                       AND ap.crnt_rec_flg = 1
+                                       AND psh.crnt_rec_flg = 1
+                                       AND psd.crnt_rec_flg = 1
+                                       AND rdtl.crnt_rec_flg = 1
+                                       AND rht.crnt_rec_flg = 1),
+                               0))
+                           ADVANCE_RECOVERED
+                  FROM mw_brnch brnch
+                       INNER JOIN mw_port prt ON prt.brnch_seq = brnch.brnch_seq
+                       INNER JOIN mw_port_emp_rel erl
+                           ON erl.port_seq = prt.port_seq
+                       INNER JOIN mw_emp emp ON emp.emp_seq = erl.emp_seq
+                       INNER JOIN mw_brnch_prd_rel prl
+                           ON prl.brnch_seq = brnch.brnch_seq
+                       INNER JOIN mw_prd prd ON prd.prd_seq = prl.prd_seq
+                       INNER JOIN mw_prd_grp grp
+                           ON grp.prd_grp_seq = prd.prd_grp_seq
+                       INNER JOIN mw_loan_app loan_app
+                           ON     loan_App.port_seq = prt.port_Seq
+                              AND prd.prd_Seq = loan_app.prd_seq
+                       INNER JOIN pre_covid_apr20_outs_loan_apps pre_covid
+                           ON pre_covid.loan_app_seq = loan_App.loan_app_seq
+                       INNER JOIN mw_acl acl ON acl.port_Seq = prt.port_Seq
+                 WHERE     acl.user_id = to_char(:userId)
+                       AND erl.crnt_rec_flg = 1
+                       AND prl.crnt_rec_flg = 1
+                       AND prd.crnt_rec_flg = 1
+                       AND grp.crnt_rec_flg = 1
+                       AND prt.crnt_rec_flg = 1
+                       AND loan_app.crnt_rec_flg = 1
+              GROUP BY brnch_nm, loan_app.loan_App_seq, emp_nm)
+    GROUP BY brnch_nm, emp_nm   

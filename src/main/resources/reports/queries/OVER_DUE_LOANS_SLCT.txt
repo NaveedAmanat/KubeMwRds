@@ -1,0 +1,5 @@
+SELECT *
+  FROM MW_OD_CREDIT_REPORT_TBL gtl
+ WHERE od_amt > 0 AND 
+ :P_TYPE = gtl.p_type
+ORDER BY 2, 14

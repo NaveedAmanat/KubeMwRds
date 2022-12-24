@@ -1,0 +1,2 @@
+select biz_inc,biz_exp,prm_incm hfs_incm,sec_incm,hsld_exp,ndi from vw_loan_app where loan_app_seq=:loanAppSeq
+               

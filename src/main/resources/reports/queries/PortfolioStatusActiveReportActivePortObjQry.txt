@@ -1,0 +1,123 @@
+select distinct grp.prd_grp_nm,
+nvl(ost_clnt,0) tot_clnt,
+nvl(dsb_amt,0) tot_clnt_amt,
+nvl(dsb_clnts_1st_lc,0) new_clnt,
+nvl(dsb_amt_1st_lc,0) new_clnt_amt,
+nvl(dsb_clnts_2st_lc,0) rpt_clnt,
+nvl(dsb_amt_2st_lc,0) rpt_clnt_amt,
+nvl(ost_amt,0) ost_amt,
+nvl(par_1_dy_amt,0) par_1_dy_amt,
+nvl(par_1_30_day_amt,0) par_1__29_day_amt,
+nvl(par_30_day_amt,0) par_over_30_amt,
+nvl(par_1_dy_cnt,0) od_clnts,
+nvl(par_30_day_cnt,0) od_clnts_30,
+nvl(dsb_clnt_2st_lc_mnth,0) rnw_clnt_month,
+nvl(cmpltd_loans,0) cmpltd_mnth,   
+nvl(rep,0) rep_mnth,
+nvl(dsb_loans,0) dsbmt_mnth, 
+nvl(fml_prt,0) fml_prt
+from mw_brnch brnch
+join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnchSeq
+-- in (select distinct mp1.brnch_seq from mw_acl acl1, mw_port mp1 where acl1.port_seq=mp1.port_seq and acl1.user_id=:user_id)
+join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+join mw_emp emp on emp.emp_seq=erl.emp_seq
+join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq and prl.crnt_rec_flg=1
+join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+join mw_prd_grp grp on grp.prd_grp_seq=prd.prd_grp_seq and grp.crnt_rec_flg=1
+left outer join
+(
+select grp.prd_grp_seq,count(ap.loan_app_seq) ost_clnt,
+sum(nvl(ap.APRVD_LOAN_AMT,0)) dsb_amt,
+count(case when ap.LOAN_CYCL_NUM = 1 then nvl(ap.loan_app_seq,0) end) dsb_clnts_1st_lc,
+count(case when ap.LOAN_CYCL_NUM > 1 then nvl(ap.loan_app_seq,0) end) dsb_clnts_2st_lc,
+sum(case when ap.LOAN_CYCL_NUM = 1 then nvl(ap.APRVD_LOAN_AMT,0) end) dsb_amt_1st_lc,
+sum(case when ap.LOAN_CYCL_NUM > 1 then nvl(ap.APRVD_LOAN_AMT,0) end) dsb_amt_2st_lc,
+sum(loan_app_ost(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'psc')) ost_amt,
+count(case when TRUNC(dvh.DSBMT_DT) BETWEEN TRUNC(to_date(:to_dt, 'dd-MM-yyyy'),'month') AND last_day(to_date(:to_dt, 'dd-MM-yyyy')) then dvh.loan_app_seq end) dsb_loans,
+count(case when (ap.LOAN_CYCL_NUM > 1 and TRUNC(dvh.DSBMT_DT) BETWEEN TRUNC(to_date(:to_dt, 'dd-MM-yyyy'),'month') AND last_day(to_date(:to_dt, 'dd-MM-yyyy')) ) then nvl(dvh.loan_app_seq,0) end) dsb_clnt_2st_lc_mnth,
+count((select apr.loan_app_seq from mw_biz_aprsl apr where apr.PRSN_RUN_THE_BIZ in (190,1058,1056,1057,1059,191,1055) and apr.loan_app_seq = ap.loan_app_seq and apr.crnt_rec_flg = 1)) fml_prt
+from mw_loan_app ap
+join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1
+join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1
+join mw_prd_grp grp on grp.prd_grp_seq=prd.prd_grp_seq and grp.crnt_rec_flg=1
+join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq =:brnchSeq,
+-- in (select distinct brnch_seq from mw_acl acl1, mw_port mp1 where acl1.port_seq=mp1.port_seq and acl1.user_id=:user_id),
+mw_dsbmt_vchr_hdr dvh
+where ( (asts.ref_cd='0005' and trunc(ap.loan_app_sts_dt) <= to_date(:to_dt, 'dd-MM-yyyy') and ap.crnt_rec_flg=1)
+or (asts.ref_cd='0006' and trunc(ap.loan_app_sts_dt) > to_date(:to_dt, 'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:to_dt, 'dd-MM-yyyy')
+and ap.crnt_rec_flg=1)
+or (asts.ref_cd='1245' and trunc(ap.loan_app_sts_dt) > to_date(:to_dt, 'dd-MM-yyyy'))) and dvh.loan_app_seq = ap.loan_app_seq
+and dvh.crnt_rec_flg = 1
+and loan_app_ost(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'psc') > 0
+and not exists (select distinct ctl.loan_app_seq from mw_clnt_tag_list ctl where ctl.loan_app_seq = ap.loan_app_seq
+and trunc(ctl.eff_start_dt) <= to_date(:to_dt, 'dd-MM-yyyy') and ctl.tags_seq = 4 and ctl.crnt_rec_flg=1)
+group by grp.prd_grp_seq
+) ost on ost.prd_grp_seq=grp.prd_grp_seq
+left outer join
+(
+select prd_grp_seq,
+count(par_1_dy_cnt) par_1_dy_cnt,
+count(par_30_day_cnt) par_30_day_cnt,
+sum(nvl(od_amt,0)) od_amt,
+sum(nvl(par_1_dy_amt,0)) par_1_dy_amt,
+sum(nvl(par_1_30_day,0)) par_1_30_day_amt,
+sum(nvl(par_30_day,0)) par_30_day_amt
+from
+(
+select prd_grp_seq,
+od_clnt par_1_dy_cnt,
+par_30_day_cnt par_30_day_cnt,
+sum(nvl(od_amt,0)) od_amt,
+sum(nvl(par_1_dy_amt,0)) par_1_dy_amt,
+sum(nvl(par_1_30_day,0)) par_1_30_day,
+sum(nvl(par_30_day,0)) par_30_day
+from(
+select grp.prd_grp_seq, ap.loan_app_seq od_clnt,
+GET_OD_INFO(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'psc') od_amt,
+loan_app_ost(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'psc') par_1_dy_amt,
+(case when GET_OD_INFO(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'d') > 28.5 then ap.loan_app_seq end) par_30_day_cnt,
+(case when GET_OD_INFO(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'d') <= 28.5 then loan_app_ost(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'psc') end) par_1_30_day,
+(case when GET_OD_INFO(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'d') > 28.5 then loan_app_ost(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'psc') end) par_30_day,
+GET_OD_INFO(ap.loan_app_seq,to_date(:to_dt, 'dd-MM-yyyy'),'d') od_dys
+from mw_loan_app ap
+join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1
+join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1
+join mw_prd_grp grp on grp.prd_grp_seq=prd.prd_grp_seq and grp.crnt_rec_flg=1
+join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnchSeq,
+--in (select distinct brnch_seq from mw_acl acl1, mw_port mp1 where acl1.port_seq=mp1.port_seq and acl1.user_id=:user_id),
+mw_dsbmt_vchr_hdr dvh
+where ( (asts.ref_cd='0005' and trunc(ap.loan_app_sts_dt) <= to_date(:to_dt, 'dd-MM-yyyy') and ap.crnt_rec_flg=1)
+or (asts.ref_cd='0006' and trunc(ap.loan_app_sts_dt) > to_date(:to_dt, 'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:to_dt, 'dd-MM-yyyy'))
+or (asts.ref_cd='1245' and trunc(ap.loan_app_sts_dt) > to_date(:to_dt, 'dd-MM-yyyy'))) and dvh.loan_app_seq = ap.loan_app_seq
+and dvh.crnt_rec_flg = 1
+and not exists (select distinct ctl.loan_app_seq from mw_clnt_tag_list ctl where ctl.loan_app_seq = ap.loan_app_seq
+and trunc(ctl.eff_start_dt) <= to_date(:to_dt, 'dd-MM-yyyy') and ctl.tags_seq = 4 and ctl.crnt_rec_flg=1)
+)
+group by prd_grp_seq,od_clnt,par_30_day_cnt
+having sum(nvl(od_amt,0)) > 0
+) group by prd_grp_seq
+) od
+on od.prd_grp_seq=grp.prd_grp_seq
+left outer join
+(
+select grp.prd_grp_seq,count(ap.loan_app_seq) cmpltd_loans ,
+count((
+select ap1.CLNT_SEQ
+from mw_loan_app ap1, mw_dsbmt_vchr_hdr dvh1
+where ap1.LOAN_APP_SEQ = dvh1.LOAN_APP_SEQ and ap1.CRNT_REC_FLG = 1
+and dvh1.CRNT_REC_FLG = 1 and ap1.LOAN_CYCL_NUM > 1 and
+trunc(dvh1.DSBMT_DT) between trunc(to_date(:to_dt, 'dd-MM-yyyy'),'month') and last_day(to_date(:to_dt, 'dd-MM-yyyy'))
+and ap1.CLNT_SEQ = ap.clnt_seq and ap1.prd_Seq = ap.prd_seq
+)) rep
+from mw_loan_app ap
+join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1
+join mw_prd_grp grp on grp.prd_grp_seq=prd.prd_grp_seq and grp.crnt_rec_flg=1
+join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnchSeq
+join mw_ref_cd_val lsts on lsts.ref_cd_seq=ap.loan_app_sts and lsts.crnt_rec_flg=1 where ap.crnt_rec_flg=1
+and lsts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) between trunc(to_date(:to_dt, 'dd-MM-yyyy'),'month') and last_day(to_date(:to_dt, 'dd-MM-yyyy'))
+and ap.crnt_rec_flg=1
+group by grp.prd_grp_seq
+) cmpltd
+on cmpltd.prd_grp_seq=grp.prd_grp_seq
+where (nvl(ost_clnt,0)+ nvl(ost_amt,0)+
+nvl(par_1_dy_cnt,0)+ nvl(par_1_dy_amt,0)+ nvl(par_30_day_cnt,0)+ nvl(par_30_day_amt,0)+nvl(cmpltd_loans,0)) > 0

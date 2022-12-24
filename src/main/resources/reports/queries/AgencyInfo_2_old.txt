@@ -1,0 +1,21 @@
+select case when clnt.co_bwr_san_flg=1 then nom_nm else cbwr_nm end prvdr_nm,
+ph.acct_num,pd.chq_num,amt
+from mw_pdc_hdr ph
+join mw_pdc_dtl pd on pd.pdc_hdr_seq=ph.pdc_hdr_seq and pd.crnt_rec_flg=1
+join mw_loan_app ap on ap.loan_app_seq = ph.loan_app_seq and ap.crnt_rec_flg=1
+join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1
+left outer join (select loan_app_seq,nom.frst_nm||' '||nom.last_nm nom_nm
+from mw_clnt_rel nom
+where nom.crnt_rec_flg=1
+and rel_typ_flg=1
+and nom.loan_app_seq=:loanAppSeq
+) nmi on nmi.loan_app_seq=ap.loan_app_seq
+left outer join (select loan_app_seq,nom.frst_nm||' '||nom.last_nm cbwr_nm
+from mw_clnt_rel nom
+where nom.crnt_rec_flg=1
+and rel_typ_flg=1
+and nom.loan_app_seq=:loanAppSeq
+) cbwr on cbwr.loan_app_seq=ap.loan_app_seq
+where ph.crnt_rec_flg=1
+and ph.loan_app_seq=:loanAppSeq
+

@@ -1,0 +1,17 @@
+select me.EMP_NM, mgrp.PRD_GRP_NM, mc.CLNT_ID, mc.FRST_NM||' '||mc.LAST_NM Clnt_nm,
+mc.SPZ_FRST_NM||' '||mc.SPZ_LAST_NM hsbnd_nm, ap.APRVD_LOAN_AMT, to_date(ap.LAST_UPD_DT) dsb_dt,
+(to_date(:to_dt,'dd-MM-yyyy') - to_date(ap.LAST_UPD_DT)) pndng_dys 
+from mw_loan_app ap, mw_port mp, mw_port_emp_rel mpr, mw_emp me, mw_clnt mc,
+mw_prd mprd, mw_prd_grp mgrp, mw_acl mcl
+where ap.PORT_SEQ = mp.PORT_SEQ and ap.CRNT_REC_FLG = 1
+and mp.PORT_SEQ = mpr.PORT_SEQ and mp.CRNT_REC_FLG = 1
+and mpr.EMP_SEQ = me.EMP_SEQ and mpr.CRNT_REC_FLG = 1
+and ap.CLNT_SEQ = mc.CLNT_SEQ and mc.CRNT_REC_FLG = 1
+and ap.PRD_SEQ = mprd.PRD_SEQ and mprd.crnt_rec_flg = 1
+and mprd.PRD_GRP_SEQ = mgrp.PRD_GRP_SEQ and mgrp.CRNT_REC_FLG = 1
+and mp.PORT_SEQ = mcl.PORT_SEQ
+and me.EMP_SEQ = mpr.EMP_SEQ and mcl.USER_ID = :usrid
+and mp.brnch_seq = :brnch_cd
+and ap.LAST_UPD_DT between to_date(:from_dt,'dd-MM-yyyy') and to_date(:to_dt,'dd-MM-yyyy')
+and ap.LOAN_APP_STS = 1305
+order by pndng_dys desc

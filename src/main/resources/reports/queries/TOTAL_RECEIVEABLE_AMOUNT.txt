@@ -1,0 +1,6 @@
+select sum(ppal_amt_due)ppal_amt_due,sum(tot_chrg_due) tot_chrg_due,sum(amt) amt from 
+             (select psd.ppal_amt_due,psd.tot_chrg_due,sum(psc.amt) amt   from mw_pymt_sched_hdr psh 
+             join mw_pymt_sched_dtl psd on psh.pymt_sched_hdr_seq=psd.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+             left outer join mw_pymt_sched_chrg psc on psd.pymt_sched_dtl_seq = psc.pymt_sched_dtl_seq and psc.crnt_rec_flg=1 
+             where psh.loan_app_seq=:loanAppSeq and psh.crnt_rec_flg=1 
+             group by psd.pymt_sched_dtl_seq,psd.ppal_amt_due,psd.tot_chrg_due   )

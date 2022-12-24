@@ -1,0 +1,7 @@
+select lad.doc_seq, doc_img,d.doc_nm    from mw_loan_app_doc lad 
+                 join mw_doc d on d.doc_seq=lad.doc_seq and d.crnt_rec_flg = 1 and doc_nm='CLIENTS PICTURE'
+                 where lad.loan_app_seq=:loanAppSeq and lad.crnt_rec_flg = 1 
+union all select lad.doc_seq, doc_img,d.doc_nm    from mw_loan_app_doc lad 
+                 join mw_doc d on d.doc_seq=lad.doc_seq and d.crnt_rec_flg = 1 and doc_nm='NOMINEE PICTURE' 
+                 join mw_clnt_rel rel on rel.LOAN_APP_SEQ = lad.LOAN_APP_SEQ and rel.crnt_rec_flg =1 and rel.REL_TYP_FLG = 1
+                 where lad.loan_app_seq=:loanAppSeq and lad.crnt_rec_flg = 1 order by 1

@@ -1,0 +1,21 @@
+select  mb.BRNCH_NM,    
+    sum((select mjd.amt from mw_jv_hdr mjh, mw_jv_dtl mjd
+        where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ and mjh.ENTY_SEQ = dvh.DSBMT_HDR_SEQ 
+        and UPPER(mjh.ENTY_TYP) = 'DISBURSEMENT'
+        AND mjd.CRDT_DBT_FLG = 0 AND mjd.GL_ACCT_NUM = mt.GL_ACCT_NUM
+        )) DISB_AMOUNT,
+    '10.0101001' || SUBSTR(case when  mt.TYP_ID in (16228,16229)  then mt.GL_ACCT_NUM else null end, 8) || '.0000' BANK
+    from mw_loan_app ap              
+    join mw_prd prd on ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG = 1                 
+    join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1
+    join mw_brnch mb on prt.brnch_seq = mb.brnch_seq and mb.crnt_rec_flg = 1
+    join mw_area ma on ma.area_seq = mb.area_seq  and ma.crnt_rec_flg = 1 
+    join mw_reg mr on mr.reg_seq = ma.reg_seq  and mr.crnt_rec_flg = 1,    
+    mw_dsbmt_vchr_hdr dvh, mw_dsbmt_vchr_dtl dsd, mw_typs mt      
+    where ap.CRNT_REC_FLG = 1 and dvh.DSBMT_HDR_SEQ = dsd.DSBMT_HDR_SEQ and dsd.CRNT_REC_FLG = 1              
+    and dvh.loan_app_seq = ap.loan_app_seq and dvh.crnt_rec_flg = 1    
+    and mt.TYP_SEQ = dsd.PYMT_TYPS_SEQ and mt.CRNT_REC_FLG = 1 and mt.TYP_ID in (16228,16229)  
+    --and mr.reg_seq in (28)
+    --and mb.brnch_seq in (5)
+    and trunc(dvh.dsbmt_dt) between to_date(:frmdt, 'DD-Mon-YYYY') and to_date(:todt, 'DD-Mon-YYYY')
+    group by mb.BRNCH_NM, case when  mt.TYP_ID in (16228,16229)  then mt.GL_ACCT_NUM else null end

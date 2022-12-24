@@ -1,0 +1,7 @@
+select mjh.jv_hdr_seq,             mjh.enty_typ,             mjh.jv_dscr,             mjh.jv_dt,  
+                              me.instr_num,             mc.clnt_seq,  
+                              mc.frst_nm || ' ' || mc.last_nm     name ,me.expns_amt amt,t.typ_id        from mw_exp me  
+                              join mw_jv_hdr mjh                 on me.exp_seq = mjh.enty_seq and mjh.enty_typ = 'Expense'  
+                              left outer join mw_clnt mc                 on me.exp_ref = mc.clnt_seq and mc.crnt_rec_flg = 1  
+                              join mw_typs t on t.typ_seq = me.expns_typ_seq   
+                        where me.exp_seq = :TRX_SEQ and me.crnt_rec_flg = 1

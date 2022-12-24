@@ -1,0 +1,26 @@
+select emp_nm, count(female) female, count(male) male, count(joint_user) joint_user
+    from( 
+    select emp.emp_nm, case when vl.ref_cd_Seq in (190,1058,1056,1057,1059,191,1055) then ap.loan_app_seq end female,
+                case when vl.ref_cd_Seq in (193) then ap.loan_app_seq end joint_user,
+                case when vl.ref_cd_Seq not in (190,1058,1056,1057,1059,191,1055) then ap.loan_app_seq end male,                      
+    ap.loan_app_seq ost_clnt                 
+    from mw_loan_app ap     
+    join mw_prd prd on ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG = 1       
+    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1 
+    join mw_emp emp on emp.emp_seq=erl.emp_seq,
+    mw_dsbmt_vchr_hdr dvh, mw_biz_aprsl apr, MW_REF_CD_VAL vl
+    where ap.LOAN_APP_SEQ = apr.LOAN_APP_SEQ and apr.CRNT_REC_FLG = 1
+    and apr.PRSN_RUN_THE_BIZ = vl.REF_CD_SEQ and vl.CRNT_REC_FLG = 1 and vl.REF_CD_GRP_KEY = 14 
+    and ( (asts.ref_cd='0005' and trunc(ap.loan_app_sts_dt) <= to_date(:todt,'dd-MM-yyyy') and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='0006' and trunc(ap.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:todt,'dd-MM-yyyy')
+    and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='1245' and trunc(ap.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy'))) and dvh.loan_app_seq = ap.loan_app_seq 
+    and dvh.crnt_rec_flg = 1
+    and loan_app_ost(ap.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'psc') > 0
+    and not exists (select distinct ctl.loan_app_seq from mw_clnt_tag_list ctl where ctl.loan_app_seq = ap.loan_app_seq 
+    and trunc(ctl.eff_start_dt) <= to_date(:todt,'dd-MM-yyyy') and ctl.tags_seq = 4 and ctl.crnt_rec_flg=1)      
+    )     
+    group by emp_nm
+    order by emp_nm

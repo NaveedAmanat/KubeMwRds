@@ -1,0 +1,15 @@
+SELECT TO_DATE (MJH.JV_DT)                VOUCHER_DATE, 
+                              get_clnt_seq (MJH.ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  CLNT_INFO_seq, 
+                          get_clnt_name (MJH.ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ)  CLNT_INFO_name, 
+                          INITCAP (MJH.ENTY_TYP)                VOUCHER_TYPE,            MJH.JV_HDR_SEQ , MJH.ENTY_SEQ, 
+                          get_instr_num(MJH.ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) INSTR_NO,get_narration(MJH.ENTY_SEQ, ENTY_TYP, MB.BRNCH_SEQ) NAR_NO,  
+                          MJH.JV_DSCR,            NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 1 THEN MJD.AMT END), 0) 
+                              DEBIT,            NVL ((CASE WHEN MJD.CRDT_DBT_FLG = 0 THEN MJD.AMT END), 0) 
+                              CREDIT                                                   --DFGFGG 
+                     FROM MW_JV_HDR MJH, MW_JV_DTL MJD, MW_BRNCH MB   WHERE     MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ 
+                          AND MB.CRNT_REC_FLG = 1            AND MJD.AMT > 0 
+                          AND MJH.BRNCH_SEQ = MB.BRNCH_SEQ
+                          and mb.brnch_seq = 98
+                          AND TO_DATE (MJH.JV_DT) BETWEEN TO_DATE (:FROM_DATE, 'MM/dd/yyyy') 
+                                                      AND TO_DATE (:TO_DATE, 'MM/dd/yyyy') 
+                          AND MJD.GL_ACCT_NUM =:GL_ACC_NUM   ORDER BY MJH.JV_DT, MJH.JV_HDR_SEQ || '/' || MJH.ENTY_SEQ  DESC

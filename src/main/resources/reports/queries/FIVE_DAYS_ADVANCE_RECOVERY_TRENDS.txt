@@ -1,0 +1,16 @@
+select distinct emp.emp_nm, clnt.clnt_id,frst_nm||' '||last_nm clnt_nm, psd.due_dt, trx.pymt_dt, 
+                due_dt-pymt_dt adv_days,clnt.ph_num                
+                from mw_rcvry_trx trx, mw_rcvry_dtl rd, mw_pymt_sched_dtl psd,mw_pymt_sched_hdr psh,
+                     mw_loan_app ap, mw_port_emp_rel erl, mw_port mp, mw_emp emp, mw_clnt clnt, mw_prd prd
+                where trx.rcvry_trx_seq=rd.rcvry_trx_seq and trx.crnt_rec_flg=1 and rd.crnt_rec_flg=1    
+                and rd.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and psd.crnt_rec_flg=1 
+                and psd.PYMT_SCHED_HDR_SEQ = psh.PYMT_SCHED_HDR_SEQ and psh.CRNT_REC_FLG = 1
+                and psh.LOAN_APP_SEQ = ap.LOAN_APP_SEQ and ap.CRNT_REC_FLG=1
+                and ap.port_seq=mp.port_seq and mp.crnt_rec_flg=1 and mp.brnch_seq=:brnchSeq    
+                and mp.port_seq=erl.port_seq and erl.crnt_rec_flg=1
+                and emp.emp_seq=erl.emp_seq
+                and due_dt- pymt_dt > 5
+                and ap.clnt_seq=clnt.clnt_seq and clnt.crnt_rec_flg=1    
+                and ap.prd_seq=prd.prd_seq and prd.crnt_rec_flg=1 
+                and trx.pymt_dt between to_date(:fromDt,'dd-mm-yyyy') and to_date(:toDt,'dd-mm-yyyy')               
+                order by 1,adv_days desc

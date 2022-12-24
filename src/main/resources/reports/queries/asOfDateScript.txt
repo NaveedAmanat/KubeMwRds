@@ -1,0 +1,3 @@
+select to_date  
+    from CON_MON_PROCESS_PARAM@link_to_testmwc cc 
+	where cc.REPORT_NUMBER=1

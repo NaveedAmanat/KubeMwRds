@@ -1,0 +1,2392 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="TOPSHEET" pageWidth="842" pageHeight="595" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" isFloatColumnFooter="true" whenResourceMissingType="Error"
+              uuid="649c6d5f-b991-4b1c-a5fb-957bf3498abc">
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w1" value="353"/>
+    <property name="com.jaspersoft.studio.property.dataset.dialog.DatasetDialog.sash.w2" value="633"/>
+    <style name="Table_TH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_CH" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Table_TD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <subDataset name="reversalDataset" uuid="00a44ee5-5c4d-4c30-b45c-d5675ae15102">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+        <queryString language="SQL">
+            <![CDATA[select prdg.prd_grp_nm,emp.emp_nm, sum(dsbmt_cnt) as dsbmt_cnt ,
+                   sum(dsbmt_prn_amt) as dsbmt_prn_amt,         sum(dsbmt_svc_amt)as dsbmt_svc_amt , 
+                   sum(rcvrd_clnt) as rcvrd_clnt,  sum(rcvrd_prn_amt) as rcvrd_prn_amt,
+                   sum(rcvrd_svc_amt) as rcvrd_svc_amt,         sum(adj_clnt) as adj_clnt ,         sum(adj_prn_amt) as adj_prn_amt,
+                   sum(adj_svc_amt) as adj_svc_amt
+                   from mw_brnch brnch
+            join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1
+            join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+            join mw_emp emp on emp.emp_seq=erl.emp_seq
+            join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq and prl.crnt_rec_flg=1
+            join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+            join mw_prd_grp prdg on prdg.prd_grp_seq=prd.prd_grp_seq and prdg.crnt_rec_flg=1 
+            left outer join  
+            (  
+                select ap.prd_seq,ap.port_seq,count(distinct ap.loan_app_seq) dsbmt_cnt,
+                       sum(ap.aprvd_loan_amt) dsbmt_prn_amt,             sum(svc.svc_chrg) dsbmt_svc_amt
+                from mw_loan_app ap
+                join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=0
+                join mw_port mp on mp.PORT_SEQ = ap.PORT_SEQ and mp.BRNCH_SEQ = 98
+                join (select loan_app_seq,sum(tot_chrg_due) svc_chrg
+                          from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=0 and psd.del_flg = 1  
+                          where psh.crnt_rec_flg=0 and psh.del_flg = 1 
+                          group by psh.loan_app_seq) svc on svc.loan_app_seq=ap.loan_app_seq
+                where ap.crnt_rec_flg=1
+                  and to_date(hdr.EFF_START_DT) between to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                  and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('25-11-2019','dd-MM-yyyy'))
+                group by ap.prd_seq,ap.port_seq   
+            ) 
+            achvd on achvd.prd_seq=prd.prd_seq and achvd.port_seq=prt.port_seq
+            left outer join  (                      
+                    select prd_seq, port_seq,
+                    count(distinct LOAN_APP_SEQ) rcvrd_clnt,          sum(rec_pr) rcvrd_prn_amt, sum(rec_sc) rcvrd_svc_amt
+                    from         (         select ap.LOAN_APP_SEQ, ap.prd_seq, ap.port_seq,
+                                nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1            
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=0 and rdtl.del_flg = 1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=0 and rht.del_flg=1
+                                    and (rdtl.chrg_typ_key=-1)   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                                )),0) rec_pr,                     nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=0 and rdtl.del_flg=1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=0 and rht.del_flg=1
+                                    and (rdtl.chrg_typ_key in (select mt.typ_seq from mw_typs mt where mt.typ_id = '0017' and mt.crnt_rec_flg = 1))   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                                )),0) rec_sc                    
+                                from mw_loan_app ap
+                                join mw_pymt_sched_hdr psh on psh.loan_app_seq=ap.loan_app_seq and psh.crnt_rec_flg=1
+                                join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1,
+                                mw_port mp                     where ap.PORT_SEQ = mp.PORT_SEQ
+                                and ap.crnt_rec_flg=1 and psd.PYMT_STS_KEY not in (949) and mp.brnch_seq = 98
+                                and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('25-11-2019','dd-MM-yyyy'))                  
+                                group by ap.prd_seq, ap.port_seq, ap.loan_app_seq         )
+                    where (rec_pr > 0 or rec_sc > 0)          group by prd_seq, port_seq                           
+                ) rcvd on rcvd.prd_seq=prd.prd_seq and rcvd.port_seq=prt.port_seq         
+                left outer join (   
+                    select prd_seq, PORT_SEQ, count(distinct loans) adj_clnt,         sum(adj_pr) adj_prn_amt,
+                    sum(adj_sc) adj_svc_amt         from (
+                    SELECT ap.prd_seq,  ap.loan_app_seq loans, ap.PORT_SEQ,
+                    (case when dtl.CHRG_TYP_KEY=-1 then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_pr,
+                    (case when (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)) then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_sc 
+                    FROM mw_loan_app ap join mw_port prt on prt.PORT_SEQ = ap.PORT_SEQ and prt.crnt_rec_flg = 1
+                    JOIN mw_ref_cd_val asts  ON asts.ref_cd_seq = ap.loan_app_sts  AND asts.crnt_rec_flg = 1 
+                    JOIN mw_pymt_sched_hdr psh  ON psh.loan_app_seq = ap.loan_app_seq  AND psh.crnt_rec_flg = 1
+                    JOIN mw_pymt_sched_dtl psd  ON psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq  AND psd.crnt_rec_flg = 1 
+                    JOIN mw_ref_cd_val vl  ON vl.ref_cd_seq = psd.pymt_sts_key  AND vl.crnt_rec_flg = 1 and vl.REF_CD_GRP_KEY = 179 and vl.ref_cd = '0949'
+                    JOIN mw_rcvry_dtl dtl  ON (dtl.pymt_sched_dtl_seq is null or dtl.pymt_sched_dtl_seq = psd.PYMT_SCHED_DTL_SEQ)  AND dtl.crnt_rec_flg = 0 
+                    JOIN mw_rcvry_trx trx  ON trx.rcvry_trx_seq = dtl.rcvry_trx_seq  AND trx.crnt_rec_flg = 0 
+                    and trx.PYMT_REF = ap.CLNT_SEQ
+                    WHERE ap.crnt_rec_flg = 1 
+                    AND to_date(trx.pymt_dt) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                    and prt.brnch_seq = 98  
+                    and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('22-11-2019','dd-MM-yyyy'))
+            GROUP BY ap.prd_seq, dtl.CHRG_TYP_KEY, ap.loan_app_seq, ap.PORT_SEQ ) group by prd_seq, PORT_SEQ        
+            ) adj on adj.prd_seq=prd.prd_seq and adj.port_seq=prt.port_seq
+            where prd.prd_grp_seq=1  and brnch.brnch_seq=98 group by prdg.prd_grp_nm,emp.emp_nm order by 1,2]]>
+        </queryString>
+        <field name="PRD_GRP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_GRP_NM"/>
+        </field>
+        <field name="EMP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+        </field>
+        <field name="DSBMT_CNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_CNT"/>
+        </field>
+        <field name="DSBMT_PRN_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_PRN_AMT"/>
+        </field>
+        <field name="DSBMT_SVC_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_SVC_AMT"/>
+        </field>
+        <field name="RCVRD_CLNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_CLNT"/>
+        </field>
+        <field name="RCVRD_PRN_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_PRN_AMT"/>
+        </field>
+        <field name="RCVRD_SVC_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_SVC_AMT"/>
+        </field>
+        <field name="ADJ_CLNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_CLNT"/>
+        </field>
+        <field name="ADJ_PRN_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_PRN_AMT"/>
+        </field>
+        <field name="ADJ_SVC_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_SVC_AMT"/>
+        </field>
+        <group name="PRD_GRP_NM">
+            <groupExpression><![CDATA[$F{PRD_GRP_NM}]]></groupExpression>
+        </group>
+        <group name="EMP_NM">
+            <groupExpression><![CDATA[$F{EMP_NM}]]></groupExpression>
+        </group>
+    </subDataset>
+    <subDataset name="reversalTS" uuid="1f92f89a-dbf2-463d-98e9-6149e0418f6e">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+        <queryString language="SQL">
+            <![CDATA[select prdg.prd_grp_nm,emp.emp_nm, sum(dsbmt_cnt) as dsbmt_cnt ,
+                   sum(dsbmt_prn_amt) as dsbmt_prn_amt,         sum(dsbmt_svc_amt)as dsbmt_svc_amt , 
+                   sum(rcvrd_clnt) as rcvrd_clnt,  sum(rcvrd_prn_amt) as rcvrd_prn_amt,
+                   sum(rcvrd_svc_amt) as rcvrd_svc_amt,         sum(adj_clnt) as adj_clnt ,         sum(adj_prn_amt) as adj_prn_amt,
+                   sum(adj_svc_amt) as adj_svc_amt
+                   from mw_brnch brnch
+            join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1
+            join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+            join mw_emp emp on emp.emp_seq=erl.emp_seq
+            join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq and prl.crnt_rec_flg=1
+            join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+            join mw_prd_grp prdg on prdg.prd_grp_seq=prd.prd_grp_seq and prdg.crnt_rec_flg=1 
+            left outer join  
+            (  
+                select ap.prd_seq,ap.port_seq,count(distinct ap.loan_app_seq) dsbmt_cnt,
+                       sum(ap.aprvd_loan_amt) dsbmt_prn_amt,             sum(svc.svc_chrg) dsbmt_svc_amt
+                from mw_loan_app ap
+                join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=0
+                join mw_port mp on mp.PORT_SEQ = ap.PORT_SEQ and mp.BRNCH_SEQ = 98
+                join (select loan_app_seq,sum(tot_chrg_due) svc_chrg
+                          from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=0 and psd.del_flg = 1  
+                          where psh.crnt_rec_flg=0 and psh.del_flg = 1 
+                          group by psh.loan_app_seq) svc on svc.loan_app_seq=ap.loan_app_seq
+                where ap.crnt_rec_flg=1
+                  and to_date(hdr.EFF_START_DT) between to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                  and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('25-11-2019','dd-MM-yyyy'))
+                group by ap.prd_seq,ap.port_seq   
+            ) 
+            achvd on achvd.prd_seq=prd.prd_seq and achvd.port_seq=prt.port_seq
+            left outer join  (                      
+                    select prd_seq, port_seq,
+                    count(distinct LOAN_APP_SEQ) rcvrd_clnt,          sum(rec_pr) rcvrd_prn_amt, sum(rec_sc) rcvrd_svc_amt
+                    from         (         select ap.LOAN_APP_SEQ, ap.prd_seq, ap.port_seq,
+                                nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1            
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=0 and rdtl.del_flg = 1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=0 and rht.del_flg=1
+                                    and (rdtl.chrg_typ_key=-1)   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                                )),0) rec_pr,                     nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=0 and rdtl.del_flg=1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=0 and rht.del_flg=1
+                                    and (rdtl.chrg_typ_key in (select mt.typ_seq from mw_typs mt where mt.typ_id = '0017' and mt.crnt_rec_flg = 1))   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                                )),0) rec_sc                    
+                                from mw_loan_app ap
+                                join mw_pymt_sched_hdr psh on psh.loan_app_seq=ap.loan_app_seq and psh.crnt_rec_flg=1
+                                join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1,
+                                mw_port mp                     where ap.PORT_SEQ = mp.PORT_SEQ
+                                and ap.crnt_rec_flg=1 and psd.PYMT_STS_KEY not in (949) and mp.brnch_seq = 98
+                                and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('25-11-2019','dd-MM-yyyy'))                  
+                                group by ap.prd_seq, ap.port_seq, ap.loan_app_seq         )
+                    where (rec_pr > 0 or rec_sc > 0)          group by prd_seq, port_seq                           
+                ) rcvd on rcvd.prd_seq=prd.prd_seq and rcvd.port_seq=prt.port_seq         
+                left outer join (   
+                    select prd_seq, PORT_SEQ, count(distinct loans) adj_clnt,         sum(adj_pr) adj_prn_amt,
+                    sum(adj_sc) adj_svc_amt         from (
+                    SELECT ap.prd_seq,  ap.loan_app_seq loans, ap.PORT_SEQ,
+                    (case when dtl.CHRG_TYP_KEY=-1 then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_pr,
+                    (case when (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)) then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_sc 
+                    FROM mw_loan_app ap join mw_port prt on prt.PORT_SEQ = ap.PORT_SEQ and prt.crnt_rec_flg = 1
+                    JOIN mw_ref_cd_val asts  ON asts.ref_cd_seq = ap.loan_app_sts  AND asts.crnt_rec_flg = 1 
+                    JOIN mw_pymt_sched_hdr psh  ON psh.loan_app_seq = ap.loan_app_seq  AND psh.crnt_rec_flg = 1
+                    JOIN mw_pymt_sched_dtl psd  ON psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq  AND psd.crnt_rec_flg = 1 
+                    JOIN mw_ref_cd_val vl  ON vl.ref_cd_seq = psd.pymt_sts_key  AND vl.crnt_rec_flg = 1 and vl.REF_CD_GRP_KEY = 179 and vl.ref_cd = '0949'
+                    JOIN mw_rcvry_dtl dtl  ON (dtl.pymt_sched_dtl_seq is null or dtl.pymt_sched_dtl_seq = psd.PYMT_SCHED_DTL_SEQ)  AND dtl.crnt_rec_flg = 0 
+                    JOIN mw_rcvry_trx trx  ON trx.rcvry_trx_seq = dtl.rcvry_trx_seq  AND trx.crnt_rec_flg = 0 
+                    and trx.PYMT_REF = ap.CLNT_SEQ
+                    WHERE ap.crnt_rec_flg = 1 
+                    AND to_date(trx.pymt_dt) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                    and prt.brnch_seq = 98  
+                    and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('22-11-2019','dd-MM-yyyy'))
+            GROUP BY ap.prd_seq, dtl.CHRG_TYP_KEY, ap.loan_app_seq, ap.PORT_SEQ ) group by prd_seq, PORT_SEQ        
+            ) adj on adj.prd_seq=prd.prd_seq and adj.port_seq=prt.port_seq
+            where prd.prd_grp_seq=1  and brnch.brnch_seq=98 group by prdg.prd_grp_nm,emp.emp_nm order by 1,2]]>
+        </queryString>
+        <field name="PRD_GRP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_GRP_NM"/>
+        </field>
+        <field name="EMP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+        </field>
+        <field name="DSBMT_CNT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_CNT"/>
+        </field>
+        <field name="DSBMT_PRN_AMT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_PRN_AMT"/>
+        </field>
+        <field name="DSBMT_SVC_AMT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_SVC_AMT"/>
+        </field>
+        <field name="RCVRD_CLNT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_CLNT"/>
+        </field>
+        <field name="RCVRD_PRN_AMT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_PRN_AMT"/>
+        </field>
+        <field name="RCVRD_SVC_AMT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_SVC_AMT"/>
+        </field>
+        <field name="ADJ_CLNT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_CLNT"/>
+        </field>
+        <field name="ADJ_PRN_AMT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_PRN_AMT"/>
+        </field>
+        <field name="ADJ_SVC_AMT" class="java.math.BigDecimal">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_SVC_AMT"/>
+        </field>
+        <group name="PRD_GRP_NM">
+            <groupExpression><![CDATA[$F{PRD_GRP_NM}]]></groupExpression>
+        </group>
+        <group name="EMP_NM">
+            <groupExpression><![CDATA[$F{EMP_NM}]]></groupExpression>
+        </group>
+        <group name="DSBMT_CNT">
+            <groupExpression><![CDATA[$F{DSBMT_CNT}]]></groupExpression>
+        </group>
+        <group name="DSBMT_PRN_AMT">
+            <groupExpression><![CDATA[$F{DSBMT_PRN_AMT}]]></groupExpression>
+        </group>
+        <group name="DSBMT_SVC_AMT">
+            <groupExpression><![CDATA[$F{DSBMT_SVC_AMT}]]></groupExpression>
+        </group>
+        <group name="RCVRD_CLNT">
+            <groupExpression><![CDATA[$F{RCVRD_CLNT}]]></groupExpression>
+        </group>
+        <group name="RCVRD_PRN_AMT">
+            <groupExpression><![CDATA[$F{RCVRD_PRN_AMT}]]></groupExpression>
+        </group>
+        <group name="RCVRD_SVC_AMT">
+            <groupExpression><![CDATA[$F{RCVRD_SVC_AMT}]]></groupExpression>
+        </group>
+        <group name="ADJ_CLNT">
+            <groupExpression><![CDATA[$F{ADJ_CLNT}]]></groupExpression>
+        </group>
+        <group name="ADJ_PRN_AMT">
+            <groupExpression><![CDATA[$F{ADJ_PRN_AMT}]]></groupExpression>
+        </group>
+        <group name="ADJ_SVC_AMT">
+            <groupExpression><![CDATA[$F{ADJ_SVC_AMT}]]></groupExpression>
+        </group>
+    </subDataset>
+    <subDataset name="Dataset" uuid="2126421c-4220-43eb-ab86-bf407a9409f5">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+        <queryString language="SQL">
+            <![CDATA[select prdg.prd_grp_nm,emp.emp_nm, sum(dsbmt_cnt) as dsbmt_cnt ,
+                   sum(dsbmt_prn_amt) as dsbmt_prn_amt,         sum(dsbmt_svc_amt)as dsbmt_svc_amt , 
+                   sum(rcvrd_clnt) as rcvrd_clnt,  sum(rcvrd_prn_amt) as rcvrd_prn_amt,
+                   sum(rcvrd_svc_amt) as rcvrd_svc_amt,         sum(adj_clnt) as adj_clnt ,         sum(adj_prn_amt) as adj_prn_amt,
+                   sum(adj_svc_amt) as adj_svc_amt
+                   from mw_brnch brnch
+            join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1
+            join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+            join mw_emp emp on emp.emp_seq=erl.emp_seq
+            join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq and prl.crnt_rec_flg=1
+            join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+            join mw_prd_grp prdg on prdg.prd_grp_seq=prd.prd_grp_seq and prdg.crnt_rec_flg=1 
+            left outer join  
+            (  
+                select ap.prd_seq,ap.port_seq,count(distinct ap.loan_app_seq) dsbmt_cnt,
+                       sum(ap.aprvd_loan_amt) dsbmt_prn_amt,             sum(svc.svc_chrg) dsbmt_svc_amt
+                from mw_loan_app ap
+                join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=0
+                join mw_port mp on mp.PORT_SEQ = ap.PORT_SEQ and mp.BRNCH_SEQ = 98
+                join (select loan_app_seq,sum(tot_chrg_due) svc_chrg
+                          from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=0 and psd.del_flg = 1  
+                          where psh.crnt_rec_flg=0 and psh.del_flg = 1 
+                          group by psh.loan_app_seq) svc on svc.loan_app_seq=ap.loan_app_seq
+                where ap.crnt_rec_flg=1
+                  and to_date(hdr.EFF_START_DT) between to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                  and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('25-11-2019','dd-MM-yyyy'))
+                group by ap.prd_seq,ap.port_seq   
+            ) 
+            achvd on achvd.prd_seq=prd.prd_seq and achvd.port_seq=prt.port_seq
+            left outer join  (                      
+                    select prd_seq, port_seq,
+                    count(distinct LOAN_APP_SEQ) rcvrd_clnt,          sum(rec_pr) rcvrd_prn_amt, sum(rec_sc) rcvrd_svc_amt
+                    from         (         select ap.LOAN_APP_SEQ, ap.prd_seq, ap.port_seq,
+                                nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1            
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=0 and rdtl.del_flg = 1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=0 and rht.del_flg=1
+                                    and (rdtl.chrg_typ_key=-1)   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                                )),0) rec_pr,                     nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=0 and rdtl.del_flg=1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=0 and rht.del_flg=1
+                                    and (rdtl.chrg_typ_key in (select mt.typ_seq from mw_typs mt where mt.typ_id = '0017' and mt.crnt_rec_flg = 1))   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                                )),0) rec_sc                    
+                                from mw_loan_app ap
+                                join mw_pymt_sched_hdr psh on psh.loan_app_seq=ap.loan_app_seq and psh.crnt_rec_flg=1
+                                join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1,
+                                mw_port mp                     where ap.PORT_SEQ = mp.PORT_SEQ
+                                and ap.crnt_rec_flg=1 and psd.PYMT_STS_KEY not in (949) and mp.brnch_seq = 98
+                                and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('25-11-2019','dd-MM-yyyy'))                  
+                                group by ap.prd_seq, ap.port_seq, ap.loan_app_seq         )
+                    where (rec_pr > 0 or rec_sc > 0)          group by prd_seq, port_seq                           
+                ) rcvd on rcvd.prd_seq=prd.prd_seq and rcvd.port_seq=prt.port_seq         
+                left outer join (   
+                    select prd_seq, PORT_SEQ, count(distinct loans) adj_clnt,         sum(adj_pr) adj_prn_amt,
+                    sum(adj_sc) adj_svc_amt         from (
+                    SELECT ap.prd_seq,  ap.loan_app_seq loans, ap.PORT_SEQ,
+                    (case when dtl.CHRG_TYP_KEY=-1 then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_pr,
+                    (case when (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)) then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_sc 
+                    FROM mw_loan_app ap join mw_port prt on prt.PORT_SEQ = ap.PORT_SEQ and prt.crnt_rec_flg = 1
+                    JOIN mw_ref_cd_val asts  ON asts.ref_cd_seq = ap.loan_app_sts  AND asts.crnt_rec_flg = 1 
+                    JOIN mw_pymt_sched_hdr psh  ON psh.loan_app_seq = ap.loan_app_seq  AND psh.crnt_rec_flg = 1
+                    JOIN mw_pymt_sched_dtl psd  ON psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq  AND psd.crnt_rec_flg = 1 
+                    JOIN mw_ref_cd_val vl  ON vl.ref_cd_seq = psd.pymt_sts_key  AND vl.crnt_rec_flg = 1 and vl.REF_CD_GRP_KEY = 179 and vl.ref_cd = '0949'
+                    JOIN mw_rcvry_dtl dtl  ON (dtl.pymt_sched_dtl_seq is null or dtl.pymt_sched_dtl_seq = psd.PYMT_SCHED_DTL_SEQ)  AND dtl.crnt_rec_flg = 0 
+                    JOIN mw_rcvry_trx trx  ON trx.rcvry_trx_seq = dtl.rcvry_trx_seq  AND trx.crnt_rec_flg = 0 
+                    and trx.PYMT_REF = ap.CLNT_SEQ
+                    WHERE ap.crnt_rec_flg = 1 
+                    AND to_date(trx.pymt_dt) BETWEEN to_date('25-11-2019','dd-MM-yyyy') and to_date('25-11-2019','dd-MM-yyyy')
+                    and prt.brnch_seq = 98  
+                    and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('22-11-2019','dd-MM-yyyy'))
+            GROUP BY ap.prd_seq, dtl.CHRG_TYP_KEY, ap.loan_app_seq, ap.PORT_SEQ ) group by prd_seq, PORT_SEQ        
+            ) adj on adj.prd_seq=prd.prd_seq and adj.port_seq=prt.port_seq
+            where prd.prd_grp_seq=1  and brnch.brnch_seq=98 group by prdg.prd_grp_nm,emp.emp_nm order by 1,2]]>
+        </queryString>
+        <field name="PRD_GRP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="PRD_GRP_NM"/>
+        </field>
+        <field name="EMP_NM" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+        </field>
+        <field name="DSBMT_CNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_CNT"/>
+        </field>
+        <field name="DSBMT_PRN_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_PRN_AMT"/>
+        </field>
+        <field name="DSBMT_SVC_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_SVC_AMT"/>
+        </field>
+        <field name="RCVRD_CLNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_CLNT"/>
+        </field>
+        <field name="RCVRD_PRN_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_PRN_AMT"/>
+        </field>
+        <field name="RCVRD_SVC_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="RCVRD_SVC_AMT"/>
+        </field>
+        <field name="ADJ_CLNT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_CLNT"/>
+        </field>
+        <field name="ADJ_PRN_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_PRN_AMT"/>
+        </field>
+        <field name="ADJ_SVC_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="ADJ_SVC_AMT"/>
+        </field>
+    </subDataset>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="fromDt" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="toDt" class="java.lang.String"/>
+    <parameter name="title" class="java.lang.String"/>
+    <parameter name="dataset" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <queryString>
+        <![CDATA[select prdg.prd_grp_nm,emp.emp_nm,         sum(opn_clnt) as opn_clnt ,
+                   sum(opn_prn_amt) as opn_prn_amt,         sum(opn_svc_amt)as opn_svc_amt,         sum(dsbmt_cnt) as dsbmt_cnt ,
+                   sum(dsbmt_prn_amt) as dsbmt_prn_amt ,         sum(dsbmt_svc_amt) as dsbmt_svc_amt , sum(rcvrd_clnt) as rcvrd_clnt, sum(rcvrd_prn_amt) as rcvrd_prn_amt,
+                   sum(rcvrd_svc_amt) as rcvrd_svc_amt,         sum(adj_clnt) as adj_clnt ,         sum(adj_prn_amt) as adj_prn_amt ,
+                   sum(adj_svc_amt) as adj_svc_amt ,         sum(clsng_clnt) as clsng_clnt ,         sum(clsng_prn_amt) as clsng_prn_amt ,
+                   sum(clsng_svc_amt) as clsng_svc_amt,         sum(cmpltd_loans)  as cmpltd_loans , sum(tg_clsng_clnt) as tg_clsng_clnt ,         sum(tg_clsng_prn_amt)as tg_clsng_prn_amt ,
+                   sum(tg_clsng_svc_amt) as tg_clsng_svc_amt
+                   from mw_brnch brnch
+            join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1
+            join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+            join mw_emp emp on emp.emp_seq=erl.emp_seq
+            join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq            
+            join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+            join mw_prd_grp prdg on prdg.prd_grp_seq=prd.prd_grp_seq and prdg.crnt_rec_flg=1 
+            left outer join
+            (                   
+                select ap.prd_seq, ap.port_seq, count(ap.loan_app_seq) tg_clsng_clnt,
+                    sum(loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy'),'s')) tg_clsng_svc_amt,
+                    sum(loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy'),'p')) tg_clsng_prn_amt
+                    from mw_loan_app ap
+                    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1,
+                    mw_dsbmt_vchr_hdr dvh, mw_port mp
+                    where ((asts.ref_cd='1245' and to_date(ap.loan_app_sts_dt) <= to_date('11-11-2019','dd-MM-yyyy') and ap.crnt_rec_flg=1) 
+                    or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date('11-11-2019','dd-MM-yyyy') and to_date(dvh.dsbmt_dt) <= to_date('11-11-2019','dd-MM-yyyy'))) 
+                    and dvh.loan_app_seq = ap.loan_app_seq 
+                    and ap.PORT_SEQ = mp.PORT_SEQ and mp.BRNCH_SEQ = 98
+                    and dvh.crnt_rec_flg = 1
+                    and loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy')) > 0
+                    and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))
+                    group by ap.prd_seq,ap.port_seq 
+            ) tg_ost on tg_ost.prd_seq=prd.prd_seq and tg_ost.port_seq=prt.port_seq 
+            left outer join  (  
+            select ap.prd_seq, ap.port_seq, count(ap.loan_app_seq) opn_clnt,
+                    sum(loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy')-1,'s')) opn_svc_amt,
+                    sum(loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy')-1,'p')) opn_prn_amt
+                    from mw_loan_app ap
+                    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1,
+                    mw_dsbmt_vchr_hdr dvh, mw_port mp  
+                    where ((asts.ref_cd='0005' and to_date(ap.loan_app_sts_dt) <= to_date('11-11-2019','dd-MM-yyyy')-1and ap.crnt_rec_flg=1) 
+                    or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date('11-11-2019','dd-MM-yyyy')-1 and to_date(dvh.dsbmt_dt) <= to_date('11-11-2019','dd-MM-yyyy')-1) 
+                    or (asts.ref_cd='1245' and to_date(ap.loan_app_sts_dt) > to_date('11-11-2019','dd-MM-yyyy')-1)) and dvh.loan_app_seq = ap.loan_app_seq 
+                    and dvh.crnt_rec_flg = 1 and ap.port_seq = mp.port_seq and mp.brnch_seq = 98
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))
+                    group by ap.prd_seq,ap.port_seq                  
+            ) ost on ost.prd_seq=prd.prd_seq and ost.port_seq=prt.port_seq             
+            left outer join  ( 
+            select ap.prd_seq, ap.port_seq,         count(ap.loan_app_seq) clsng_clnt,
+                    sum(loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy'),'s')) clsng_svc_amt,
+                    sum(loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy'),'p')) clsng_prn_amt
+                    from mw_loan_app ap
+                    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1,
+                    mw_dsbmt_vchr_hdr dvh, mw_port mp  
+                    where ((asts.ref_cd='0005' and to_date(ap.loan_app_sts_dt) <= to_date('11-11-2019','dd-MM-yyyy') and ap.crnt_rec_flg=1) 
+                    or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date('11-11-2019','dd-MM-yyyy') and to_date(dvh.dsbmt_dt) <= to_date('11-11-2019','dd-MM-yyyy')) 
+                    or (asts.ref_cd='1245' and to_date(ap.loan_app_sts_dt) > to_date('11-11-2019','dd-MM-yyyy'))) and dvh.loan_app_seq = ap.loan_app_seq 
+                    and dvh.crnt_rec_flg = 1 and ap.port_seq = mp.port_seq and mp.brnch_seq = 98
+                    and loan_app_ost(ap.loan_app_seq,to_date('11-11-2019','dd-MM-yyyy')) > 0
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))
+                    group by ap.prd_seq,ap.port_seq        
+            ) clsng on clsng.prd_seq=prd.prd_seq and clsng.port_seq=prt.port_seq 
+            left outer join  
+            (
+                select ap.prd_seq,ap.port_seq,count(distinct ap.loan_app_seq) dsbmt_cnt,
+                       sum(ap.aprvd_loan_amt) dsbmt_prn_amt,             sum(svc.svc_chrg) dsbmt_svc_amt
+                from mw_loan_app ap
+                join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=1
+                join (select loan_app_seq,sum(tot_chrg_due) svc_chrg
+                          from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1
+                          where psh.crnt_rec_flg=1 
+                          group by psh.loan_app_seq) svc on svc.loan_app_seq=ap.loan_app_seq
+                where ap.crnt_rec_flg=1
+                  and to_date(hdr.dsbmt_dt) between to_date('11-11-2019','dd-MM-yyyy') and to_date('11-11-2019','dd-MM-yyyy')
+                  and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))
+                group by ap.prd_seq,ap.port_seq    
+                ) 
+                achvd on achvd.prd_seq=prd.prd_seq and achvd.port_seq=prt.port_seq
+            left outer join  (           select prd_seq, port_seq,
+                    count(distinct LOAN_APP_SEQ) rcvrd_clnt,          sum(rec_pr) rcvrd_prn_amt, sum(rec_sc) rcvrd_svc_amt
+                    from         (         select ap.LOAN_APP_SEQ, ap.prd_seq, ap.port_seq,
+                                nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=1
+                                    and (rdtl.chrg_typ_key=-1)   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('11-11-2019','dd-MM-yyyy') and to_date('11-11-2019','dd-MM-yyyy')
+                                )),0) rec_pr,                     nvl(sum((
+                                    select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                    left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                    where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=1
+                                    and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ and rht.crnt_rec_flg=1
+                                    and (rdtl.chrg_typ_key in (select mt.typ_seq from mw_typs mt where mt.typ_id = '0017' and mt.crnt_rec_flg = 1))   
+                                    and to_date(rht.PYMT_DT) BETWEEN to_date('11-11-2019','dd-MM-yyyy') and to_date('11-11-2019','dd-MM-yyyy')
+                                )),0) rec_sc                    
+                                from mw_loan_app ap
+                                join mw_pymt_sched_hdr psh on psh.loan_app_seq=ap.loan_app_seq and psh.crnt_rec_flg=1
+                                join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1,
+                                mw_port mp                     where ap.PORT_SEQ = mp.PORT_SEQ
+                                and ap.crnt_rec_flg=1 and psd.PYMT_STS_KEY not in (949) and mp.brnch_seq = 98
+                                and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))                  
+                                group by ap.prd_seq, ap.port_seq, ap.loan_app_seq         )
+                    where (rec_pr > 0 or rec_sc > 0)          group by prd_seq, port_seq       
+                ) rcvd on rcvd.prd_seq=prd.prd_seq and rcvd.port_seq=prt.port_seq         left outer join (   
+                    select prd_seq, PORT_SEQ, count(distinct loans) adj_clnt,         sum(adj_pr) adj_prn_amt,
+                    sum(adj_sc) adj_svc_amt         from (
+                    SELECT ap.prd_seq,  ap.loan_app_seq loans, ap.PORT_SEQ,
+                    (case when dtl.CHRG_TYP_KEY=-1 then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_pr,
+                    (case when (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)) then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_sc 
+                    FROM mw_loan_app ap join mw_port prt on prt.PORT_SEQ = ap.PORT_SEQ and prt.crnt_rec_flg = 1
+                    JOIN mw_ref_cd_val asts  ON asts.ref_cd_seq = ap.loan_app_sts  AND asts.crnt_rec_flg = 1 
+                    JOIN mw_pymt_sched_hdr psh  ON psh.loan_app_seq = ap.loan_app_seq  AND psh.crnt_rec_flg = 1 
+                    JOIN mw_pymt_sched_dtl psd  ON psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq  AND psd.crnt_rec_flg = 1 
+                    JOIN mw_ref_cd_val vl  ON vl.ref_cd_seq = psd.pymt_sts_key  AND vl.crnt_rec_flg = 1 and vl.REF_CD_GRP_KEY = 179 and vl.ref_cd = '0949'
+                    JOIN mw_rcvry_dtl dtl  ON (dtl.pymt_sched_dtl_seq is null or dtl.pymt_sched_dtl_seq = psd.PYMT_SCHED_DTL_SEQ)  AND dtl.crnt_rec_flg = 1 
+                    JOIN mw_rcvry_trx trx  ON trx.rcvry_trx_seq = dtl.rcvry_trx_seq  AND trx.crnt_rec_flg = 1 
+                    and trx.PYMT_REF = ap.CLNT_SEQ
+                    WHERE ap.crnt_rec_flg = 1 
+                    AND to_date(trx.pymt_dt) BETWEEN to_date('11-11-2019','dd-MM-yyyy') and to_date('11-11-2019','dd-MM-yyyy')
+                    and prt.brnch_seq = 98
+                    and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))
+            GROUP BY ap.prd_seq, dtl.CHRG_TYP_KEY, ap.loan_app_seq, ap.PORT_SEQ ) group by prd_seq, PORT_SEQ        
+            ) adj on adj.prd_seq=prd.prd_seq and adj.port_seq=prt.port_seq left outer join (
+                 select ap.prd_seq,ap.port_seq,count(ap.loan_app_seq) cmpltd_loans         from mw_loan_app ap
+                    join mw_ref_cd_val lsts on lsts.ref_cd_seq=ap.loan_app_sts and lsts.crnt_rec_flg=1
+                    where ap.crnt_rec_flg=1
+                    and lsts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) between to_date('11-11-2019','dd-MM-yyyy') and to_date('11-11-2019','dd-MM-yyyy')
+                    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                    and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date('11-11-2019','dd-MM-yyyy'))
+                    group by ap.prd_seq,ap.port_seq        
+              ) cmpltd on cmpltd.prd_seq=prd.prd_seq and cmpltd.port_seq=prt.port_seq
+            where prd.prd_grp_seq=1  and brnch.brnch_seq=98 
+            group by prdg.prd_grp_nm,emp.emp_nm 
+            having (sum(clsng_clnt) > 0 or sum(opn_clnt) > 0 or sum(tg_clsng_clnt) > 0)
+            order by 1,2
+            
+]]>
+    </queryString>
+    <field name="PRD_GRP_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PRD_GRP_NM"/>
+    </field>
+    <field name="EMP_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="EMP_NM"/>
+    </field>
+    <field name="OPN_CLNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OPN_CLNT"/>
+    </field>
+    <field name="OPN_PRN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OPN_PRN_AMT"/>
+    </field>
+    <field name="OPN_SVC_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OPN_SVC_AMT"/>
+    </field>
+    <field name="DSBMT_CNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DSBMT_CNT"/>
+    </field>
+    <field name="DSBMT_PRN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DSBMT_PRN_AMT"/>
+    </field>
+    <field name="DSBMT_SVC_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DSBMT_SVC_AMT"/>
+    </field>
+    <field name="RCVRD_CLNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="RCVRD_CLNT"/>
+    </field>
+    <field name="RCVRD_PRN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="RCVRD_PRN_AMT"/>
+    </field>
+    <field name="RCVRD_SVC_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="RCVRD_SVC_AMT"/>
+    </field>
+    <field name="ADJ_CLNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ADJ_CLNT"/>
+    </field>
+    <field name="ADJ_PRN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ADJ_PRN_AMT"/>
+    </field>
+    <field name="ADJ_SVC_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="ADJ_SVC_AMT"/>
+    </field>
+    <field name="CLSNG_CLNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CLSNG_CLNT"/>
+    </field>
+    <field name="CLSNG_PRN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CLSNG_PRN_AMT"/>
+    </field>
+    <field name="CLSNG_SVC_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CLSNG_SVC_AMT"/>
+    </field>
+    <field name="CMPLTD_LOANS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CMPLTD_LOANS"/>
+    </field>
+    <field name="TG_CLSNG_CLNT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TG_CLSNG_CLNT"/>
+    </field>
+    <field name="TG_CLSNG_PRN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TG_CLSNG_PRN_AMT"/>
+    </field>
+    <field name="TG_CLSNG_SVC_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TG_CLSNG_SVC_AMT"/>
+    </field>
+    <variable name="TTL_OPN_CLNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OPN_CLNT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OPN_PRN_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OPN_PRN_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OPN_SVC_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OPN_SVC_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DSBMT_CNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DSBMT_CNT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DSBMT_PRN_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DSBMT_PRN_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DSBMT_SVC_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DSBMT_SVC_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_RCVRD_PRN_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{RCVRD_PRN_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_RCVRD_SVC_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{RCVRD_SVC_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_ADJ_CLNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{ADJ_CLNT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_ADJ_PRN_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{ADJ_PRN_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_ADJ_SVC_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{ADJ_SVC_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CMPLTD_LOANS" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CMPLTD_LOANS}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CLSNG_CLNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CLSNG_CLNT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CLSNG_PRN_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CLSNG_PRN_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_CLSNG_SVC_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{CLSNG_SVC_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="Count" class="java.lang.Integer" calculation="Count">
+        <variableExpression><![CDATA[$V{Count}+1]]></variableExpression>
+        <initialValueExpression><![CDATA[1]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_TG_CLSNG_CLNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{TG_CLSNG_CLNT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_TG_CLSNG_PRN_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{TG_CLSNG_PRN_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_TG_CLSNG_SVC_AMT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{TG_CLSNG_SVC_AMT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_RCV_CLNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{RCVRD_CLNT}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <title>
+        <band height="79" splitType="Stretch">
+            <textField>
+                <reportElement x="170" y="60" width="80" height="12" uuid="231c9c97-16c7-4945-94c8-017144d21897"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="570" y="60" width="35" height="12" uuid="2af2a823-dac6-4820-ae0a-80415e5ba664"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[From :]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="260" y="60" width="67" height="12" uuid="067172ea-c225-4537-b742-ce07d4519d1e"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Name:]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="710" y="8" width="90" height="12"
+                               uuid="11efc0c3-1934-4f5f-a43d-c2c92115f990"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="650" y="20" width="60" height="12"
+                               uuid="54d2fb69-5b49-43ed-b832-7d847e3db6e7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="605" y="60" width="80" height="12" uuid="6ed8f031-d2d9-4048-be40-26e609d70222"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{fromDt}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="50" y="60" width="80" height="12" uuid="08be6132-8f23-4f00-b942-521d09d1c79f"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="710" y="20" width="90" height="12"
+                               uuid="c593c6f0-c119-419e-b21b-3dd4da6aba54"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement positionType="Float" x="47" y="4" width="127" height="20"
+                               uuid="96f9ed64-fcdd-4350-b544-1646c21fc452"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <image>
+                <reportElement positionType="Float" x="5" y="4" width="40" height="50"
+                               uuid="c026861a-9fdb-4b52-99c1-4edff0d39590"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <textField>
+                <reportElement x="327" y="60" width="92" height="12" uuid="c6e748d5-6e5a-4a56-b1d7-6f1e6e54da42"/>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="140" y="60" width="30" height="12" uuid="53ea5367-b722-48d3-86bf-4d20f3f56f5c"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="650" y="8" width="36" height="12"
+                               uuid="d02d7f2f-63cf-4a7c-9962-79a24d7f7bb7"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[User:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="500" y="60" width="42" height="12" uuid="cbbbe55c-9ea0-4f3b-93a6-b78484207137"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_cd}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="430" y="60" width="70" height="12" uuid="19847a57-907f-4b59-9052-4722d3723449"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch Code:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="10" y="60" width="39" height="12" uuid="ca144006-d062-48cd-b861-8ca5d50251f1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="710" y="60" width="80" height="12" uuid="60812219-aad1-49f8-a1e0-8a359d4cf763"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{toDt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="690" y="60" width="20" height="12" uuid="dc7621f8-9a5f-4f1b-9538-db180583fe0d"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[To :]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="180" y="20" width="420" height="24" uuid="c96103a2-7e6c-45e9-82a3-7c297eb06ba4"/>
+                <textElement textAlignment="Center">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{title}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="43">
+            <staticText>
+                <reportElement x="62" y="23" width="80" height="10" uuid="65c218b3-0f5d-4129-9384-679e93cbf1a5"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="40" y="13" width="134" height="10" uuid="a0246c6d-1065-4651-9ac1-10a03c929e70"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Opening Outstanding]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="422" y="23" width="22" height="20" uuid="74a3c0ae-2f24-4e98-ba27-6aec5bb06f7a"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="444" y="23" width="60" height="10" uuid="1e49070e-2b87-40a5-b78b-58e9eef6489f"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="576" y="23" width="65" height="10" uuid="2e4605f2-7592-427b-ba14-5d707fdbd2de"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="530" y="13" width="24" height="30" uuid="8c7a224d-fc01-4e01-8e55-5ca913d92ae0"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Loan Com.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="607" y="33" width="34" height="10" uuid="5508657d-773e-419e-8c1f-430138746361"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="298" y="13" width="124" height="10" uuid="4fa81914-14f8-4aec-bf99-55403728b2b8"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Recovery]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="174" y="23" width="22" height="20" uuid="e0096a1a-1190-4fb5-809a-fca16d6991c7"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="320" y="23" width="68" height="10" uuid="353abb53-a26b-499f-b093-c2fba24f4d53"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="354" y="33" width="34" height="10" uuid="d5a538f1-e996-4c39-9bb6-1861869012c6">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="102" y="33" width="40" height="10" uuid="5a21ac98-8d20-4ceb-ba07-82d44d93e714"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="554" y="13" width="121" height="10" uuid="c7843526-3be3-445d-99b5-4dc17a1440a9"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Closing Outstanding]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="320" y="33" width="34" height="10" uuid="660dc712-7283-45d4-ae72-24d76e005f7d">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="576" y="33" width="31" height="10" uuid="7c17655a-5fcb-4cbd-b3cc-f6079150998b">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="264" y="23" width="34" height="20" uuid="2f066135-6cb0-4500-8f82-433a139124f8">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="388" y="23" width="34" height="20" uuid="9a98c611-e0ff-4763-aff6-92b5106aad7b">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="196" y="33" width="34" height="10" uuid="9d78eecc-5924-4404-8a4d-f1ad41ded99c"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="196" y="23" width="68" height="10" uuid="d4820a16-9466-4b75-a0fd-77e998e514cc"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="142" y="23" width="32" height="20" uuid="dfc51483-8c6a-4f67-8e9f-6e07833678f3"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="422" y="13" width="108" height="10" uuid="9d0c126c-65c3-4fd3-bdd1-8c305f556453"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Loan Adjustment]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="444" y="33" width="30" height="10" uuid="6291b43b-2763-47ee-88fb-54658f47b8f5">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="641" y="23" width="34" height="20" uuid="40b34ac8-fb75-4fca-9c8d-023bc9397cdd"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="504" y="23" width="26" height="20" uuid="ae86b02e-9a33-479a-8fa0-7d43c6da37f5">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="474" y="33" width="30" height="10" uuid="c0d80f99-5036-446f-b190-ca803d23db02">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="40" y="23" width="22" height="20" uuid="2ab1d245-121c-4c39-b144-cb5ae56aaea5"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="33" width="40" height="10" uuid="fd47b8f2-e128-4f87-aa11-9c14dc0829c9"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="174" y="13" width="124" height="10" uuid="c89b25ea-8677-44a7-8e86-8a84cd418d9a"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Disbursment]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="230" y="33" width="34" height="10" uuid="757c79d3-2ec3-4562-a277-536f60441a5f"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="13" width="40" height="30" uuid="d3802978-839c-4ebe-be90-79a13a7f4fa0">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[BDO Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="554" y="23" width="22" height="20" uuid="56faf42c-c772-429e-b923-0ad1c91cf5e6"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <textField isStretchWithOverflow="true">
+                <reportElement x="0" y="0" width="280" height="12" uuid="0b766235-7bee-4809-a512-c1ebf959c47f"/>
+                <textElement>
+                    <font size="8" isUnderline="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{PRD_GRP_NM}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="298" y="23" width="22" height="20" uuid="6cfec040-4a36-4bd6-8b14-28307a79d4f7"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="733" y="33" width="29" height="10" uuid="4de70a31-6c64-4652-8ee8-fa26812f9916">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="762" y="23" width="40" height="20" uuid="4d4efacc-1f31-4aa0-b80b-635bfb73f848">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="675" y="13" width="127" height="10" uuid="1a7bc9c7-d846-4158-b441-6ce54bf41bbe"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Tagged Closing Outstanding]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="700" y="23" width="62" height="10" uuid="28db7a13-8c9c-4cd8-ac0e-b946b0434c4e"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="675" y="23" width="25" height="20" uuid="f1f3cc5f-52aa-45f6-90ce-a90708f598a4">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="700" y="33" width="33" height="10" uuid="79b78c4d-ca45-4f65-a0aa-2070623371f3">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="10" splitType="Stretch">
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="0" y="0" width="40" height="10"
+                               uuid="3c86ecf6-393e-4faf-938c-9ac97815f453">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                </reportElement>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{EMP_NM}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="62" y="0" width="40" height="10"
+                               uuid="ec5f5ef3-0217-4963-be59-2bf0eba5d785"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{OPN_PRN_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($F{OPN_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="102" y="0" width="40"
+                               height="10" uuid="a4641db4-efc3-4f87-8868-bb52a75c7d1d"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{OPN_SVC_AMT} == null ? 0 :  new java.text.DecimalFormat("#,##0").format($F{OPN_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="174" y="0" width="22"
+                               height="10" uuid="edeee79b-e8ad-478d-80c1-b52fc1a86b4e"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{DSBMT_CNT}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="196" y="0" width="34"
+                               height="10" uuid="cf541319-0a93-4d8e-b2cb-bc1341014c25"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{DSBMT_PRN_AMT} == null ? 0 : new java.text.DecimalFormat("#,##0").format($F{DSBMT_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="264" y="0" width="34"
+                               height="10" uuid="e83b2a8b-4617-4238-9b0e-c45f57a3ad0f"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DSBMT_PRN_AMT}+$F{DSBMT_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="40" y="0" width="22" height="10"
+                               uuid="aa0b003e-33a5-4138-ae56-8976fc5a6109"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{OPN_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="142" y="0" width="32"
+                               height="10" uuid="efc63bd1-a8af-4acd-82f2-339244f2d10a"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{OPN_PRN_AMT}+$F{OPN_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="230" y="0" width="34"
+                               height="10" uuid="c3b68880-94a3-4eeb-a750-113bb39bdd8f"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{DSBMT_SVC_AMT} == null ? 0 : new java.text.DecimalFormat("#,##0").format($F{DSBMT_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="320" y="0" width="34"
+                               height="10" uuid="cbee8365-a11f-4734-8456-41e8021507da"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{RCVRD_PRN_AMT} == null ? 0 : new java.text.DecimalFormat("#,##0").format($F{RCVRD_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="354" y="0" width="34"
+                               height="10" uuid="5cdd3c6c-cbd7-4e26-bd1a-965a5c85b4dd"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{RCVRD_SVC_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($F{RCVRD_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="388" y="0" width="34"
+                               height="10" uuid="3ecc58ec-6385-4a3a-8e2b-c89a5a3283ca">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{RCVRD_PRN_AMT}+$F{RCVRD_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="444" y="0" width="30"
+                               height="10" uuid="fb1548a7-29f7-4f6e-816b-09e0c3ef2163"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{ADJ_PRN_AMT} == null ? 0 : new java.text.DecimalFormat("#,##0").format($F{ADJ_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="422" y="0" width="22"
+                               height="10" uuid="15613efd-1ddf-4e78-b3ff-03492f8b0159"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{ADJ_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="474" y="0" width="30"
+                               height="10" uuid="d31ad6cc-b297-47c2-8ba4-84bfcd539221"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{ADJ_SVC_AMT} == null ? 0 : new java.text.DecimalFormat("#,##0").format($F{ADJ_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="504" y="0" width="26"
+                               height="10" uuid="43107542-7eae-4456-a64d-6d5b12718a9a"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{ADJ_PRN_AMT}+$F{ADJ_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="576" y="0" width="31"
+                               height="10" uuid="39ec5aae-f4cc-450f-bd13-99e317e05878"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{CLSNG_PRN_AMT} == null ? 0 : new java.text.DecimalFormat("#,##0").format($F{CLSNG_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="641" y="0" width="34"
+                               height="10" uuid="8e37a0c8-d788-494f-aa99-9171810de948"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{CLSNG_SVC_AMT} + $F{CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="554" y="0" width="22"
+                               height="10" uuid="0962da4b-53f7-4882-94ea-e16b19249b8e"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLSNG_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="675" y="0" width="25"
+                               height="10" uuid="c302a6e1-35df-4376-bc1f-a3d4c99dfa48">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TG_CLSNG_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="530" y="0" width="24"
+                               height="10" uuid="d6794409-bebc-4443-8a4d-0b0962e906cf"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CMPLTD_LOANS}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="298" y="0" width="22"
+                               height="10" uuid="f4be395d-ef29-4ab8-ae58-db5fee0f6df9"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{RCVRD_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="762" y="0" width="40"
+                               height="10" uuid="db42ce3a-6f74-458d-b475-8a48a64c1af1"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{TG_CLSNG_PRN_AMT}+$F{TG_CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="700" y="0" width="33"
+                               height="10" uuid="12f784ac-5eb0-4d0d-b0a9-5fc616c10ed7"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{TG_CLSNG_PRN_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($F{TG_CLSNG_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="733" y="0" width="29"
+                               height="10" uuid="b750182d-5dc4-4e80-b3f3-e761296b71eb"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$F{TG_CLSNG_SVC_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($F{TG_CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField isStretchWithOverflow="true">
+                <reportElement positionType="Float" stretchType="ElementGroupHeight" x="607" y="0" width="34"
+                               height="10" uuid="19f88374-72f4-440a-acf5-9c241df991e0"/>
+                <box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLSNG_SVC_AMT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="12">
+            <textField>
+                <reportElement x="702" y="0" width="52" height="12" uuid="ab3f97fd-77fa-4fbb-ad77-3c64e3a35594"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="756" y="0" width="45" height="12" uuid="8772738e-daac-4204-9739-d0e3a4f790da"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="265" splitType="Stretch">
+            <staticText>
+                <reportElement positionType="Float" x="0" y="241" width="110" height="24"
+                               uuid="68ac0364-645d-4b6c-bc53-148382d22e40"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="0" y="239" width="110" height="1"
+                               uuid="7fde6869-af71-4161-acef-cc8c8e757d46"/>
+            </line>
+            <staticText>
+                <reportElement x="0" y="0" width="40" height="20" uuid="05e039a9-1c88-4725-95e2-ed96f75d1ca9">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                    <topPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.25" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="6" isBold="false"/>
+                </textElement>
+                <text><![CDATA[Total: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="130" y="241" width="110" height="24"
+                               uuid="c3604dbb-710c-4c77-a440-67f1fce381ba"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="130" y="239" width="110" height="1"
+                               uuid="b32dc9a8-7b89-468e-a695-5c944de146bd"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="270" y="241" width="110" height="24"
+                               uuid="e1426261-17c1-420d-9854-83ce8d5839bb"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="270" y="239" width="110" height="1"
+                               uuid="b9b1dc43-2a34-41e3-8b90-95132f7c633a"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="410" y="241" width="110" height="24"
+                               uuid="dfe8d893-41df-4679-a88d-24836dacf6c5"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="410" y="239" width="110" height="1"
+                               uuid="36a6f840-64a5-44a3-97fb-9e1a97298197"/>
+            </line>
+            <staticText>
+                <reportElement style="Table_TH" positionType="Float" mode="Transparent" x="691" y="240" width="110"
+                               height="24" uuid="5409ea8f-c160-460c-93a5-43559453dae5"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Branch Manager Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement style="Table_CH" positionType="Float" x="691" y="239" width="110" height="1"
+                               uuid="f89e6a75-7ff0-4bff-bbdf-9c2bbb15b8c6"/>
+            </line>
+            <staticText>
+                <reportElement positionType="Float" x="550" y="241" width="110" height="24"
+                               uuid="e0219fd7-0c29-4f54-afa8-c5b1bb063688"/>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Business Development Officer's Signature]]></text>
+            </staticText>
+            <line>
+                <reportElement positionType="Float" x="550" y="239" width="110" height="1"
+                               uuid="b72c7443-dec1-40d3-b76a-507e08e41e26"/>
+            </line>
+            <textField>
+                <reportElement x="230" y="0" width="34" height="20" uuid="bbe85d9c-1aeb-43c4-9263-2d1cf1cc9ad1"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{TTL_DSBMT_SVC_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($V{TTL_DSBMT_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="354" y="0" width="34" height="20" uuid="49946bca-95f1-47ba-b144-86866114544b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_RCVRD_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="40" y="0" width="22" height="20" uuid="7b9d39db-ebab-4c81-802d-30d8c348208d"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_OPN_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="607" y="0" width="34" height="20" uuid="4eeda5ec-ad7d-4fcf-b32b-e0c299ddde4d"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="264" y="0" width="34" height="20" uuid="a3bd308b-5ac8-4e3d-9e32-407b49a8aace"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DSBMT_PRN_AMT}+$V{TTL_DSBMT_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="102" y="0" width="40" height="20" uuid="aa18fa6f-315d-42f3-9c7b-659f420032d6"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OPN_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="504" y="0" width="26" height="20" uuid="da32bdc5-777a-4af4-bf60-48bbe146b489"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_ADJ_PRN_AMT}+$V{TTL_ADJ_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="196" y="0" width="34" height="20" uuid="835695aa-e837-4190-a0af-1f46fbddce76"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DSBMT_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="422" y="0" width="22" height="20" uuid="dd500386-977c-4dd2-a040-f9aaa2d729ca"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_ADJ_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="388" y="0" width="34" height="20" uuid="40de52d4-5bf4-4ce0-adf4-125de2b0b994"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_RCVRD_PRN_AMT}+$V{TTL_RCVRD_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="474" y="0" width="30" height="20" uuid="df811761-4305-4bd5-af3f-c243ac27638b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_ADJ_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="554" y="0" width="22" height="20" uuid="48620a82-f24b-4218-8d93-9c0aafd08b09"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_CLSNG_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="320" y="0" width="34" height="20" uuid="c9580a2a-bc1a-4848-b02f-6251379b57d4"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_RCVRD_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="576" y="0" width="31" height="20" uuid="15b59b59-34b8-4c6a-bf81-5a43816fc62a"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_CLSNG_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="444" y="0" width="30" height="20" uuid="8abaccb7-f2c0-41fd-bb32-f7d2eefa92c6"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_ADJ_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="675" y="0" width="25" height="20" uuid="33f2ede9-c07b-448c-9315-8f7b19e8e6a9">
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{TTL_TG_CLSNG_CLNT}==null ? 0  :new java.text.DecimalFormat("#,##0").format($V{TTL_TG_CLSNG_CLNT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="174" y="0" width="22" height="20" uuid="9ba6bd87-a31e-4416-a297-63e0356d9f92"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_DSBMT_CNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="530" y="0" width="24" height="20" uuid="446e6f38-bfae-4886-931b-e3de0470e219"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_CMPLTD_LOANS}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="142" y="0" width="32" height="20" uuid="6de3f2f6-d643-4ff4-b171-2636bf99024d"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OPN_PRN_AMT}+$V{TTL_OPN_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="62" y="0" width="40" height="20" uuid="d3a138fd-361a-485a-8b1b-625dec667d7b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OPN_PRN_AMT})]]></textFieldExpression>
+            </textField>
+            <componentElement>
+                <reportElement positionType="Float" mode="Opaque" x="0" y="68" width="802" height="30"
+                               uuid="87553063-8d55-4e0f-b29b-4c74668da386">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.table.style.table_header" value="Table_TH"/>
+                    <property name="com.jaspersoft.studio.table.style.column_header" value="Table_CH"/>
+                    <property name="com.jaspersoft.studio.table.style.detail" value="Table_TD"/>
+                </reportElement>
+                <jr:table xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components"
+                          xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+                    <datasetRun subDataset="Dataset" uuid="9390b5bc-4851-4f8e-a3f6-bd1873687930">
+                        <dataSourceExpression><![CDATA[$P{dataset}]]></dataSourceExpression>
+                    </datasetRun>
+                    <jr:column width="60" uuid="cf5d153d-e36f-4bfe-ad3d-b02411cb8cd2">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column1"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="60" height="30"
+                                               uuid="3dd85d1a-75bb-4ade-8f41-f8832b92f1e6"/>
+                                <textFieldExpression><![CDATA[$F{EMP_NM}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="7ec3c49a-c280-4812-b12a-22c4e5dffcb1">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column2"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="30"
+                                               uuid="598682c8-4380-4c45-a7d5-f824c9db1670"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{DSBMT_CNT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="1babcfe1-85bf-4ad8-af6d-c54c6146bfda">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column3"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="50" height="30"
+                                               uuid="41618cde-5f65-4b0a-991a-7c6008a1d501"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{DSBMT_PRN_AMT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="b0278055-8cce-4e18-a294-b03e08073850">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column4"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="50" height="30"
+                                               uuid="2ad28138-a8ed-4bf3-8823-8b2b3a3895b9"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{DSBMT_SVC_AMT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="a4f93ebe-7098-40a5-aa5f-03912875af7e">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column5"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="50" height="30"
+                                               uuid="5d33d90e-c109-4020-b529-4fb4f603a86f"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DSBMT_PRN_AMT}+$F{DSBMT_SVC_AMT})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="42" uuid="aedfe2a2-bf84-4acd-bfd3-ece18bc1618c">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column6"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="42" height="30"
+                                               uuid="e7636594-6077-43fe-a2db-48d8f6701999"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{RCVRD_CLNT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="48" uuid="2d355cab-19d4-4b49-8894-03295c5bdf0c">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column7"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="48" height="30"
+                                               uuid="02e0f93a-cf2d-4f2c-81d3-d3a950314892"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{RCVRD_PRN_AMT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="40604254-9893-4622-8eb7-99f25afae44c">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column8"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="30"
+                                               uuid="24d1cafd-71f3-4499-9a10-1dd370a66c1a"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{RCVRD_SVC_AMT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="26de32fe-c1f8-4469-b621-ade92d71848b">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column9"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="30"
+                                               uuid="d160333c-d3af-430b-8383-1ed446fdb17d"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{RCVRD_PRN_AMT}+$F{RCVRD_SVC_AMT})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="50" uuid="aae755c0-bfea-4a57-bf7a-1c8601813dda">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column10"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="50" height="30"
+                                               uuid="5554f4eb-18a4-465e-b5b4-399e304f751a"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{ADJ_CLNT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="46" uuid="bf9347a7-65b4-44e8-a7ef-61bb33aff3c2">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column11"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="46" height="30"
+                                               uuid="101c0b9d-2bcf-4a19-a7bf-426b58cda260"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{ADJ_PRN_AMT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="44" uuid="22e3c92b-fbb9-4858-b84e-ed5d5fa9b8b9">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column12"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="44" height="30"
+                                               uuid="278cbca0-bd75-4f99-9997-e3205d3c092a"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression><![CDATA[$F{ADJ_SVC_AMT}]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                    <jr:column width="40" uuid="1e6a313b-d6d2-43b1-b6f6-f62952268e36">
+                        <property name="com.jaspersoft.studio.components.table.model.column.name" value="Column13"/>
+                        <jr:detailCell style="Table_TD" height="30">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="30"
+                                               uuid="1df08760-0799-478a-882d-79dfe1b4490b"/>
+                                <textElement textAlignment="Right"/>
+                                <textFieldExpression>
+                                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{ADJ_PRN_AMT}+$F{ADJ_SVC_AMT})]]></textFieldExpression>
+                            </textField>
+                        </jr:detailCell>
+                    </jr:column>
+                </jr:table>
+            </componentElement>
+            <staticText>
+                <reportElement x="520" y="58" width="40" height="10" uuid="cf6022e2-1683-4bb8-b082-514ae5dae4a2"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="250" y="48" width="43" height="20" uuid="38960625-5542-4279-a9f9-4754221bf055"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="200" y="58" width="50" height="10" uuid="75631b95-7753-4c3d-99f6-bacff92c144c"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="339" y="58" width="40" height="10" uuid="bac6e1c7-d6ad-4d3c-95ab-8027ed8713ad"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="250" y="38" width="169" height="10" uuid="7c879ab9-4773-4fce-ba46-a3f354f6d2dd"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reversal Recovery]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="560" y="48" width="40" height="20" uuid="88453f4a-362a-41df-9fc6-71cb30dc442e"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="150" y="58" width="50" height="10" uuid="775abcd8-daf4-46a0-ae49-749208916218"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[service Charge]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="470" y="58" width="50" height="10" uuid="198f1ff0-a967-4b4d-8656-b489f0684d8a"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="48" width="150" height="10" uuid="83311039-a241-4fa3-9ec4-d77ac1f0a35f"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="419" y="38" width="181" height="10" uuid="dc372793-0914-43b9-88ad-372db8015cea"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reversal Loan Adjustment]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="38" width="60" height="30" uuid="a3c337c0-eb90-4dd6-859f-9e1a3984166d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="68e9edf1-4626-4fda-94fe-0dd4af363bfd"/>
+                </reportElement>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="7" isBold="true"/>
+                </textElement>
+                <text><![CDATA[BDO Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="379" y="48" width="40" height="20" uuid="fe20dcdc-aa7c-4c31-9617-48361575f23b"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Total]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="60" y="48" width="40" height="20" uuid="fffadf41-755f-4f17-904b-5761ba337fed"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="58" width="50" height="10" uuid="d44daf85-2ecf-4b4b-b2e3-a4d5af714dcd"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="60" y="38" width="190" height="10" uuid="bbf93601-0f28-4423-8536-6904d261cf6c"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Reversal Disbursment ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="293" y="58" width="46" height="10" uuid="3bcb6b9f-a43e-4a2f-92c0-b0c347436da6"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Principle]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="470" y="48" width="90" height="10" uuid="027335e1-e3ad-4cf1-a86c-5d2290b09f9b"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="293" y="48" width="86" height="10" uuid="7e213000-eccc-44e4-b36f-bb3beb907d33"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Amount]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="419" y="48" width="51" height="20" uuid="a020545f-0e13-4eb8-ab28-28975d9821a5"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[No. of Clients]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="298" y="0" width="22" height="20" uuid="3504e8c4-e3a2-4fef-8fb7-000389e95510"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_RCV_CLNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="641" y="0" width="34" height="20" uuid="82666e7d-48ad-438a-b1d4-20f1e92b9425"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_CLSNG_PRN_AMT}+$V{TTL_CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="700" y="0" width="33" height="20" uuid="e0b2ba90-9e5a-43d4-a4f8-c59b1f1f925d"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{TTL_TG_CLSNG_PRN_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($V{TTL_TG_CLSNG_PRN_AMT})
+]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="733" y="0" width="29" height="20" uuid="fa2b650c-cfa5-46a2-ae05-b24599942d51"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[$V{TTL_TG_CLSNG_SVC_AMT} == null ? 0 :new java.text.DecimalFormat("#,##0").format($V{TTL_TG_CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="762" y="0" width="40" height="20" uuid="85c79e91-5c03-4b4f-8a7f-b6b0a7b9840b"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.5"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="5" isBold="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_TG_CLSNG_PRN_AMT}+$V{TTL_TG_CLSNG_SVC_AMT})]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

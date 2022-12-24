@@ -1,0 +1,16 @@
+select mjh.ENTY_TYP,
+mjh.JV_DSCR, 
+mjh.JV_HDR_SEQ, mjh.ENTY_SEQ rev_ref_key,
+get_clnt_seq (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)  clnt_seq,  
+get_clnt_name (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq) clnt_name,
+get_prd_nm(get_enty_prd1(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq)) prd,
+sum(case when mjd.CRDT_DBT_FLG = 1 then mjd.amt end) rev_amt
+from mw_jv_hdr mjh, mw_jv_dtl mjd
+where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+and mjh.PRNT_VCHR_REF is not null
+and trunc(mjh.JV_DT) = to_date(:reportdate,'MM-dd-yyyy')
+and mjh.BRNCH_SEQ = :branch
+group by mjh.ENTY_TYP,mjh.JV_DSCR,mjh.JV_HDR_SEQ, mjh.ENTY_SEQ,
+trunc(mjh.JV_DT),get_clnt_seq (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq) ,  
+get_clnt_name (mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq),get_prd_nm(get_enty_prd1(mjh.enty_seq, mjh.enty_typ, mjh.brnch_seq))
+order by 1 desc, 2, 3, 4,trunc(mjh.JV_DT)

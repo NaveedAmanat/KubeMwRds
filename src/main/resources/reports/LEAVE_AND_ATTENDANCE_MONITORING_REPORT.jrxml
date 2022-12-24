@@ -1,0 +1,1437 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="LEAVE_AND_ATTENDANCE_MONITORING_REPORT" printOrder="Horizontal" pageWidth="842" pageHeight="595"
+              orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20"
+              rightMargin="20" topMargin="20" bottomMargin="20" uuid="8574033b-06de-42ac-ae09-535aa4403fb8">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="PROD_DB"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="436"/>
+    <property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="557"/>
+    <style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CT" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="late_arrival_style" mode="Transparent" backcolor="#FF0000">
+        <conditionalStyle>
+            <conditionExpression>
+                <![CDATA[new SimpleDateFormat("HH:mm").parse($V{TIMEIN}).compareTo(new SimpleDateFormat("HH:mm").parse("09:05")) > 0 ? true : false]]></conditionExpression>
+            <style mode="Opaque"/>
+        </conditionalStyle>
+    </style>
+    <style name="status_style" mode="Transparent" backcolor="#9686CF">
+        <conditionalStyle>
+            <conditionExpression><![CDATA[$V{STATUS}.equals("TR")]]></conditionExpression>
+            <style mode="Opaque" backcolor="#9686CF"/>
+        </conditionalStyle>
+        <conditionalStyle>
+            <conditionExpression><![CDATA[$V{STATUS}.equals("UL")]]></conditionExpression>
+            <style mode="Opaque" backcolor="#D3ADDE"/>
+        </conditionalStyle>
+    </style>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[select
+' '||B.BRANCH AS BRANCH,
+' '||b.AREA AS AREA,
+' '||B.REGION AS REGION,
+B.HRID,
+' '||B.NAME AS NAME,
+' '||B.DESIGNATION AS DESIGNATION,
+B.NDATE DATES,
+B.OPBAL_AL,
+B.OPBAL_ML,
+B.OPBAL_CL,
+nvl(B.opbal_al,0)-nvl(B.avail_al,0) - nvl((SELECT ld.no_of_leave_deduct
+                                        FROM leave_deduction@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK ld
+                                        WHERE ld.POST = 'Y'
+                                        AND LD.LEAVE_ID=1
+                                        AND LD.employee_id = B.HRID
+                                        AND ld.from_date Between to_date('01/05/2019','dd-MM-yyyy') AND to_date('30/05/2019','dd-MM-yyyy')
+                                        ),0) clbal_al,
+nvl(B.opbal_ml,0)-nvl(B.avail_ml,0) clbal_ml,
+nvl(B.opbal_cl,0)-nvl(B.avail_cl,0) clbal_cl,
+ev.SHORT_DESC status,
+ev.TIME_IN TIMEIN,
+ev.TIMEOUT TIME_OUT,
+TO_CHAR(B.NDATE,'YYMMDD') ADATE,
+b.HRIDS
+from 
+(select 
+dl.DETAIL_LOCATION_ID,
+dl.MASTER_LOCATION_ID,
+initcap(dl.DESCRIPTION) branch,
+initcap(ml.DESCRIPTION) area,
+initcap(r.Region_name) Region,
+e.EMPLOYEE_ID HRID,
+INITCAP (          e.first_name
+                   || ' '
+                   || e.middle_name
+                   || ' '
+                   || e.last_name
+                  ) AS name,
+p.SHORT_DESC Designation,
+subquery_name.ndate,
+((SELECT nvl(LB.LOADEDBAL,0)
+--into OP_BAL 
+  FROM LEAVE_BALANCE@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LB
+  where LB.employee_id = e.EMPLOYEE_ID
+  AND LB.ACTIVE  = 'Y'
+  AND LB.POST = 'Y'
+AND LB.LEAVE_ID = 1)-
+(select NVL(SUM(LQ.TOTAL_DAYS),0) 
+FROM LEAVE_REQUEST@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LQ
+    where Lq.employee_id = e.EMPLOYEE_ID
+    AND  LQ.LEAVE_ID = 1
+    AND (LQ.APPLICATION_DATE >= (SELECT LB.TRANS_DATE
+                                                        FROM LEAVE_BALANCE@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LB
+                                                        where LB.employee_id = e.EMPLOYEE_ID
+                                                        AND LB.ACTIVE  = 'Y'
+                                                        AND LB.POST = 'Y'
+                                                        AND LB.LEAVE_ID = 1
+                      )
+    and LQ.APPLICATION_DATE < to_date('01/05/2019','dd-MM-yyyy')))) opbal_al,
+    ((SELECT nvl(LB.LOADEDBAL,0)
+--into OP_BAL 
+  FROM LEAVE_BALANCE@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LB
+  where LB.employee_id = e.EMPLOYEE_ID
+  AND LB.ACTIVE  = 'Y'
+  AND LB.POST = 'Y'
+AND LB.LEAVE_ID = 2)-
+(select NVL(SUM(LQ.TOTAL_DAYS),0) 
+FROM LEAVE_REQUEST@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LQ
+    where Lq.employee_id = e.EMPLOYEE_ID
+    AND  LQ.LEAVE_ID = 2
+    AND (LQ.APPLICATION_DATE >= (SELECT LB.TRANS_DATE
+                                                        FROM LEAVE_BALANCE@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LB
+                                                        where LB.employee_id = e.EMPLOYEE_ID
+                                                        AND LB.ACTIVE  = 'Y'
+                                                        AND LB.POST = 'Y'
+                                                        AND LB.LEAVE_ID = 2
+                      )
+    and LQ.APPLICATION_DATE < to_date('01/05/2019','dd-MM-yyyy')))) opbal_ml,
+     ((SELECT nvl(LB.LOADEDBAL,0)
+--into OP_BAL 
+  FROM LEAVE_BALANCE@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LB
+  where LB.employee_id = e.EMPLOYEE_ID
+  AND LB.ACTIVE  = 'Y'
+  AND LB.POST = 'Y'
+AND LB.LEAVE_ID = 3)-
+(select NVL(SUM(LQ.TOTAL_DAYS),0) 
+FROM LEAVE_REQUEST@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LQ
+    where Lq.employee_id = e.EMPLOYEE_ID
+    AND  LQ.LEAVE_ID = 3
+    AND (LQ.APPLICATION_DATE >= (SELECT LB.TRANS_DATE
+                                                        FROM LEAVE_BALANCE@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LB
+                                                        where LB.employee_id = e.EMPLOYEE_ID
+                                                        AND LB.ACTIVE  = 'Y'
+                                                        AND LB.POST = 'Y'
+                                                        AND LB.LEAVE_ID = 3
+                      )
+    and LQ.APPLICATION_DATE < to_date('01/05/2019','dd-MM-yyyy')))) opbal_cl,
+  (select NVL(SUM(LQ.TOTAL_DAYS),0) 
+    FROM LEAVE_REQUEST@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LQ
+    where Lq.employee_id = e.EMPLOYEE_ID
+    AND  LQ.LEAVE_ID = 1
+    AND (LQ.APPLICATION_DATE >= to_date('01/05/2019','dd-MM-yyyy') and LQ.APPLICATION_DATE <= to_date('30/05/2019','dd-MM-yyyy')))avail_al,
+    (select NVL(SUM(LQ.TOTAL_DAYS),0) 
+    FROM LEAVE_REQUEST@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LQ
+    where Lq.employee_id = e.EMPLOYEE_ID
+    AND  LQ.LEAVE_ID = 2
+    AND (LQ.APPLICATION_DATE >= to_date('01/05/2019','dd-MM-yyyy') and LQ.APPLICATION_DATE <= to_date('30/05/2019','dd-MM-yyyy')))avail_ml,
+     (select NVL(SUM(LQ.TOTAL_DAYS),0) 
+    FROM LEAVE_REQUEST@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK LQ
+    where Lq.employee_id = e.EMPLOYEE_ID
+    AND  LQ.LEAVE_ID = 3
+    AND (LQ.APPLICATION_DATE >= to_date('01/05/2019','dd-MM-yyyy') and LQ.APPLICATION_DATE <= to_date('30/05/2019','dd-MM-yyyy')))avail_cl,
+TO_NUMBER(e.EMPLOYEE_ID) HRIDS
+from 
+region@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK r,
+employee@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK e,
+position@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK p,
+master_location@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK ml,
+detail_location@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK dl,
+(          
+ SELECT NDATE
+FROM (
+SELECT ROWNUM - 1 + to_date (to_date('01/05/2019','dd-MM-yyyy'), 'dd-mon-yy') ndate
+  FROM all_tab_columns
+   WHERE ROWNUM <= (               
+   SELECT TRIM (to_date('30/05/2019','dd-MM-yyyy') - to_date('01/05/2019','dd-MM-yyyy')) + 1
+  FROM DUAL                                          
+  ))
+  WHERE LTRIM (RTRIM (TO_CHAR(NDATE,'DAY'))) NOT IN ('SATURDAY', 'SUNDAY')
+) subquery_name
+where ml.REGION_CD=r.REGION_CD
+and dl.MASTER_LOCATION_ID=ml.MASTER_LOCATION_ID
+and e.MASTER_LOCATION_ID=ml.MASTER_LOCATION_ID
+and e.DETAIL_LOCATION_ID=dl.DETAIL_LOCATION_ID
+and e.POSITION_ID=p.POSITION_ID
+and ml.ACTIVE='Y'
+and dl.ACTIVE='Y'
+and e.ACTIVE='Y'
+and LTRIM(UPPER(DL.DETAIL_LOCATION_ID))=(CASE when '140'='001' THEN  LTRIM(UPPER(DL.DETAIL_LOCATION_ID)) ELSE REPLACE(UPPER('140'),'_',' ') END)
+and LTRIM(UPPER(ML.MASTER_LOCATION_ID))=(case when '006'='001' THEN   LTRIM(UPPER(ML.MASTER_LOCATION_ID)) ELSE REPLACE(UPPER('006'),'_',' ')   END)
+AND LTRIM(UPPER(R.REGION_CD))=(CASE WHEN '6'='999' THEN LTRIM(UPPER(R.REGION_CD)) ELSE REPLACE(upper('6'),'_',' ') END)
+--and e.EMPLOYEE_ID='04758'
+--and initcap(dl.DESCRIPTION)='Qanchi'
+and exists
+(select hr_branch_cd from hr_mw6_branch_maps@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK hmbm
+where hmbm.mw6_branch_cd is not null
+and hmbm.hr_branch_cd=dl.DETAIL_LOCATION_ID))b,
+EMPLOYEE_ATTENDANCE_V@DBLINK_NEWMW_TO_H0DB1.KASHF.ORG.PK ev
+where b.HRID=ev.EMPLOYEE_ID(+)
+--and   b.detail_location_id=ev.DETAIL_LOCATION_ID(+)
+and   b.NDATE=ev.ATT_DATE(+)]]>
+    </queryString>
+    <field name="BRANCH" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="BRANCH"/>
+    </field>
+    <field name="AREA" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="AREA"/>
+    </field>
+    <field name="REGION" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="REGION"/>
+    </field>
+    <field name="HRID" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="HRID"/>
+    </field>
+    <field name="NAME" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="NAME"/>
+    </field>
+    <field name="DESIGNATION" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="DESIGNATION"/>
+    </field>
+    <field name="DATES" class="java.sql.Timestamp">
+        <property name="com.jaspersoft.studio.field.label" value="DATES"/>
+    </field>
+    <field name="OPBAL_AL" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OPBAL_AL"/>
+    </field>
+    <field name="OPBAL_ML" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OPBAL_ML"/>
+    </field>
+    <field name="OPBAL_CL" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.label" value="OPBAL_CL"/>
+    </field>
+    <field name="CLBAL_AL" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CLBAL_AL"/>
+    </field>
+    <field name="CLBAL_ML" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="CLBAL_ML"/>
+    </field>
+    <field name="CLBAL_CL" class="java.lang.Double">
+        <property name="com.jaspersoft.studio.field.label" value="CLBAL_CL"/>
+    </field>
+    <field name="STATUS" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="STATUS"/>
+    </field>
+    <field name="TIMEIN" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TIMEIN"/>
+    </field>
+    <field name="TIME_OUT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TIME_OUT"/>
+    </field>
+    <field name="ADATE" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="ADATE"/>
+    </field>
+    <field name="HRIDS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="HRIDS"/>
+    </field>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <title>
+        <band height="145" splitType="Stretch">
+            <property name="com.jaspersoft.studio.unit.height" value="px"/>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="41" y="0" width="127" height="20"
+                               uuid="092d700e-f0d8-417a-b8b8-da4ad387d5ce"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="233" y="22" width="336" height="20" uuid="ed4412b7-0336-4936-a5d8-6bacc6466742"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="false"/>
+                </textElement>
+                <text><![CDATA[Leave and Attendance Monitoring Report]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="671" y="1" width="38" height="12" uuid="dc4d131f-b071-419c-be10-89f43656ea07"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[User: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="671" y="14" width="58" height="12" uuid="3369a687-441b-41e1-8ac5-e4917cc384d4"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="729" y="2" width="71" height="12" uuid="7876763a-78e0-4460-a3f7-f6a0709152e5">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                </reportElement>
+                <textElement>
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement x="729" y="14" width="71" height="12" uuid="41e1cea3-2619-4cbf-a6ad-f3b0681b0b46"/>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement positionType="Float" x="0" y="70" width="800" height="4"
+                               uuid="0d1e7aa5-dd13-4f1f-811c-4421e37e0bcc">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                </reportElement>
+            </line>
+            <staticText>
+                <reportElement x="0" y="57" width="39" height="12" uuid="04e1346b-16dd-450e-a412-698732e722a2"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Region:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="39" y="57" width="70" height="12" uuid="b2d365b3-4e6b-4002-9299-b1e0b1854ee4"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isItalic="false" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{reg_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="109" y="57" width="30" height="12" uuid="5dd93ead-62b4-4cba-b718-ffbc2f453387"/>
+                <textElement textAlignment="Left">
+                    <font size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[ Area:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="139" y="57" width="63" height="12" uuid="c072d81c-6f78-4b37-9961-a3eeda2fd57b"/>
+                <box>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{area_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="202" y="57" width="40" height="12" uuid="1fbbb5a9-08a4-4194-8065-7dad1a8cb22f"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Branch:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="242" y="57" width="82" height="12" uuid="0c8ef034-bbaf-402f-9a56-5e404cd95e12"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="653" y="60" width="27" height="12" uuid="a3a475ac-a1b2-42cb-9f3d-2fb506c74194"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[From:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="680" y="60" width="48" height="12" uuid="da669a7f-03c3-4503-8ad2-7538d91c3c68"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{from_dt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="728" y="60" width="16" height="12" uuid="70a3e856-165d-4726-9dd2-21ed7529a1e7"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[To:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="744" y="60" width="54" height="12" uuid="b735163d-4407-4949-a281-fb70e32fc783"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{to_dt}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement positionType="Float" x="0" y="141" width="800" height="4"
+                               uuid="aee8ba16-34ce-41d1-85b3-31637151ae4a">
+                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                </reportElement>
+            </line>
+            <frame>
+                <reportElement mode="Opaque" x="155" y="76" width="624" height="64" forecolor="#000000"
+                               backcolor="#C7C7C7" uuid="14d2af5f-8b58-48e1-a8f6-79e7daf8b55f"/>
+                <staticText>
+                    <reportElement x="4" y="1" width="100" height="20" uuid="734e69e3-78d2-48e0-b6e4-4b3bf88d33d3">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[PR  Present]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="4" y="19" width="100" height="20" uuid="ef2cb661-1f3d-486d-82dc-ef2d4ba54a44"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[AL  Anuual Leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="4" y="39" width="100" height="20" uuid="27bcbcb7-91be-4817-a681-79db75192c52">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[CL  Casual Leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="105" y="1" width="100" height="20" uuid="12f9da9a-d394-45d3-a756-7c9fd481e66b">
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[ML  Medical Leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="105" y="20" width="100" height="20" uuid="9d5f6aa2-7333-47b1-a625-a5d68b0f6fb7"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[HL  Hospitalization leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="105" y="40" width="100" height="20" uuid="3a50f550-6c58-44fc-ae4f-666ce2105bc2">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[MT  Mateernity Leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="204" y="1" width="100" height="20" uuid="b5f9725e-228b-4814-b23a-a3ac425e3ad3"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[LL  Long Leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="204" y="21" width="100" height="20" uuid="b5ba52b4-3a20-4b9c-9cf9-da4b108bc0a8"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[UL  Uniformed Leave]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="204" y="41" width="100" height="20" uuid="55cab958-a1fd-4513-babb-f6499b4165ff">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[OT On Training]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="305" y="1" width="100" height="20" uuid="86fc8bc4-df9c-455f-9d3c-195bfe0a07ab"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[TR  Transfer]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="305" y="21" width="100" height="20" uuid="ba42872c-314d-465e-8cbc-b168c3a4724e"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[TT Temp Transfer]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="305" y="41" width="100" height="20" uuid="6a2e241f-1583-427b-adc2-d0df13ffad30">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[RG Resignation]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="404" y="1" width="100" height="20" uuid="a7f96f25-6da8-4408-8dc3-cbb208381f75"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[DT  Death]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="404" y="41" width="197" height="20" uuid="6d53849b-cdad-4905-a9af-2e6614b471f2">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    </reportElement>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[RT  Recommended Terminassion]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="404" y="21" width="100" height="20" uuid="6440e9a5-abe8-4c5c-9417-ff3606d5c889"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[SS  Suspended]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="525" y="1" width="99" height="20" uuid="7d713474-322e-4c63-9c2f-4f05221299e4"/>
+                    <textElement textAlignment="Left" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[UA Un-Approved Leave]]></text>
+                </staticText>
+            </frame>
+            <frame>
+                <reportElement x="57" y="76" width="98" height="63" uuid="7683e07e-8d90-4614-8468-8a1cab780240"/>
+                <rectangle>
+                    <reportElement x="0" y="0" width="20" height="20" backcolor="#FF0000"
+                                   uuid="f117f7c6-82c1-40e9-99d9-29b42fa20aeb">
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                </rectangle>
+                <rectangle>
+                    <reportElement mode="Opaque" x="0" y="20" width="20" height="20" backcolor="#9686CF"
+                                   uuid="7d007612-0534-4e4a-85b0-c6b538cfc4b9">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                </rectangle>
+                <rectangle>
+                    <reportElement mode="Opaque" x="0" y="40" width="20" height="20" backcolor="#D3ADDE"
+                                   uuid="1799cc93-587f-491b-aa60-29aa3d7ed307">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                </rectangle>
+                <staticText>
+                    <reportElement x="20" y="0" width="78" height="20" uuid="ab643ac7-bc5a-4a67-a9de-c3fa8670dad8">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    </reportElement>
+                    <textElement>
+                        <font size="8"/>
+                        <paragraph leftIndent="5"/>
+                    </textElement>
+                    <text><![CDATA[Late Arrivals]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="20" width="78" height="20" uuid="6f4ebdc2-f180-46fe-901a-c31e8a829ded">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                    </reportElement>
+                    <textElement>
+                        <font size="8"/>
+                        <paragraph leftIndent="5"/>
+                    </textElement>
+                    <text><![CDATA[Transfer]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="40" width="78" height="20" uuid="55c778a3-16cf-4610-8ec6-42b587ac1b4a">
+                        <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.leftIndent" value="px"/>
+                        <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                    </reportElement>
+                    <textElement>
+                        <font size="8"/>
+                        <paragraph leftIndent="5"/>
+                    </textElement>
+                    <text><![CDATA[Uninformed Leave]]></text>
+                </staticText>
+            </frame>
+        </band>
+    </title>
+    <pageFooter>
+        <band height="15">
+            <textField>
+                <reportElement x="703" y="0" width="52" height="12" uuid="39f27e7c-075b-40c0-b7ab-2a9761a56048"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="755" y="0" width="45" height="12" uuid="b50bb632-98c1-4ba6-9a22-20cfcc003a06"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="99" splitType="Stretch">
+            <crosstab isRepeatRowHeaders="false" horizontalPosition="Left">
+                <reportElement style="Crosstab_CG" mode="Transparent" x="20" y="10" width="780" height="76"
+                               uuid="7a6637c0-e1ee-42c7-b739-5d7b860bda86">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+                </reportElement>
+                <crosstabHeaderCell>
+                    <cellContents>
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <staticText>
+                            <reportElement x="185" y="0" width="120" height="20"
+                                           uuid="c037a357-99c2-4a03-88a4-a6803f7a1ff9">
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="10"/>
+                            </textElement>
+                            <text><![CDATA[Opening Balance]]></text>
+                        </staticText>
+                        <staticText>
+                            <reportElement x="265" y="20" width="40" height="20"
+                                           uuid="2acb6151-4028-4d32-b5ee-ee92e65e5f0a">
+                                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <text><![CDATA[CL]]></text>
+                        </staticText>
+                        <staticText>
+                            <reportElement x="225" y="20" width="40" height="20"
+                                           uuid="6070060d-e74e-4862-86f3-37d04a79b11c">
+                                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <text><![CDATA[ML]]></text>
+                        </staticText>
+                        <staticText>
+                            <reportElement x="185" y="20" width="40" height="20"
+                                           uuid="593e8168-4aa2-4f72-af0b-85e0374bc8f2">
+                                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <text><![CDATA[AL]]></text>
+                        </staticText>
+                        <staticText>
+                            <reportElement x="140" y="20" width="45" height="20"
+                                           uuid="2c02e441-d279-4953-9fef-a1335b31dfc6">
+                                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <text><![CDATA[Designation]]></text>
+                        </staticText>
+                        <staticText>
+                            <reportElement x="40" y="20" width="100" height="20"
+                                           uuid="58c2d7a6-a109-488d-9064-06c3b0ae902b">
+                                <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <text><![CDATA[Name]]></text>
+                        </staticText>
+                        <staticText>
+                            <reportElement x="0" y="20" width="40" height="20"
+                                           uuid="6a116fb2-d486-40a3-b573-076b6b644dde"/>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <text><![CDATA[HRID]]></text>
+                        </staticText>
+                    </cellContents>
+                </crosstabHeaderCell>
+                <rowGroup name="HRID" width="40">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{HRID}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="20"
+                                               uuid="edd262ae-c5a9-4c3c-a5d2-70720420da2c"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{HRID}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="7f4f9eb7-29d1-4c65-b6e5-06327b442c54"/>
+                                <text><![CDATA[Total HRID]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="NAME" width="100">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{NAME}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement x="0" y="0" width="100" height="20"
+                                               uuid="f7618f4a-ee11-4bb5-abe8-846e999cfa64"/>
+                                <textElement verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{NAME}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="b9e0fd05-0ead-450e-98ae-70f3334279d5"/>
+                                <text><![CDATA[Total NAME]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="DESIGNATION" width="45">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{DESIGNATION}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement x="0" y="0" width="45" height="20"
+                                               uuid="cb7bf6ab-9fdc-48a1-9e26-c591763f4fb2"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{DESIGNATION}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="511bfbd1-29dc-4e8f-95cb-baed62a7ae1c"/>
+                                <text><![CDATA[Total DESIGNATION]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="OPBAL_AL" width="40">
+                    <bucket class="java.lang.Long">
+                        <bucketExpression><![CDATA[$F{OPBAL_AL}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="20"
+                                               uuid="2e3db066-bc9c-485a-94eb-0d7b017d7b7f"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{OPBAL_AL}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="4da3b7d3-d5a7-466e-bd5f-fb42b85408b0"/>
+                                <text><![CDATA[Total OPBAL_AL]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="OPBAL_ML" width="40">
+                    <bucket class="java.lang.Long">
+                        <bucketExpression><![CDATA[$F{OPBAL_ML}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="20"
+                                               uuid="b7db05f5-34b3-4435-9f34-078db47e393a"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{OPBAL_ML}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="e8079d8b-5d8f-4cbf-a3b6-2a2bbb1623af"/>
+                                <text><![CDATA[Total OPBAL_ML]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="OPBAL_CL" width="40">
+                    <bucket class="java.lang.Double">
+                        <bucketExpression><![CDATA[$F{OPBAL_CL}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement x="0" y="0" width="40" height="20"
+                                               uuid="f79ac5a1-3b3d-42b2-aff5-d3e0f83c52d6"/>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{OPBAL_CL}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="8bddcee0-2a31-426c-8b56-09e0efb8bdf0"/>
+                                <text><![CDATA[Total OPBAL_CL]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="CLBAL_AL" width="0">
+                    <bucket class="java.lang.Long">
+                        <bucketExpression><![CDATA[$F{CLBAL_AL}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH"/>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="75b8b24b-487c-4cbc-a427-89ecdbbdcce3"/>
+                                <text><![CDATA[Total CLBAL_AL]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="CLBAL_ML" width="0">
+                    <bucket class="java.lang.Long">
+                        <bucketExpression><![CDATA[$F{CLBAL_ML}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH"/>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="ac32f52f-f337-4b34-af3e-2a5694451f50"/>
+                                <text><![CDATA[Total CLBAL_ML]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <rowGroup name="CLBAL_CL" width="0">
+                    <bucket class="java.lang.Double">
+                        <bucketExpression><![CDATA[$F{CLBAL_CL}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH"/>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents>
+                            <staticText>
+                                <reportElement x="0" y="0" width="-2147483648" height="-2147483648"
+                                               uuid="1d0eaa51-88cc-48b4-b587-7fd1a534445d"/>
+                                <text><![CDATA[Total CLBAL_CL]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <columnGroup name="DATES" height="40" totalPosition="End">
+                    <bucket class="java.sql.Timestamp">
+                        <bucketExpression><![CDATA[$F{DATES}]]></bucketExpression>
+                    </bucket>
+                    <crosstabColumnHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <property name="com.jaspersoft.studio.layout"
+                                      value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                            <textField>
+                                <reportElement x="0" y="0" width="120" height="20"
+                                               uuid="a671dd92-65e9-4bc4-b222-974111d70457">
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                </reportElement>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font isBold="true"/>
+                                </textElement>
+                                <textFieldExpression>
+                                    <![CDATA[new SimpleDateFormat("dd-MM-yy").format($V{DATES})]]></textFieldExpression>
+                            </textField>
+                            <staticText>
+                                <reportElement x="0" y="20" width="40" height="20"
+                                               uuid="9e4e7789-2b97-42b5-bc00-81149f854bd1">
+                                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Time in]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement x="40" y="20" width="40" height="20"
+                                               uuid="8de23115-a6c7-4598-9457-60985fb87227">
+                                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Time out]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement x="80" y="20" width="40" height="20"
+                                               uuid="690f2169-7803-44f8-b5bb-9771f38e6113">
+                                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Status]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabColumnHeader>
+                    <crosstabTotalColumnHeader>
+                        <cellContents>
+                            <property name="com.jaspersoft.studio.layout"
+                                      value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                            <staticText>
+                                <reportElement x="0" y="0" width="120" height="20"
+                                               uuid="324078ef-252e-45b2-a5be-4f40f8d1a4a5"/>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font isBold="false"/>
+                                </textElement>
+                                <text><![CDATA[Closing Balance]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement x="0" y="20" width="40" height="20"
+                                               uuid="cdb2605f-d6a3-4b2f-9da4-8a0d92bc2cab">
+                                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[AL]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement x="40" y="20" width="40" height="20"
+                                               uuid="c62da6ee-b91a-4250-b1f2-33fbd5c36eb4">
+                                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[ML]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement x="80" y="20" width="40" height="20"
+                                               uuid="d36805ff-ce21-4f6e-af18-72456cce12c9">
+                                    <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                </reportElement>
+                                <box>
+                                    <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                    <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                </box>
+                                <textElement textAlignment="Center" verticalAlignment="Middle">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[CL]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalColumnHeader>
+                </columnGroup>
+                <measure name="DATES_MEASURE" class="java.lang.Integer" calculation="Count">
+                    <measureExpression><![CDATA[$F{DATES}]]></measureExpression>
+                </measure>
+                <measure name="TIMEIN" class="java.lang.String">
+                    <measureExpression><![CDATA[$F{TIMEIN}]]></measureExpression>
+                </measure>
+                <measure name="STATUS" class="java.lang.String">
+                    <measureExpression><![CDATA[$F{STATUS}]]></measureExpression>
+                </measure>
+                <measure name="TIME_OUT" class="java.lang.String">
+                    <measureExpression><![CDATA[$F{TIME_OUT}]]></measureExpression>
+                </measure>
+                <crosstabCell width="120" height="20">
+                    <cellContents mode="Opaque" style="Crosstab_CD">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <textField>
+                            <reportElement style="late_arrival_style" x="0" y="0" width="40" height="20"
+                                           uuid="c9e4bbc8-fd98-4f60-a674-8894a343c5b8"/>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{TIMEIN}  == null ? 0 : $V{TIMEIN}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="40" y="0" width="40" height="20"
+                                           uuid="8ef9bcf3-84e9-4634-af40-c9f92d1ec42b">
+                                <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{TIME_OUT}  == "" ? 0 : $V{TIME_OUT}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement style="status_style" x="80" y="0" width="40" height="20"
+                                           uuid="19adcfb1-374d-4e02-a394-cd2424ed935a"/>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle" markup="none">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{STATUS}  == "" ? 0 : $V{STATUS}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="120" height="20" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <property name="com.jaspersoft.studio.layout"
+                                  value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+                        <textField>
+                            <reportElement x="0" y="0" width="40" height="20"
+                                           uuid="ec049c9f-283a-49ee-bec9-13936b918ac2">
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{CLBAL_AL}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="40" y="0" width="40" height="20"
+                                           uuid="6784a4b4-5058-422e-82b5-36a67dad4e91">
+                                <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{CLBAL_ML}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="80" y="0" width="40" height="20"
+                                           uuid="45ce50b9-6feb-4330-a582-58d827e48855">
+                                <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.x" value="px"/>
+                                <property name="com.jaspersoft.studio.unit.y" value="px"/>
+                            </reportElement>
+                            <box>
+                                <topPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                                <rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#000000"/>
+                            </box>
+                            <textElement textAlignment="Center" verticalAlignment="Middle">
+                                <font size="8" isBold="false"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{CLBAL_CL}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="HRID">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="3e20dcee-33ae-4aac-ab64-2d5a9b20ec8e"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="HRID" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="53a4cc3a-6e89-4754-8695-74d4af33f5de"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="NAME">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="57fa5fb5-9734-453d-b1be-cf0d5ab4a186"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="NAME" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="b60c0cd0-bafe-4d2c-a14d-a27f72c7c8c2"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="DESIGNATION">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="87078930-d99a-4613-8e1b-a3a8c0ed6022"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="DESIGNATION" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="ef6d2e02-543c-481b-a317-0dd8f16f273b"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="OPBAL_AL">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="2d5249b0-c34c-4881-86e0-b2a61e6e95b0"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="OPBAL_AL" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="36027387-a6f1-4878-b98c-ffbba61637f4"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="OPBAL_ML">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="801c2615-743a-4370-995e-44da57a77035"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="OPBAL_ML" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="5c04bf10-5fec-45a2-a00a-9fcf2362fc08"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="OPBAL_CL">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="4a22b4b3-2be9-4679-85ac-c6af9aaa2b5d"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="OPBAL_CL" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="0a35390f-294f-40f4-b62d-78fb83f5de7f"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="CLBAL_AL">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="629beea8-07eb-4e16-bc66-77f62fd25a04"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="CLBAL_AL" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="6c59dc46-28b5-43b4-9aec-fe820209489a"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="CLBAL_ML">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="3888ec14-e907-417f-b1e4-cb92a2e91513"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="CLBAL_ML" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="04e0e47d-76c4-4e23-9599-1a63cd3dc0a9"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="CLBAL_CL">
+                    <cellContents mode="Opaque" style="Crosstab_CG">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="b6cc0241-5e78-45f7-9f2a-e6d43ace2e14"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="60" height="20" rowTotalGroup="CLBAL_CL" columnTotalGroup="DATES">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement x="0" y="0" width="60" height="20"
+                                           uuid="a54235e4-3179-4cca-adea-c797155a5294"/>
+                            <textFieldExpression><![CDATA[$V{DATES_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+            </crosstab>
+        </band>
+    </summary>
+</jasperReport>

@@ -1,0 +1,127 @@
+
+select TO_NUMBER(TO_CHAR(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month'),'RRRRMM')) ORD,
+TO_CHAR(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month'),'Mon-RRRR') ror_month, 
+count(tot_disb), count(rep_disb), round((nvl(count(rep_disb),1) / nvl(count(tot_disb),1)) * 100,2) ror_perc
+from
+(
+select ap.CLNT_SEQ tot_disb,
+case when ap.loan_cycl_num > 1 then ap.CLNT_SEQ end rep_disb
+    from mw_loan_app ap,
+    mw_dsbmt_vchr_hdr dvh,
+    mw_port prt,
+    mw_prd prd,
+    mw_prd_grp grp
+    where ap.LOAN_APP_SEQ=dvh.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1 and dvh.CRNT_REC_FLG = 1
+    and ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    and ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG =1 
+    and prd.PRD_GRP_SEQ = grp.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1    
+    and  trunc(dvh.DSBMT_DT) 
+    between trunc(to_date(:toDt, 'dd-MM-yyyy'),'month') and last_day(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month'))
+    and ap.PRD_SEQ not in (2,5,29)    
+)
+union
+select TO_NUMBER(TO_CHAR(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month'),'RRRRMM')) ORD,
+TO_CHAR(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month'),'Mon-RRRR') ror_month,
+count(tot_disb), count(rep_disb), round((nvl(count(rep_disb),1) / nvl(count(tot_disb),1)) * 100,2) ror_perc
+from
+(
+select ap.CLNT_SEQ tot_disb,
+case when ap.loan_cycl_num > 1 then ap.CLNT_SEQ end rep_disb
+    from mw_loan_app ap,
+    mw_dsbmt_vchr_hdr dvh,
+    mw_port prt,
+    mw_prd prd,
+    mw_prd_grp grp
+    where ap.LOAN_APP_SEQ=dvh.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1 and dvh.CRNT_REC_FLG = 1
+    and ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    and ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG =1 
+    and prd.PRD_GRP_SEQ = grp.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1    
+    and  trunc(dvh.DSBMT_DT) 
+    between trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month') and last_day(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month'))
+    and ap.PRD_SEQ not in (2,5,29)    
+)    
+union
+select TO_NUMBER(TO_CHAR(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month'),'RRRRMM')) ORD,
+TO_CHAR(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month'),'Mon-RRRR') ror_month, 
+ count(tot_disb), count(rep_disb), round((nvl(count(rep_disb),1) / nvl(count(tot_disb),1)) * 100,2) ror_perc
+from
+(
+select ap.CLNT_SEQ tot_disb,
+case when ap.loan_cycl_num > 1 then ap.CLNT_SEQ end rep_disb
+    from mw_loan_app ap,
+    mw_dsbmt_vchr_hdr dvh,
+    mw_port prt,
+    mw_prd prd,
+    mw_prd_grp grp
+    where ap.LOAN_APP_SEQ=dvh.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1 and dvh.CRNT_REC_FLG = 1
+    and ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    and ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG =1 
+    and prd.PRD_GRP_SEQ = grp.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1    
+    and  trunc(dvh.DSBMT_DT) 
+    between trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month') and last_day(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month'))
+    and ap.PRD_SEQ not in (2,5,29)    
+)    
+union
+select TO_NUMBER(TO_CHAR(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month'),'RRRRMM')) ORD,
+TO_CHAR(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month'),'Mon-RRRR') ror_month, 
+ count(tot_disb), count(rep_disb), round((nvl(count(rep_disb),1) / nvl(count(tot_disb),1)) * 100,2) ror_perc
+from
+(
+select ap.CLNT_SEQ tot_disb,
+case when ap.loan_cycl_num > 1 then ap.CLNT_SEQ end rep_disb
+    from mw_loan_app ap,
+    mw_dsbmt_vchr_hdr dvh,
+    mw_port prt,
+    mw_prd prd,
+    mw_prd_grp grp
+    where ap.LOAN_APP_SEQ=dvh.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1 and dvh.CRNT_REC_FLG = 1
+    and ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    and ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG =1 
+    and prd.PRD_GRP_SEQ = grp.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1    
+    and  trunc(dvh.DSBMT_DT) 
+    between trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month') and last_day(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month'))
+    and ap.PRD_SEQ not in (2,5,29)    
+)    
+union
+select TO_NUMBER(TO_CHAR(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month'),'RRRRMM')) ORD,
+TO_CHAR(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month'),'Mon-RRRR') ror_month,  
+ count(tot_disb), count(rep_disb), round((nvl(count(rep_disb),1) / nvl(count(tot_disb),1)) * 100,2) ror_perc
+from
+(
+select  ap.CLNT_SEQ tot_disb,
+case when ap.loan_cycl_num > 1 then ap.CLNT_SEQ end rep_disb
+    from mw_loan_app ap,
+    mw_dsbmt_vchr_hdr dvh,
+    mw_port prt,
+    mw_prd prd,
+    mw_prd_grp grp
+    where ap.LOAN_APP_SEQ=dvh.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1 and dvh.CRNT_REC_FLG = 1
+    and ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    and ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG =1 
+    and prd.PRD_GRP_SEQ = grp.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1    
+    and  trunc(dvh.DSBMT_DT) 
+    between trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month') and last_day(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month'))
+    and ap.PRD_SEQ not in (2,5,29)    
+)    
+union
+select TO_NUMBER(TO_CHAR(trunc(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1,'month'),'RRRRMM')) ORD,
+TO_CHAR(trunc(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1,'month'),'Mon-RRRR') ror_month,  
+ count(tot_disb), count(rep_disb), round((nvl(count(rep_disb),1) / nvl(count(tot_disb),1)) * 100,2) ror_perc
+from
+(
+select ap.CLNT_SEQ tot_disb,
+case when ap.loan_cycl_num > 1 then ap.CLNT_SEQ end rep_disb
+    from mw_loan_app ap,
+    mw_dsbmt_vchr_hdr dvh,
+    mw_port prt,
+    mw_prd prd,
+    mw_prd_grp grp
+    where ap.LOAN_APP_SEQ=dvh.LOAN_APP_SEQ and ap.CRNT_REC_FLG = 1 and dvh.CRNT_REC_FLG = 1
+    and ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    and ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG =1 
+    and prd.PRD_GRP_SEQ = grp.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1    
+    and  trunc(dvh.DSBMT_DT) 
+    between trunc(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1,'month') and last_day(trunc(trunc(trunc(trunc(trunc(trunc(to_date(:toDt, 'dd-MM-yyyy'),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1,'month'))
+    and ap.PRD_SEQ not in (2,5,29)    
+)    
+

@@ -1,0 +1,966 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="TRANSFERRED_CLIENTS" pageWidth="1008" pageHeight="612" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="968" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" isFloatColumnFooter="true" uuid="1e36d134-28c7-433a-a67e-89080436c1ca">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NWMW1.xml"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="frm_dt" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[select  prd.prd_nm,
+    clnt.clnt_id,
+    ap.loan_app_seq,clnt.frst_nm||' '||clnt.last_nm clnt_nm,
+    (select emp_nm from mw_emp emp join mw_port_emp_rel pr on pr.emp_seq=emp.emp_seq and pr.crnt_rec_flg=1 and pr.port_seq=trns.frm_port) frm_bdo,
+    (select emp_nm from mw_emp emp join mw_port_emp_rel pr on pr.emp_seq=emp.emp_seq and pr.crnt_rec_flg=1 and pr.port_seq=trns.to_port) to_bdo,
+    fi.brnch_nm frm_brnch,ti.brnch_nm to_brnch,
+    ap.loan_app_sts_dt,
+    ap.aprvd_loan_amt,
+    (select count(psd.pymt_sched_dtl_seq) 
+         from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1
+            where psh.crnt_rec_flg=1 
+              and psd.pymt_sts_key=945 and psh.loan_app_seq=ap.loan_app_seq) inst_num,
+        loan_app_ost(ap.loan_app_seq,trns.frm_end_dt,'p') ost_pr,
+         loan_app_ost(ap.loan_app_seq,trns.frm_end_dt,'s') ost_sc,
+    0 KSZB_ost,
+    0 doc_fee_ost,
+    0 trn_ost,
+    0 ins_ost,
+    0 ex_rcvry
+from mw_loan_app ap
+join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1
+join mw_clnt clnt on clnt.clnt_seq=ap.clnt_seq and clnt.crnt_rec_flg=1
+join
+(
+select tp.loan_app_seq,
+       tp.port_seq to_port,
+       (select frm.port_seq from mw_loan_app frm where frm.crnt_rec_flg=0 and frm.loan_app_seq=tp.loan_app_seq and frm.port_seq <> tp.port_seq) frm_port,
+       (select frm.eff_end_dt from mw_loan_app frm where frm.crnt_rec_flg=0 and frm.loan_app_seq=tp.loan_app_seq and frm.port_seq <> tp.port_seq) frm_end_dt
+from mw_loan_app tp
+where tp.crnt_rec_flg=1
+and exists (
+    select loan_app_seq,count(distinct port_seq)
+    from mw_loan_app chng
+    where chng.loan_app_seq=tp.loan_app_seq
+    group by loan_app_seq
+    having count(distinct port_seq)>1
+) 
+)  trns on trns.loan_app_seq=ap.loan_app_seq
+join ( select reg_nm, area_nm, brnch_nm, prt.port_seq 
+        from mw_reg rg join mw_area ar on ar.reg_seq=rg.reg_seq and ar.crnt_rec_flg=1
+        join mw_brnch br on br.area_seq=ar.area_seq and br.crnt_rec_flg=1
+        join mw_port prt on prt.brnch_seq=br.brnch_seq and prt.crnt_rec_flg=1
+        where rg.crnt_rec_flg=1
+) fi on fi.port_seq=trns.frm_port
+join ( select reg_nm, area_nm, brnch_nm, prt.port_seq 
+        from mw_reg rg join mw_area ar on ar.reg_seq=rg.reg_seq and ar.crnt_rec_flg=1
+        join mw_brnch br on br.area_seq=ar.area_seq and br.crnt_rec_flg=1
+        join mw_port prt on prt.brnch_seq=br.brnch_seq and prt.crnt_rec_flg=1 
+        where rg.crnt_rec_flg=1        
+) ti on ti.port_seq=trns.to_port
+where ap.crnt_rec_flg=1
+  and ap.loan_app_sts=703
+  and trns.frm_end_dt between to_date('01-06-2019','dd-MM-yyyy') and to_date('11-06-2019','dd-MM-yyyy')]]>
+    </queryString>
+    <field name="PRD_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="PRD_NM"/>
+    </field>
+    <field name="CLNT_ID" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_ID"/>
+    </field>
+    <field name="LOAN_APP_SEQ" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="LOAN_APP_SEQ"/>
+    </field>
+    <field name="CLNT_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_NM"/>
+    </field>
+    <field name="FRM_BDO" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="FRM_BDO"/>
+    </field>
+    <field name="TO_BDO" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TO_BDO"/>
+    </field>
+    <field name="FRM_BRNCH" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="FRM_BRNCH"/>
+    </field>
+    <field name="TO_BRNCH" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TO_BRNCH"/>
+    </field>
+    <field name="LOAN_APP_STS_DT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="LOAN_APP_STS_DT"/>
+    </field>
+    <field name="APRVD_LOAN_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="APRVD_LOAN_AMT"/>
+    </field>
+    <field name="INST_NUM" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="INST_NUM"/>
+    </field>
+    <field name="OST_PR" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OST_PR"/>
+    </field>
+    <field name="OST_SC" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="OST_SC"/>
+    </field>
+    <field name="KSZB_OST" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="KSZB_OST"/>
+    </field>
+    <field name="DOC_FEE_OST" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DOC_FEE_OST"/>
+    </field>
+    <field name="TRN_OST" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="TRN_OST"/>
+    </field>
+    <field name="INS_OST" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="INS_OST"/>
+    </field>
+    <field name="EX_RCVRY" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="EX_RCVRY"/>
+    </field>
+    <variable name="count" class="java.lang.Integer" resetType="Group" resetGroup="prdGroup" calculation="Count">
+        <variableExpression><![CDATA[$V{count}+1]]></variableExpression>
+        <initialValueExpression><![CDATA[1]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OST_PR" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_PR}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OST_SC" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_SC}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_KSZB_OST" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{KSZB_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DOC_FEE_OST" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{DOC_FEE_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_TRN_OST" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{TRN_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_INS_OST" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{INS_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_EX_RCVRY" class="java.lang.Long" resetType="Group" resetGroup="prdGroup" calculation="Sum">
+        <variableExpression><![CDATA[$F{EX_RCVRY}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OST_PR_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_PR}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_OST_SC_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{OST_SC}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_KSZB_OST_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{KSZB_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_DOC_FEE_OST_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{DOC_FEE_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_TRN_OST_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{TRN_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_INS_OST_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{INS_OST}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <variable name="TTL_EX_RCVRY_1" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{EX_RCVRY}]]></variableExpression>
+        <initialValueExpression><![CDATA[0L]]></initialValueExpression>
+    </variable>
+    <group name="prdGroup">
+        <groupExpression><![CDATA[$F{PRD_NM}]]></groupExpression>
+        <groupHeader>
+            <band height="38">
+                <textField>
+                    <reportElement x="0" y="0" width="180" height="12" uuid="0633f060-655e-439d-a7f7-7c92dbbc3d1e"/>
+                    <box leftPadding="1" rightPadding="1"/>
+                    <textElement verticalAlignment="Middle">
+                        <font size="8" isBold="true" isUnderline="true"/>
+                    </textElement>
+                    <textFieldExpression><![CDATA[$F{PRD_NM}]]></textFieldExpression>
+                </textField>
+                <staticText>
+                    <reportElement x="120" y="14" width="90" height="24" uuid="223222b1-6e9c-468c-b993-3b365e83beef"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Client Name]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="70" y="14" width="50" height="24" uuid="78f9560c-bda7-48d9-b007-f80a1b37c6ae"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Loan Application ID]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="490" y="14" width="50" height="24" uuid="2038e7a1-7143-4157-a480-9d4ff9d50724"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Disb. Date]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="0" y="14" width="20" height="24" uuid="f202c94d-5fb8-4329-b07a-14c0e95bca23"/>
+                    <box>
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Sr No.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="20" y="14" width="50" height="24" uuid="fc3cf1a9-792e-4c6a-8b18-5ecebec01acb"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Client ID]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="210" y="14" width="70" height="24" uuid="20994e55-60e1-464e-bcc9-9371a5938e64"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[From BDO]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="280" y="14" width="70" height="24" uuid="be9241bb-17a2-4d52-8e82-85c783f39afc"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[To BDO]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="350" y="14" width="70" height="24" uuid="6b8edb75-311e-41fe-b6aa-b764866ef112"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[From Branch]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="420" y="14" width="70" height="24" uuid="e905f099-a5fd-4718-977e-cefb7f6f2ee7"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Top">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[To Branch]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="540" y="14" width="50" height="24" uuid="a65da14b-49c3-455b-b8da-4f1c1387ca10"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Disb. Amount]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="590" y="14" width="50" height="24" uuid="17a43903-2eec-4e8a-a5b2-2963b057702a"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Remaing Inst.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="640" y="14" width="50" height="24" uuid="5e27785c-23d7-4dcc-807a-7a4d450282e0"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Outs. Pr]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="690" y="14" width="50" height="24" uuid="f98381f9-2078-451a-a147-75d33e7bd6bd"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Outs. Sc]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="910" y="14" width="50" height="24" uuid="4b99d5e6-c7be-449c-a08a-76a5546a72d6"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Excess Recovery]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="740" y="14" width="40" height="24" uuid="cacf366f-dff6-4d55-92d1-62c2eeefd628"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[KSZB Outs.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="870" y="14" width="40" height="24" uuid="c30afc98-04d0-43a3-a302-36bb9ecd4aac"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Insurance Fee]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="780" y="14" width="40" height="24" uuid="80415175-5b29-401c-a1bd-750821f3ae1f"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Doc fee Outs.]]></text>
+                </staticText>
+                <staticText>
+                    <reportElement x="820" y="14" width="50" height="24" uuid="a3647472-2153-4dfc-921b-42804aed7fde"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Training Fee Outs.]]></text>
+                </staticText>
+            </band>
+        </groupHeader>
+        <groupFooter>
+            <band height="12">
+                <staticText>
+                    <reportElement x="0" y="0" width="640" height="12" uuid="09cd203b-6461-4121-a70d-e9faefcad9e3"/>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Center" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <text><![CDATA[Total]]></text>
+                </staticText>
+                <textField>
+                    <reportElement x="780" y="0" width="40" height="12" uuid="f5ffc31f-e71f-4c2a-96f8-84f10f1fd3a7">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DOC_FEE_OST})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="740" y="0" width="40" height="12" uuid="2badd91d-3e3a-4a88-a937-b27f32d53bee">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_KSZB_OST})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="640" y="0" width="50" height="12" uuid="69d5ce12-46db-436d-9fb0-5b0be0603667">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OST_PR})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="870" y="0" width="40" height="12" uuid="f6bb705f-0501-401e-a23f-5bffdfcddf99">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_INS_OST})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="910" y="0" width="50" height="12" uuid="0a957889-cc24-475c-ab08-d0a7bc04009f">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_EX_RCVRY})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="690" y="0" width="50" height="12" uuid="248daa75-9711-41fe-81e6-a72e3a3bdd62">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OST_SC})]]></textFieldExpression>
+                </textField>
+                <textField>
+                    <reportElement x="820" y="0" width="50" height="12" uuid="aff34fb2-d8f6-4954-8d36-1653e052fb70">
+                        <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                                  value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                    </reportElement>
+                    <box leftPadding="1" rightPadding="1">
+                        <pen lineWidth="0.25"/>
+                    </box>
+                    <textElement textAlignment="Right" verticalAlignment="Middle">
+                        <font size="8"/>
+                    </textElement>
+                    <textFieldExpression>
+                        <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_TRN_OST})]]></textFieldExpression>
+                </textField>
+            </band>
+        </groupFooter>
+    </group>
+    <title>
+        <band height="73" splitType="Stretch">
+            <image>
+                <reportElement positionType="Float" x="5" y="4" width="40" height="50"
+                               uuid="3cf674b4-6b09-451e-9d84-b0400b8864ea"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement positionType="Float" x="47" y="4" width="127" height="20"
+                               uuid="0ee0f15c-3c5b-42c4-a130-da7f88589257"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="280" y="10" width="400" height="24"
+                               uuid="1770ef5c-4ddd-4985-862a-35161f4d38d4"/>
+                <textElement textAlignment="Center">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Transferred Clients Report]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="810" y="12" width="36" height="12"
+                               uuid="86e0643f-b646-4c2d-963c-9d7f85498ba1"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[User:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement positionType="Float" x="810" y="24" width="60" height="12"
+                               uuid="8c073d9c-851f-41f7-a6fe-0f12d15a8e35"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement positionType="Float" x="870" y="24" width="90" height="12"
+                               uuid="835b26fc-50ce-45d4-95a1-ffee01dcc3ca"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="870" y="12" width="90" height="12"
+                               uuid="04f93bf5-1f25-45b6-98e9-22d212e6a0d9"/>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="650" y="50" width="50" height="12" uuid="40c94027-a469-4859-86ba-1d3f507e04d6"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[From Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="701" y="50" width="80" height="12" uuid="3fde75b7-c6d6-47e3-8a7f-7f385ab6f9fc"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{frm_dt}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="1" y="72" width="965" height="1" uuid="637d9e06-f432-4bdd-8867-b201ef118124"/>
+            </line>
+            <staticText>
+                <reportElement x="810" y="50" width="40" height="12" uuid="0e17eb0e-ff9a-4933-9aa7-dac5c5f2eec4"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[To Date:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="850" y="50" width="80" height="12" uuid="b30efacf-d777-44d6-ad39-69073a175e24"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{to_dt}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <detail>
+        <band height="12" splitType="Stretch">
+            <textField>
+                <reportElement x="20" y="0" width="50" height="12" uuid="de75e5cd-0212-43e3-b1dc-e0103dc25f87">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="0" y="0" width="20" height="12" uuid="bbf7d555-4214-4d8f-91ab-99f88eba77ba"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{count}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="70" y="0" width="50" height="12" uuid="2ee18de7-098d-427b-9eb6-39eef2dbe3cc">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{LOAN_APP_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="120" y="0" width="90" height="12" uuid="cf6f5f79-cc61-47b4-9a7b-7da3349707ce">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="210" y="0" width="70" height="12" uuid="c908706b-a2cb-48b2-a308-9c1ca0741a39">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{FRM_BDO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="0" width="70" height="12" uuid="7d1c7a32-309a-4928-9582-824c0f948ab0">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TO_BDO}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="420" y="0" width="70" height="12" uuid="648a3f66-b36a-4db8-a2d9-cd398e9863f2">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TO_BRNCH}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="350" y="0" width="70" height="12" uuid="6d84049e-a6e7-43b9-be48-3c9ba0eb4eaa">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{FRM_BRNCH}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="490" y="0" width="50" height="12" uuid="d36b349d-4944-4073-8af6-a1bc1634ea53">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{LOAN_APP_STS_DT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="540" y="0" width="50" height="12" uuid="bab73520-00d8-4008-bb09-befe740ffe66">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{APRVD_LOAN_AMT})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="590" y="0" width="50" height="12" uuid="b639beac-bc2f-40fe-83bc-baff60648e31">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{INST_NUM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="640" y="0" width="50" height="12" uuid="9f34565c-fb32-4d67-8a00-be4740927c36">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{OST_PR})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="690" y="0" width="50" height="12" uuid="1457d8c2-d480-487a-8ece-ede79e0ce369">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{OST_SC})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="740" y="0" width="40" height="12" uuid="a85e5760-0435-473e-ac34-ded1858c0703">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{KSZB_OST})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="780" y="0" width="40" height="12" uuid="dca8c469-a437-427f-a7da-e7fc8deb046c">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{DOC_FEE_OST})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="870" y="0" width="40" height="12" uuid="7fa0847b-f859-4f3f-b53f-f635b24028a1">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{INS_OST})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="910" y="0" width="50" height="12" uuid="a9643133-bb1a-41ce-8bf1-5425e8674507">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{EX_RCVRY})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="820" y="0" width="50" height="12" uuid="4f0138f1-8ccb-4c15-9884-b4b3a7792fd8">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($F{TRN_OST})]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="12">
+            <textField>
+                <reportElement x="869" y="0" width="52" height="12" uuid="873b51d0-26c6-4879-9da6-fb98f713f4d3"/>
+                <box leftPadding="1" rightPadding="1"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="921" y="0" width="45" height="12" uuid="917458f0-3334-40d2-9157-c1682d057880"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="12" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="640" height="12" uuid="8f7eab5b-e4ec-4958-82ac-29efbb3665e9"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="6" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Grand Total]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="740" y="0" width="40" height="12" uuid="32158150-cfdc-42b4-9469-b0c8db19075d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_KSZB_OST_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="820" y="0" width="50" height="12" uuid="a8fbc2ec-bd2e-4fd8-b9b3-ed6041409f34">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_TRN_OST_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="640" y="0" width="50" height="12" uuid="80a0e156-2ec0-4917-a1f1-6a96886cd735">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OST_PR_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="690" y="0" width="50" height="12" uuid="99613186-d44f-47c0-9663-8e4a999a993f">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_OST_SC_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="780" y="0" width="40" height="12" uuid="ca2870df-da4e-4933-afee-171db6fd1c58">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_DOC_FEE_OST_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="910" y="0" width="50" height="12" uuid="1069a576-1962-41d4-924f-e0306834da82">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_EX_RCVRY_1})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="870" y="0" width="40" height="12" uuid="483d2789-8ec2-4598-9b20-1088a58c3939">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="816e3446-742a-468b-ad0c-fdcb1137ef0f"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new java.text.DecimalFormat("#,##0").format($V{TTL_INS_OST_1})]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

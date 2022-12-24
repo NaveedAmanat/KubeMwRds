@@ -1,0 +1,156 @@
+select to_number(to_char(to_date(last_day(:as_dt)),'RRRRMM')) par_ordr, to_char(to_date(last_day(:as_dt)),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(last_day(:as_dt)),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(last_day(:as_dt)),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(:as_dt)),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(last_day(:as_dt)),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(last_day(:as_dt)),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(:as_dt)),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(last_day(:as_dt)),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(:as_dt)),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(last_day(:as_dt)),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(last_day(:as_dt)),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(last_day(:as_dt)),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(last_day(:as_dt)))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(last_day(:as_dt)))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(last_day(:as_dt)) and to_date(dvh.dsbmt_dt) <= to_date(last_day(:as_dt)))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(last_day(:as_dt)))) 
+    group by to_number(to_char(to_date(last_day(:as_dt)),'RRRRMM')), to_char(to_date(last_day(:as_dt)),'Mon-RRRR')
+    union
+    select to_number(to_char(to_date(trunc(last_day(:as_dt),'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(last_day(:as_dt),'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(:as_dt),'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(last_day(:as_dt),'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(last_day(:as_dt),'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(last_day(:as_dt),'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(last_day(:as_dt),'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(:as_dt),'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(last_day(:as_dt),'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(last_day(:as_dt),'month')-1))) 
+    group by to_number(to_char(to_date(trunc(last_day(:as_dt),'month')-1),'RRRRMM')), to_char(to_date(trunc(last_day(:as_dt),'month')-1),'Mon-RRRR')
+    union
+     select to_number(to_char(to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1),'Mon-RRRR')
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1),'Mon-RRRR')
+    union
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR')
+    union    
+    select to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')) par_ordr, to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR') par_month,
+    count(app.loan_app_seq) tot_clnt,
+    sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc')) ost_amt,     
+    count(distinct case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then app.loan_app_seq else null end) par_over_30_day_cnt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_day_od_amt, 
+    sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) par_over_30_amt,
+    case when sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) > 0
+    then
+        round((sum(case when get_od_info(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'d') > 28.5 then loan_app_ost(app.loan_app_seq, to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc') else 0 end) /
+        sum(loan_app_ost(app.loan_app_seq,to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'psc'))) * 100 ,2)
+    else
+        0.0
+    end par_perc
+    from mw_loan_app app  
+    join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1       
+    join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1 
+    join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1 and brnch.brnch_seq = :brnchSeq
+    join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                                
+    where app.crnt_rec_flg=1    
+    and not exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = app.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+    and ( (asts.ref_cd='0005' and to_date(app.loan_app_sts_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))  
+        or (asts.ref_cd='0006' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1) and to_date(dvh.dsbmt_dt) <= to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))                                              
+        or (asts.ref_cd='1245' and to_date(app.loan_app_sts_dt) > to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1))) 
+    group by to_number(to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'RRRRMM')), to_char(to_date(trunc(trunc(trunc(trunc(trunc(last_day(:as_dt),'month')-1,'month')-1,'month')-1,'month')-1,'month')-1),'Mon-RRRR');
+      

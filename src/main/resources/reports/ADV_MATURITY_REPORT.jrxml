@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="FUNDTRANS" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="3e74af4c-5fdf-44c2-97bb-9029f084f2c8">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <parameter name="reg_nm" class="java.lang.String"/>
+    <parameter name="area_nm" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_cd" class="java.lang.String"/>
+    <parameter name="date" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="as_dt" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[select grp_nm,
+    sum(mat_15_30) mat_15_30,
+    sum(mat_31_60) mat_31_60,
+    sum(mat_61_90) mat_61_90,
+    sum(mat_61_90) mat_61_90
+from(    
+select 
+    case when 1= 1 then brnch.brnch_nm else ar.area_nm end grp_nm,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 15 and 30 then 1 else 0 end mat_15_30,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 31 and 60 then 1 else 0 end mat_31_60,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 61 and 90 then 1 else 0 end mat_61_90,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) >90 then 1 else 0 end mat_ovr_90
+from mw_loan_app la 
+join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_acl acl on acl.port_seq=la.port_seq and acl.user_id='mbasheer255'
+where la.crnt_rec_flg=1
+and la.loan_app_sts=703
+and to_date(loan_mturty_dt(la.loan_app_seq))<= to_date('01-12-2019','dd-mm-yyyy')
+union all
+select 'zzzOverall',
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 15 and 30 then 1 else 0 end mat_15_30,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 31 and 60 then 1 else 0 end mat_31_60,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) between 61 and 90 then 1 else 0 end mat_61_90,
+    case when to_date('01-12-2019','dd-mm-yyyy')-to_date(loan_mturty_dt(la.loan_app_seq)) >90 then 1 else 0 end mat_ovr_90
+from mw_loan_app la 
+join mw_port prt on prt.port_seq=la.port_seq and prt.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_acl acl on acl.port_seq=la.port_seq and acl.user_id='mbasheer255'
+where la.crnt_rec_flg=1
+and la.loan_app_sts=703
+and to_date(loan_mturty_dt(la.loan_app_seq))<= to_date('01-10-2019','dd-mm-yyyy')
+)
+group by grp_nm]]>
+    </queryString>
+    <field name="GRP_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="GRP_NM"/>
+    </field>
+    <field name="MAT_15_30" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="MAT_15_30"/>
+    </field>
+    <field name="MAT_31_60" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="MAT_31_60"/>
+    </field>
+    <field name="MAT_61_90" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="MAT_61_90"/>
+    </field>
+    <field name="COLUMN_5" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="MAT_61_90"/>
+    </field>
+    <title>
+        <band height="86" splitType="Stretch">
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="43" y="0" width="127" height="20"
+                               uuid="b7522512-407c-44f2-b773-6f8851b306ed"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="98" y="25" width="336" height="20" uuid="fa05b720-9246-426b-82dd-abcae6c6d5a9"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Advance Maturity Report ]]></text>
+            </staticText>
+            <image>
+                <reportElement x="0" y="0" width="40" height="50" uuid="5c845a37-4417-4350-a6e6-cba300a1008e"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement x="480" y="13" width="90" height="12" uuid="11e182ad-4670-4f79-bf40-53bf82b4c434"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="421" y="13" width="58" height="12" uuid="4cc065fa-f058-4a6a-a69b-8a35a3c66e92"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="484" y="60" width="16" height="12" uuid="335658a1-d5b9-41c3-902b-09b2c2cee4ca"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[To:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="500" y="60" width="54" height="12" uuid="f3d0a292-c180-4b28-b4c1-9e2363135413"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{as_dt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="421" y="0" width="38" height="12" uuid="a5b43585-a642-4ca5-989e-a8fc199b2b16"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[User: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="480" y="1" width="74" height="12" uuid="d330e12e-af5f-4424-8393-5638a4f331ef"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement mode="Opaque" x="98" y="72" width="240" height="14"
+                               uuid="00e9ee1a-fc87-4903-b737-e762f6f84fb5"/>
+                <box>
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center"/>
+                <text><![CDATA[Days Prior to Loan Completion Date]]></text>
+            </staticText>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="25" splitType="Stretch">
+            <staticText>
+                <reportElement x="0" y="0" width="98" height="25" uuid="91e645d5-7123-4503-a2ac-aabb07794f84">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d6459cd8-33bf-4766-ab9d-ee9bb52fc841"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="98" y="0" width="60" height="25" uuid="efc1c7bd-bfe6-43e2-9e65-fba20374203b">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="828532c4-4684-4d3b-b6ac-694cfb648874"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[15- 30 days ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="158" y="0" width="60" height="25" uuid="a1d03f4d-5873-439f-ae96-06a69246c52d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d6459cd8-33bf-4766-ab9d-ee9bb52fc841"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[31 – 60 days ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="218" y="0" width="60" height="25" uuid="85afa5d6-61e6-4ba1-8731-9e9be61aa24d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d6459cd8-33bf-4766-ab9d-ee9bb52fc841"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[61 – 90 days ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="278" y="0" width="60" height="25" uuid="a39bf3c8-2023-49ed-b361-e8dac43edef7">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d6459cd8-33bf-4766-ab9d-ee9bb52fc841"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Over 90 days ]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="12" splitType="Stretch">
+            <textField>
+                <reportElement positionType="Float" x="98" y="0" width="60" height="12"
+                               uuid="1202c2ae-b3ae-4338-b915-e5ce202a26bf"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MAT_15_30}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="158" y="0" width="60" height="12"
+                               uuid="f2504135-1b14-4111-abee-4bf46a406eb7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MAT_31_60}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="0" y="0" width="98" height="12"
+                               uuid="a52e26e7-0c37-451f-8ac6-9b032e2bc4f7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{GRP_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="218" y="0" width="60" height="12"
+                               uuid="dcd775a6-abd7-45e8-84fc-aaf6083c42d8"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MAT_31_60}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement positionType="Float" x="278" y="0" width="60" height="12"
+                               uuid="3c66706e-20ee-4c39-a50e-32106a50f25a"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{MAT_61_90}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="12">
+            <textField>
+                <reportElement x="459" y="0" width="52" height="12" uuid="9d470d51-75cd-4d99-98af-8798a0967582"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="511" y="0" width="45" height="12" uuid="603c07f6-95d8-424f-8b73-0751de3b5b7f"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

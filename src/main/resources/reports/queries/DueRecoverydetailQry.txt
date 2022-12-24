@@ -1,0 +1,50 @@
+select emp_seq,   emp_nm,   clnt_id,   name,   
+                nom_nm, ph_num, addr, inst_num, loan_cycl_num, prd_cmnt, inst_amt,
+                to_char(due_dt,'dd-mm-yyyy') due_dt, get_od_info(blk.loan_app_seq, sysdate,'i') od_inst  ,  
+                get_od_info(blk.loan_app_seq, sysdate,'d') od_days , 
+                blk.pdc_hldr_nm, blk.pdc_hldr_phn, to_number(to_char(DUE_DT,'yyyyMMdd')) srt
+                 from  
+                 (        
+                 select la.port_seq emp_seq, get_port_bdo(la.port_Seq) emp_nm, mc.clnt_id, 
+                 mc.frst_nm ||' '||mc.last_nm name, loan_cycl_num,
+                 (select max(frst_nm||' '||last_nm) from mw_clnt_rel where loan_app_seq=la.loan_app_seq and crnt_rec_flg=1 and rel_typ_flg=1) nom_nm,
+                 mc.fthr_frst_nm||case when mc.fthr_last_nm is not null then ' '||mc.fthr_last_nm end ||(case when mc.fthr_frst_nm is not null and mc.spz_frst_nm is not null then '/' end )||mc.spz_frst_nm||' '||mc.spz_last_nm fs_nm, 
+                 mc.ph_num, GET_CLNT_ADDR (la.LOAN_APP_SEQ)||', '||get_clnt_city(la.LOAN_APP_SEQ) addr,   psd.DUE_DT, 
+                 prd.prd_cmnt, 
+                 psd.inst_num , 
+                 (nvl(psd.PPAL_AMT_DUE,0) + nvl(psd.TOT_CHRG_DUE,0) + 
+                    nvl((select sum(psc.amt) from mw_pymt_sched_chrg psc where psc.PYMT_SCHED_DTL_SEQ = psd.PYMT_SCHED_DTL_SEQ and psc.crnt_rec_flg=1),0) 
+                 ) 
+                 -   nvl(max(( 
+                 select sum(nvl(rdtl.PYMT_AMT,0) )rec   from mw_rcvry_dtl rdtl , mw_rcvry_trx trx 
+                 where rdtl.PYMT_SCHED_DTL_SEQ = psd.PYMT_SCHED_DTL_SEQ and rdtl.CRNT_REC_FLG=1 
+                 and rdtl.RCVRY_TRX_SEQ = trx.RCVRY_TRX_SEQ and trx.CRNT_REC_FLG = 1   and trx.PYMT_REF = la.clnt_seq  
+                 )),0) inst_amt,   la.prd_seq,  la.LOAN_APP_SEQ ,                 
+                 case when mc.slf_pdc_flg=1 then mc.frst_nm||' '||mc.last_nm   
+                    when mc.co_bwr_san_flg=1 then (select max(frst_nm||' '||last_nm) from mw_clnt_rel where loan_app_seq=la.loan_app_seq and crnt_rec_flg=1 and rel_typ_flg=1)  
+                   else  
+                   (select max(frst_nm||' '||last_nm) from mw_clnt_rel where loan_app_seq=la.loan_app_seq and crnt_rec_flg=1 and rel_typ_flg=3)  
+                 end pdc_hldr_nm,
+                 case when mc.slf_pdc_flg=1 then mc.ph_num  
+                    when mc.co_bwr_san_flg=1 then 
+                        (select max(ph_num) from mw_clnt_rel where loan_app_seq=la.loan_app_seq and crnt_rec_flg=1 and rel_typ_flg=1)  
+                   else  
+                        (select max(mc.ph_num) from mw_clnt_rel where loan_app_seq=la.loan_app_seq and crnt_rec_flg=1 and rel_typ_flg=3)  
+                end pdc_hldr_phn                              
+                 from mw_loan_app la, mw_pymt_sched_hdr psh, mw_pymt_sched_dtl psd, mw_clnt mc, 
+                 mw_prd prd, mw_port mp--, mw_acl acl 
+                 where la.LOAN_APP_SEQ = psh.LOAN_APP_SEQ and la.CRNT_REC_FLG = 1 
+                 and psh.loan_app_seq=la.loan_app_seq and psh.crnt_rec_flg=1 
+                 --and acl.port_seq=la.port_seq and acl.user_id=:user_id  
+                 and mp.brnch_seq = :brnch_seq
+                 and psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                 and la.LOAN_APP_STS = 703 
+                 and mc.CLNT_SEQ = la.CLNT_SEQ and mc.CRNT_REC_FLG = 1 
+                 and prd.prd_seq=la.prd_seq and prd.crnt_rec_flg=1 
+                 and la.PORT_SEQ = mp.PORT_SEQ and mp.CRNT_REC_FLG =1 
+                 and psd.DUE_DT between TO_DATE(:frm_dt,'dd-mm-yyyy') and TO_DATE(:to_dt,'dd-mm-yyyy')
+                 group by  get_port_bdo(la.port_Seq),mc.clnt_id, la.prd_seq, la.LOAN_APP_SEQ, psd.DUE_DT,psd.inst_num, psd.PPAL_AMT_DUE, psd.TOT_CHRG_DUE,                 mc.spz_last_nm, mc.spz_frst_nm, mc.fthr_last_nm, mc.fthr_frst_nm,mc.last_nm,mc.frst_nm,la.port_seq,mc.ph_num, 
+                 prd.prd_cmnt,loan_cycl_num, mc.slf_pdc_flg,mc.co_bwr_san_flg, psd.PYMT_SCHED_DTL_SEQ 
+                ) blk   
+            where blk.inst_amt > 0   
+            order by 2,17

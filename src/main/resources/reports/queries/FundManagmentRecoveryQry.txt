@@ -1,0 +1,17 @@
+SELECT TO_CHAR (dvh.DSBMT_DT, 'yyyymm')               DSBMT_DT, 
+                         (CASE WHEN mt.TYP_ID = '0008' THEN 'BANK' ELSE MT.TYP_STR END)               TYP_STR, 
+                         TO_CHAR (TO_DATE (dvh.DSBMT_DT), 'Mon-YYYY')               mon, 
+                         COUNT (DISTINCT ap.loan_app_seq)               no_of_loans, 
+                         COUNT (DISTINCT ap.clnt_seq)               no_of_clnts,           SUM (ap.aprvd_loan_amt) 
+                             disb_amt      FROM mw_loan_app      ap,           MW_DSBMT_VCHR_HDR dvh, 
+                         MW_DSBMT_VCHR_DTL dvd,           mw_port          mp,           mw_acl           ma, 
+                         mw_typs          mt     WHERE     ap.crnt_rec_flg = 1 
+                         AND ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ           AND dvh.DSBMT_HDR_SEQ = dvd.DSBMT_HDR_SEQ 
+                         AND dvd.PYMT_TYPS_SEQ = mt.TYP_SEQ           AND mt.TYP_CTGRY_KEY = 3 
+                         AND dvd.CRNT_REC_FLG = 1           AND dvh.crnt_rec_flg = 1 
+                         AND dvh.crnt_rec_flg = 1           AND ap.PORT_SEQ = mp.PORT_SEQ 
+                         AND ap.PORT_SEQ = ma.PORT_SEQ           AND dvh.DSBMT_DT BETWEEN TO_DATE ( :frmdt, 'dd-mm-yyyy') 
+                                              AND TO_DATE ( :todt, 'dd-mm-yyyy') 
+                        AND mt.TYP_ID NOT IN ('0009','0010','0011')                       
+                 GROUP BY TO_CHAR (dvh.DSBMT_DT, 'yyyymm'),           mt.TYP_STR, 
+                         TO_CHAR (TO_DATE (dvh.DSBMT_DT), 'Mon-YYYY'),           mt.TYP_ID   ORDER BY 1

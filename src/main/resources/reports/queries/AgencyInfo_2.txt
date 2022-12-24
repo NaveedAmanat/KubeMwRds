@@ -1,0 +1,46 @@
+SELECT
+    CASE
+        WHEN clnt.co_bwr_san_flg = 1 THEN nom_nm
+        ELSE cbwr_nm
+    END prvdr_nm,
+    ph.acct_num,
+    pd.chq_num,
+    amt
+FROM
+    mw_pdc_hdr ph
+    JOIN mw_pdc_dtl pd ON pd.pdc_hdr_seq = ph.pdc_hdr_seq
+                          AND pd.crnt_rec_flg = 1
+    JOIN mw_loan_app ap ON ap.loan_app_seq = ph.loan_app_seq
+                           AND ap.crnt_rec_flg = 1
+    JOIN mw_clnt clnt ON clnt.clnt_seq = ap.clnt_seq
+                         AND clnt.crnt_rec_flg = 1
+    LEFT OUTER JOIN (
+        SELECT
+            loan_app_seq,
+            nom.frst_nm
+            || ' '
+            || nom.last_nm nom_nm
+        FROM
+            mw_clnt_rel nom
+        WHERE
+            nom.crnt_rec_flg = 1
+            AND rel_typ_flg = 1
+            AND nom.loan_app_seq = :loanAppSeq
+    ) nmi ON nmi.loan_app_seq = ap.loan_app_seq
+    LEFT OUTER JOIN (
+        SELECT
+            loan_app_seq,
+            nom.frst_nm
+            || ' '
+            || nom.last_nm cbwr_nm
+        FROM
+            mw_clnt_rel nom
+        WHERE
+            nom.crnt_rec_flg = 1
+            AND rel_typ_flg = 3
+            AND nom.loan_app_seq = :loanAppSeq
+    ) cbwr ON cbwr.loan_app_seq = ap.loan_app_seq
+WHERE
+    ph.crnt_rec_flg = 1
+    AND ph.loan_app_seq = :loanAppSeq
+order by pd.coll_dt    

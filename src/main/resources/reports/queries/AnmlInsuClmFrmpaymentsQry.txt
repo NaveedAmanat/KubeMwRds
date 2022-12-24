@@ -1,0 +1,18 @@
+select inst_num,DUE_DT,sum(ppal_amt_due),sum(tot_chrg_due),sum(amt),sum(PR_REC),sum(SC_REC), pymt_dt from(
+select psd.inst_num,psd.DUE_DT DUE_DT,psd.ppal_amt_due,psd.tot_chrg_due,sum(psc.amt) as amt,psd.pymt_sched_dtl_seq,
+(select sum(pymt_amt)
+from mw_rcvry_dtl where pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and CHRG_TYP_KEY=-1 and crnt_rec_flg=1) as PR_REC,
+(select sum(pymt_amt)
+from mw_rcvry_dtl dtl join mw_typs tp on tp.typ_seq=chrg_typ_key and tp.crnt_rec_flg=1 where pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and typ_id='0017' and dtl.crnt_rec_flg=1) as SC_REC,
+(select PYMT_DT from mw_rcvry_dtl rd
+join mw_rcvry_trx rt on rd.RCVRY_TRX_SEQ = rt.RCVRY_TRX_SEQ and rt.CRNT_REC_FLG = 1
+where pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rd.crnt_rec_flg=1 and CHRG_TYP_KEY=-1 and rownum=1) as pymt_dt
+from mw_loan_app la
+join mw_ref_cd_val val on val.ref_cd_seq=la.loan_app_sts and val.crnt_rec_flg=1 and val.del_flg=0 and val.ref_cd ='0005'
+join mw_ref_cd_grp grp on grp.ref_cd_grp_seq = val.ref_cd_grp_key and grp.crnt_rec_flg=1 and grp.ref_cd_grp = '0106'
+join mw_pymt_sched_hdr psh on la.loan_app_seq=psh.loan_app_seq and psh.crnt_rec_flg=1
+join mw_pymt_sched_dtl psd on psh.pymt_sched_hdr_seq=psd.pymt_sched_hdr_seq and psd.crnt_rec_flg=1
+left outer join mw_pymt_sched_chrg psc on psd.pymt_sched_dtl_seq=psc.pymt_sched_dtl_seq and psc.crnt_rec_flg=1
+where la.loan_app_seq=:loanAppSeq and la.crnt_rec_flg=1
+group by psd.inst_num,psd.DUE_DT,psd.ppal_amt_due,psd.tot_chrg_due,psd.pymt_sched_dtl_seq
+order by inst_num)group by inst_num,DUE_DT,pymt_dt order by inst_num

@@ -1,0 +1,109 @@
+select prdg.prd_grp_nm,emp.emp_nm,         sum(opn_clnt),
+                               sum(opn_prn_amt),         sum(opn_svc_amt),         sum(dsbmt_cnt),
+                               sum(dsbmt_prn_amt),         sum(dsbmt_svc_amt),   sum(rcvrd_prn_amt),
+                               sum(rcvrd_svc_amt),         sum(adj_clnt),         sum(adj_prn_amt),
+                               sum(adj_svc_amt),         sum(clsng_clnt),         sum(clsng_prn_amt),
+                               sum(clsng_svc_amt),         sum(cmpltd_loans)  from mw_brnch brnch
+                        join mw_port prt on prt.brnch_seq=brnch.brnch_seq and prt.crnt_rec_flg=1
+                        join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1
+                        join mw_emp emp on emp.emp_seq=erl.emp_seq
+                        join mw_brnch_prd_rel prl on prl.brnch_seq=brnch.brnch_seq and prl.crnt_rec_flg=0 and prl.del_flg=1
+                        join mw_prd prd on prd.prd_seq=prl.prd_seq and prd.crnt_rec_flg=1
+                        join mw_prd_grp prdg on prdg.prd_grp_seq=prd.prd_grp_seq and prdg.crnt_rec_flg=1 left outer join  (  
+                        select ap.prd_seq, ap.port_seq, count(ap.loan_app_seq) opn_clnt,
+                                sum(loan_app_ost_trn(ap.loan_app_seq,to_date(:frmdt,'dd-MM-yyyy')-1,'s')) opn_svc_amt,
+                                sum(loan_app_ost_trn(ap.loan_app_seq,to_date(:frmdt,'dd-MM-yyyy')-1,'p')) opn_prn_amt
+                                from mw_loan_app ap
+                                join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1
+                                join mw_port prt on ap.port_seq=prt.port_seq and prt.crnt_rec_flg=1
+                                where ( (asts.ref_cd='0005' and to_date(ap.loan_app_sts_dt) <= to_date(:frmdt,'dd-MM-yyyy')-1 and ap.crnt_rec_flg=1)
+                                or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date(:frmdt,'dd-MM-yyyy')-1)
+                                or (asts.ref_cd='1245'))
+                                and loan_app_ost_trn(ap.loan_app_seq,to_date(:frmdt,'dd-MM-yyyy')-1) > 0
+                                and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:todt,'dd-MM-yyyy'))
+                                and prt.brnch_seq=:brnchseq                     group by ap.prd_seq,ap.port_seq
+                        ) ost on ost.prd_seq=prd.prd_seq and ost.port_seq=prt.port_seq left outer join  ( 
+                        select ap.prd_seq, ap.port_seq,         count(ap.loan_app_seq) clsng_clnt,
+                                sum(loan_app_ost_trn(ap.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'s')) clsng_svc_amt,
+                                sum(loan_app_ost_trn(ap.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'p')) clsng_prn_amt
+                                from mw_loan_app ap
+                                join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1
+                                where ( (asts.ref_cd='0005' and to_date(ap.loan_app_sts_dt) <= to_date(:todt,'dd-MM-yyyy') and ap.crnt_rec_flg=1)
+                                or (asts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy'))
+                                or (asts.ref_cd='1245'))
+                                and loan_app_ost_trn(ap.loan_app_seq,to_date(:todt,'dd-MM-yyyy')) > 0
+                                and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:todt,'dd-MM-yyyy'))
+                                group by ap.prd_seq,ap.port_seq 
+                        ) clsng on clsng.prd_seq=prd.prd_seq and clsng.port_seq=prt.port_seq left outer join  (
+                            select ap.prd_seq,ap.port_seq,count(distinct ap.loan_app_seq) dsbmt_cnt,
+                                   sum(ap.aprvd_loan_amt) dsbmt_prn_amt,             sum(svc.svc_chrg) dsbmt_svc_amt
+                            from mw_loan_app ap
+                            join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=1
+                            join (select loan_app_seq,sum(tot_chrg_due) svc_chrg
+                                      from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1
+                                      --where psh.crnt_rec_flg=1 
+                                      group by psh.loan_app_seq) svc on svc.loan_app_seq=ap.loan_app_seq
+                            where ap.crnt_rec_flg=1
+                              and to_date(hdr.dsbmt_dt) between to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+                              and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:todt,'dd-MM-yyyy'))
+                            group by ap.prd_seq,ap.port_seq    ) achvd on achvd.prd_seq=prd.prd_seq and achvd.port_seq=prt.port_seq
+                        left outer join  (           select prd_seq, port_seq,
+                                count(distinct LOAN_APP_SEQ) rcvrd_clnt,          sum(rec_pr) rcvrd_prn_amt, sum(rec_sc) rcvrd_svc_amt
+                                from         (         select ap.LOAN_APP_SEQ, ap.prd_seq, ap.port_seq,
+                                            nvl(sum((
+                                                select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                                left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                                where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq --and rdtl.crnt_rec_flg=1
+                                                and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ --and rht.crnt_rec_flg=1
+                                                and (rdtl.chrg_typ_key=-1)   
+                                                and to_date(rht.PYMT_DT) BETWEEN to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+                                            )),0) rec_pr,                     nvl(sum((
+                                                select sum(nvl(rdtl.pymt_amt,0)) from mw_rcvry_trx rht ,mw_rcvry_dtl rdtl
+                                                left outer join mw_typs rtyp on rtyp.typ_seq=rdtl.chrg_typ_key and rtyp.crnt_rec_flg=1             
+                                                where rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq --and rdtl.crnt_rec_flg=1
+                                                and rht.RCVRY_TRX_SEQ = rdtl.RCVRY_TRX_SEQ --and rht.crnt_rec_flg=1
+                                                and (rdtl.chrg_typ_key in (select mt.typ_seq from mw_typs mt where mt.typ_id = '0017' and mt.crnt_rec_flg = 1))   
+                                                and to_date(rht.PYMT_DT) BETWEEN to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+                                            )),0) rec_sc                     --nto la, ost
+                                            from mw_loan_app ap
+                                            join mw_pymt_sched_hdr psh on psh.loan_app_seq=ap.loan_app_seq and psh.crnt_rec_flg=1
+                                            join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1,
+                                            mw_port mp                     where ap.PORT_SEQ = mp.PORT_SEQ
+                                            and ap.crnt_rec_flg=1 and psd.PYMT_STS_KEY not in (949) and mp.brnch_seq = :brnchseq
+                                            and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                            and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:todt,'dd-MM-yyyy'))                  
+                                            group by ap.prd_seq, ap.port_seq, ap.loan_app_seq         )
+                                where (rec_pr > 0 or rec_sc > 0)          group by prd_seq, port_seq       
+                            ) rcvd on rcvd.prd_seq=prd.prd_seq and rcvd.port_seq=prt.port_seq         left outer join (   
+                                select prd_seq, PORT_SEQ, count(distinct loans) adj_clnt,         sum(adj_pr) adj_prn_amt,
+                                sum(adj_sc) adj_svc_amt         from (
+                                SELECT ap.prd_seq,  ap.loan_app_seq loans, ap.PORT_SEQ,
+                                (case when dtl.CHRG_TYP_KEY=-1 then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_pr,
+                                (case when (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)) then nvl(SUM (distinct dtl.pymt_amt),0) else 0 end) adj_sc 
+                                FROM mw_loan_app ap join mw_port prt on prt.PORT_SEQ = ap.PORT_SEQ and prt.crnt_rec_flg = 1
+                                JOIN mw_ref_cd_val asts  ON asts.ref_cd_seq = ap.loan_app_sts  AND asts.crnt_rec_flg = 1 
+                                JOIN mw_pymt_sched_hdr psh  ON psh.loan_app_seq = ap.loan_app_seq  AND psh.crnt_rec_flg = 1 
+                                JOIN mw_pymt_sched_dtl psd  ON psd.pymt_sched_hdr_seq = psh.pymt_sched_hdr_seq  AND psd.crnt_rec_flg = 1 
+                                JOIN mw_ref_cd_val vl  ON vl.ref_cd_seq = psd.pymt_sts_key  AND vl.crnt_rec_flg = 1 and vl.REF_CD_GRP_KEY = 179 and vl.ref_cd = '0949'
+                                JOIN mw_rcvry_dtl dtl  ON (dtl.pymt_sched_dtl_seq is null or dtl.pymt_sched_dtl_seq = psd.PYMT_SCHED_DTL_SEQ)  AND dtl.crnt_rec_flg = 1 
+                                JOIN mw_rcvry_trx trx  ON trx.rcvry_trx_seq = dtl.rcvry_trx_seq  AND trx.crnt_rec_flg = 1 and trx.PYMT_REF = ap.CLNT_SEQ
+                                WHERE ap.crnt_rec_flg = 1 
+                                AND to_date(trx.pymt_dt) BETWEEN to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy') 
+                                and prt.brnch_seq = :brnchseq  
+                                and (dtl.CHRG_TYP_KEY=-1 or (dtl.chrg_typ_key in (select mt1.typ_seq from mw_typs mt1 where mt1.typ_id = '0017' and mt1.crnt_rec_flg = 1)))
+                                and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:todt,'dd-MM-yyyy'))
+                        GROUP BY ap.prd_seq, dtl.CHRG_TYP_KEY, ap.loan_app_seq, ap.PORT_SEQ ) group by prd_seq, PORT_SEQ        
+                        ) adj on adj.prd_seq=prd.prd_seq and adj.port_seq=prt.port_seq left outer join (
+                             select ap.prd_seq,ap.port_seq,count(ap.loan_app_seq) cmpltd_loans         from mw_loan_app ap
+                                join mw_ref_cd_val lsts on lsts.ref_cd_seq=ap.loan_app_sts and lsts.crnt_rec_flg=1
+                                where ap.crnt_rec_flg=1
+                                and lsts.ref_cd='0006' and to_date(ap.loan_app_sts_dt) between to_date(:frmdt,'dd-MM-yyyy') and to_date(:todt,'dd-MM-yyyy')
+                                and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 
+                                and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:todt,'dd-MM-yyyy'))
+                                group by ap.prd_seq,ap.port_seq        
+                          ) cmpltd on cmpltd.prd_seq=prd.prd_seq and cmpltd.port_seq=prt.port_seq
+                        where prd.prd_grp_seq=:prdseq  and brnch.brnch_seq=:brnchseq group by prdg.prd_grp_nm,emp.emp_nm order by 1,2

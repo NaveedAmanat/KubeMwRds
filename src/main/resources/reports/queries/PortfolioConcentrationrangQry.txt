@@ -1,0 +1,80 @@
+select  case when nvl(la.APRVD_LOAN_AMT,0) <= 20000 then '10,001 - 20,000' 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 20001 and 30000 then '20,001 - 30,000' 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 30001 and 40000 then '30,001 - 40,000' 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 40001 and 50000 then '40,001 - 50,000' 
+                          else 'More than 50,000'             end loan_size, 
+                         count(distinct la.loan_app_seq) actv_loans , 
+                         sum(case when nvl(la.APRVD_LOAN_AMT,0) <= 20000 then nvl(la.APRVD_LOAN_AMT,0) 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 20001 and 30000 then nvl(la.APRVD_LOAN_AMT,0) 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 30001 and 40000 then nvl(la.APRVD_LOAN_AMT,0)  
+                              when nvl(la.APRVD_LOAN_AMT,0) between 40001 and 50000 then nvl(la.APRVD_LOAN_AMT,0) 
+                          else nvl(la.APRVD_LOAN_AMT,0)            end) loan_amt, 
+                         sum(nvl(loan_app_ost(la.loan_app_seq,to_date(:asDt,'dd-MM-yyyy')),0)) ost_amt, 
+                         sum(nvl((nvl(od_cl.PR_OD,0) + nvl(od_cl.SC_OD,0)),0)) od_amt_cl, 
+                         count(distinct od_cl.loan_app_seq) od_loans, 
+                         sum(nvl((case when od_cl.loan_app_seq > 0 then nvl(loan_app_ost(od_cl.loan_app_seq,to_date(:asDt,'dd-MM-yyyy')),0) end),0)) ost_par_amt, 
+                         sum(nvl((case when nvl(od_cl.OD_DYS,0) >= 30 then od_cl.loan_app_seq end),0)) od_loans_30, 
+                         sum(nvl((case when nvl(od_cl.OD_DYS,0) >= 30 then nvl(loan_app_ost(od_cl.loan_app_seq,to_date(:asDt,'dd-MM-yyyy')),0) end),0)) ost_par_amt_30, 
+                         sum(nvl(od_cl.OD_DYS,0)) od_dys                              from mw_loan_app la,  
+                          mw_port mp,            mw_prd prd,            mw_ref_cd_val asts,             
+                             (                   select shld_rec.LOAN_APP_SEQ,                   pr_due - pr_rec pr_od, 
+                                 sc_due - sc_rec sc_od,                   chrg_due - chrg_rec chrg_od, 
+                                nvl(to_date(:asDt,'dd-MM-yyyy') - od_dt,0) od_dys                   from 
+                                 ( 
+                                 select ap.LOAN_APP_SEQ, nvl(sum(psd.ppal_amt_due),0) pr_due, nvl(sum(tot_chrg_due),0) sc_due, 
+                                 nvl(sum((select sum(amt) from mw_pymt_sched_chrg psc where psc.PYMT_SCHED_DTL_SEQ = psd.PYMT_SCHED_DTL_SEQ and crnt_rec_flg=1)),0) chrg_due, 
+                                 max(INST_NUM) inst_num, min(psd.due_dt) od_dt                   from mw_loan_app ap 
+                                 join mw_ref_cd_val lsts on lsts.ref_cd_seq=ap.loan_app_sts and lsts.crnt_rec_flg=1 
+                                 join mw_pymt_sched_hdr psh on psh.loan_app_seq= ap.loan_app_seq and psh.crnt_rec_flg=1 
+                                 join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                                 join mw_ref_cd_val vl on vl.ref_cd_seq=psd.pymt_sts_key and vl.crnt_rec_flg=1 
+                                 and psd.due_dt <= to_date(:asDt,'dd-MM-yyyy') 
+                                 and (psd.PYMT_STS_KEY in (select val.ref_cd_seq from mw_ref_cd_val val where val.ref_cd in ('0945','1145') and REF_CD_GRP_KEY = 179 and val.crnt_rec_flg=1) 
+                                     or (psd.PYMT_STS_KEY = (select val.ref_cd_seq from mw_ref_cd_val val where val.ref_cd in ('0948') and REF_CD_GRP_KEY = 179 and val.crnt_rec_flg=1) 
+                                     and (                       select max(trx.pymt_dt) 
+                                     from mw_rcvry_dtl rdtl join mw_rcvry_trx trx on trx.rcvry_trx_seq=rdtl.rcvry_trx_seq and trx.crnt_rec_flg=1 
+                                     and rdtl.PYMT_SCHED_DTL_SEQ = psd.PYMT_SCHED_DTL_SEQ) > to_date(:asDt,'dd-MM-yyyy') 
+                                     )                       )                   and ap.crnt_rec_flg =1 
+                                 and ap.LOAN_APP_STS not in (select val.ref_cd_seq from mw_ref_cd_val val where val.ref_cd in ('1245') and REF_CD_GRP_KEY = 106 and val.crnt_rec_flg=1) 
+                                 group by ap.LOAN_APP_SEQ                   )shld_rec,                   ( 
+                                 select ap.loan_app_seq,                          sum(nvl(pr_rec,0)) pr_rec, 
+                                        sum(nvl(sc_rec,0)) sc_rec,                          sum(nvl(chrg_rec,0)) chrg_rec 
+                                 from mw_loan_app ap 
+                                 join mw_ref_cd_val lsts on lsts.ref_cd_seq=ap.loan_app_sts and lsts.crnt_rec_flg=1 
+                                 join mw_pymt_sched_hdr psh on psh.loan_app_seq= ap.loan_app_seq and psh.crnt_rec_flg=1 
+                                 join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                                 join mw_ref_cd_val vl on vl.ref_cd_seq=psd.pymt_sts_key and vl.crnt_rec_flg=1 
+                                 left outer join (                       select rdtl.pymt_sched_dtl_seq , pymt_dt , 
+                                     (case when CHRG_TYP_KEY = -1 then nvl(sum(nvl(rdtl.pymt_amt,0)),0) end) pr_rec, 
+                                     (case when CHRG_TYP_KEY in (416,413,418,419,383,414,17,415,417,412,410,411) then nvl(sum(nvl(rdtl.pymt_amt,0)),0) end) sc_rec, 
+                                     (case when CHRG_TYP_KEY not in (-1,416,413,418,419,383,414,17,415,417,412,410,411) then nvl(sum(nvl(rdtl.pymt_amt,0)),0) end) chrg_rec 
+                                      from mw_pymt_sched_dtl psd 
+                                      join mw_rcvry_dtl rdtl on rdtl.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and rdtl.crnt_rec_flg=1 
+                                      join mw_rcvry_trx trx on trx.rcvry_trx_seq=rdtl.rcvry_trx_seq and trx.crnt_rec_flg=1 
+                                      where psd.crnt_rec_flg=1 
+                                      and trx.PYMT_DT <= to_date(:asDt,'dd-MM-yyyy') 
+                                      group by rdtl.pymt_sched_dtl_seq,pymt_dt,CHRG_TYP_KEY) pDt on pdt.pymt_sched_dtl_seq = psd.pymt_sched_dtl_seq 
+                                 where ap.crnt_rec_flg=1                   and psd.due_dt <= to_date(:asDt,'dd-MM-yyyy') 
+                                 and (psd.PYMT_STS_KEY in (select val.ref_cd_seq from mw_ref_cd_val val where val.ref_cd in ('0945','1145') and REF_CD_GRP_KEY = 179 and val.crnt_rec_flg=1) 
+                                     or (psd.PYMT_STS_KEY = (select val.ref_cd_seq from mw_ref_cd_val val where val.ref_cd in ('0948') and REF_CD_GRP_KEY = 179 and val.crnt_rec_flg=1) 
+                                     and (                       select max(trx.pymt_dt) 
+                                     from mw_rcvry_dtl rdtl join mw_rcvry_trx trx on trx.rcvry_trx_seq=rdtl.rcvry_trx_seq and trx.crnt_rec_flg=1 
+                                     and rdtl.PYMT_SCHED_DTL_SEQ = psd.PYMT_SCHED_DTL_SEQ) > to_date(:asDt,'dd-MM-yyyy') 
+                                     )                       )                     and ap.crnt_rec_flg =1 
+                                   and ap.LOAN_APP_STS not in (select val.ref_cd_seq from mw_ref_cd_val val where val.ref_cd in ('1245') and REF_CD_GRP_KEY = 106 and val.crnt_rec_flg=1) 
+                                 group by ap.loan_app_seq                   ) actl_rec 
+                                 where shld_rec.loan_app_seq = actl_rec.loan_app_seq(+) 
+                                 and ((pr_due - pr_rec) > 0 or (sc_due - sc_rec) > 0 or (chrg_due - chrg_rec) > 0) 
+                             ) od_cl           where asts.ref_cd_seq=la.loan_app_sts           and asts.crnt_rec_flg=1 
+                         and la.PORT_SEQ = mp.PORT_SEQ           and prd.prd_seq=la.prd_seq and prd.crnt_rec_flg=1 
+                         and prd.prd_grp_seq = :prdSeq           and mp.brnch_seq =:brnch           and mp.crnt_rec_flg=1 
+                         and la.LOAN_APP_SEQ = od_cl.LOAN_APP_SEQ (+) 
+                         and ((asts.ref_cd='0005' and to_date(la.loan_app_sts_dt) <= to_date(:asDt,'dd-MM-yyyy') and la.crnt_rec_flg=1) 
+                         or (asts.ref_cd='0006' and to_date(la.loan_app_sts_dt) > to_date(:asDt,'dd-MM-yyyy')) 
+                         or (asts.ref_cd='1245' and to_date(la.loan_app_sts_dt) > to_date(:asDt,'dd-MM-yyyy'))) 
+                         and la.crnt_rec_flg =1           and loan_app_ost(la.loan_app_seq,to_date(:asDt,'dd-MM-yyyy')) > 0 
+                 group by            case when nvl(la.APRVD_LOAN_AMT,0) <= 20000 then '10,001 - 20,000' 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 20001 and 30000 then '20,001 - 30,000' 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 30001 and 40000 then '30,001 - 40,000' 
+                              when nvl(la.APRVD_LOAN_AMT,0) between 40001 and 50000 then '40,001 - 50,000' 
+                          else 'More than 50,000'             end

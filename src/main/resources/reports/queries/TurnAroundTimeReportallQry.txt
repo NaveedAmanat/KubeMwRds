@@ -1,0 +1,44 @@
+select  sortedcol, 
+        grp BDO,loan_user,round((count(distinct tot_usr) / max(tot_cnt))*100 ,2),round((count(distinct new_clnts)/ max(tot_cnt))*100,2),  
+        round((count(distinct rpt_clnts)/ max(tot_cnt))*100,2)  
+        from (                                    
+                 select case when wp.ref_cd_dscr='SELF' then 1              
+                 when wp.ref_cd_dscr in ('HUSBAND','BROTHER IN LAW','FATHER IN LAW','BROTHER','SON','FATHER') then 3  
+                 when wp.ref_cd_dscr in ('JOINT USER') then 2              else 4 end as sortedcol , emp.emp_nm grp,         
+                 case when wp.ref_cd_dscr='SELF' then 'SELF'               
+                 when wp.ref_cd_dscr in ('HUSBAND','BROTHER IN LAW','FATHER IN LAW','BROTHER','SON','FATHER') then 'MALE'  
+                when wp.ref_cd_dscr in ('JOINT USER') then 'JOINT'              else 'OTHERS' end  
+                                                     Loan_user,               ap.clnt_seq tot_usr,         tot_cnt,  
+                                                case when loan_cycl_num=1 then ap.clnt_seq else null end new_clnts,  
+                                                case when loan_cycl_num>1 then ap.clnt_seq else null end rpt_clnts   
+                 from mw_loan_app ap  
+                 join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=ap.loan_app_seq and dvh.crnt_rec_flg=1
+                 join mw_port_emp_rel erl on erl.port_seq=ap.port_seq and erl.crnt_rec_flg=1  
+                 join mw_emp emp on emp.emp_seq=erl.emp_seq  
+                 join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:usrid  
+                 join mw_port prt on prt.port_seq=ap.port_seq  
+                 join mw_jv_hdr jh on jh.enty_seq=dvh.dsbmt_hdr_seq and enty_typ='Disbursement'  
+                 join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1  
+                 join mw_biz_aprsl aprsl on aprsl.loan_app_seq=ap.loan_app_seq and aprsl.crnt_rec_flg=1  
+                 join mw_ref_cd_val wp on wp.ref_cd_seq=aprsl.prsn_run_the_biz and wp.crnt_rec_flg=1  
+                join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1
+                join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+                join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1              
+                 cross join ( select count(distinct prnt_loan_app_seq) tot_cnt   
+                 from mw_loan_app ap   
+                 join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=ap.loan_app_seq and dvh.crnt_rec_flg=1
+                 join mw_jv_hdr jh on jh.enty_seq=dvh.dsbmt_hdr_seq and enty_typ='Disbursement'    
+                 join mw_biz_aprsl aprsl on aprsl.loan_app_seq=ap.loan_app_seq and aprsl.crnt_rec_flg=1   
+                 join mw_ref_cd_val wp on wp.ref_cd_seq=aprsl.prsn_run_the_biz and wp.crnt_rec_flg=1  
+                 join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:usrid  
+                 WHERE ap.crnt_rec_flg=1 and loan_app_sts=703  
+                 and to_date(jv_dt) between to_date(:frmdt,'dd-mm-yyyy'  ) and to_date(:todt,'dd-mm-yyyy'  )          
+                                                 )                  
+    where ap.crnt_rec_flg=1  
+    and brnch.brnch_seq=case when to_number(:brnchSeq)=0 then brnch.brnch_seq else to_number(:brnchSeq) end
+    and ar.area_seq=case when to_number(:areaSeq)=0 then brnch.Area_seq else to_number(:areaSeq) end
+    and ar.reg_seq=case when to_number(:regSeq)=0 then ar.reg_seq else to_number(:regSeq) end                  
+    and ap.loan_app_sts=703  
+    and to_date(jv_dt) between to_date(:frmdt,'dd-mm-yyyy' ) and to_date(:todt,'dd-mm-yyyy' ) 
+                                         )                            group by grp,loan_user , sortedcol 
+                 order by 2 , 1   

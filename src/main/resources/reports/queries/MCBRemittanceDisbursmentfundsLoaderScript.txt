@@ -1,0 +1,149 @@
+SELECT brnch_nm, BANK, tab, sum(DISB_AMOUNT) amount FROM(
+
+SELECT 
+       B.BRNCH_NM brnch_nm,
+        --'10.0101001.' ||case when  ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end BANK,
+        '10.0101001' || SUBSTR(case when  ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end, 8) || '.0000'  BANK,
+        null tab,
+        sum(dd.AMT) DISB_AMOUNT
+        FROM MW_REG R,
+             MW_AREA A,
+             MW_BRNCH B,
+             MW_BRNCH_REMIT_REL BRR,        
+             MW_PORT P,
+             MW_LOAN_APP LA,
+             MW_DSBMT_VCHR_HDR DH,
+             MW_DSBMT_VCHR_DTL DD,
+             MW_PRD PRD,
+             MW_TYPS TY,
+             MW_CLNT MC
+       WHERE     R.REG_SEQ = A.REG_SEQ
+             AND A.AREA_SEQ = B.AREA_SEQ
+             AND B.BRNCH_SEQ = BRR.BRNCH_SEQ         
+             AND B.BRNCH_SEQ = P.BRNCH_SEQ
+             AND P.PORT_SEQ = LA.PORT_SEQ
+             AND LA.LOAN_APP_SEQ = DH.LOAN_APP_SEQ
+             AND DH.DSBMT_HDR_SEQ = DD.DSBMT_HDR_SEQ
+             AND LA.PRD_SEQ = PRD.PRD_SEQ                          
+             AND DD.PYMT_TYPS_SEQ = TY.TYP_SEQ
+             AND TY.TYP_SEQ in (select mt1.TYP_SEQ from mw_typs mt1 where mt1.CRNT_REC_FLG = 1 
+             AND mt1.TYP_CTGRY_KEY = 3 AND mt1.TYP_ID IN ('0007','0004') and mt1.BRNCH_SEQ = B.BRNCH_SEQ)      
+            -- AND B.BRNCH_SEQ = 116
+             AND B.CRNT_REC_FLG = 1
+             AND MC.CLNT_SEQ = LA.CLNT_SEQ
+             AND LA.PRD_SEQ not in (10,33,34)
+             --AND JH.ENTY_SEQ = 2058
+             AND TO_DATE(DH.DSBMT_DT) BETWEEN :frmdt AND :todt
+             AND B.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = BRR.CRNT_REC_FLG         
+             AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = P.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DH.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG  
+             group by B.BRNCH_NM,  case when ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end
+    UNION ALL         
+    SELECT   B.BRNCH_NM brnch_nm,
+        '10.0101001' || SUBSTR(case when  ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end, 8) || '.0000' BANK,
+        null tab,
+        sum(ME.EXPNS_AMT) DISB_AMOUNT
+        FROM MW_REG R,
+             MW_AREA A,
+             MW_BRNCH B,
+             MW_BRNCH_REMIT_REL BRR,        
+             MW_PORT P,
+             MW_LOAN_APP LA,      
+             MW_EXP ME,     
+             MW_PRD PRD,
+             MW_TYPS TY,
+             MW_CLNT MC
+       WHERE R.REG_SEQ = A.REG_SEQ
+             AND A.AREA_SEQ = B.AREA_SEQ
+             AND B.BRNCH_SEQ = BRR.BRNCH_SEQ        
+             AND B.BRNCH_SEQ = P.BRNCH_SEQ
+             AND P.PORT_SEQ = LA.PORT_SEQ
+             AND LA.PRD_SEQ = PRD.PRD_SEQ                      
+             AND ME.PYMT_TYP_SEQ = TY.TYP_SEQ
+             AND TY.TYP_SEQ in (select mt1.TYP_SEQ from mw_typs mt1 where mt1.CRNT_REC_FLG = 1 AND mt1.TYP_CTGRY_KEY = 3
+                    AND mt1.TYP_ID IN ('0007','0004') and mt1.BRNCH_SEQ = B.BRNCH_SEQ
+                    )
+             AND ME.EXP_REF = LA.LOAN_APP_SEQ
+             AND ME.POST_FLG = 1
+             AND ME.EXPNS_TYP_SEQ = 12595
+             AND B.CRNT_REC_FLG = 1
+             AND ME.CRNT_REC_FLG = 1
+             AND ME.DEL_FLG = 0
+             AND MC.CLNT_SEQ = LA.CLNT_SEQ
+             AND LA.PRD_SEQ = 10
+             AND LA.LOAN_APP_STS in (1305,703)
+             AND LA.CRNT_REC_FLG = 1
+             AND TO_DATE(ME.EFF_START_DT)  BETWEEN :frmdt AND :todt
+             AND B.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = BRR.CRNT_REC_FLG         
+             AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = P.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = ME.CRNT_REC_FLG             
+             AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG
+             group by B.BRNCH_NM,  case when ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end
+union all
+SELECT   B.BRNCH_NM brnch_nm,
+        '10.0101001' || SUBSTR(case when  ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end, 8) || '.0000' BANK,
+        null tab,
+        sum((select mjd.amt from mw_jv_hdr mjh, mw_jv_dtl mjd
+        where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ and mjh.ENTY_SEQ = dd.DSBMT_HDR_SEQ 
+        and UPPER(mjh.ENTY_TYP) = 'DISBURSEMENT'
+        AND mjd.CRDT_DBT_FLG = 0 AND mjd.GL_ACCT_NUM = TY.GL_ACCT_NUM
+        )) DISB_AMOUNT
+        FROM MW_REG R,
+             MW_AREA A,
+             MW_BRNCH B,
+             MW_BRNCH_REMIT_REL BRR,        
+             MW_PORT P,
+             MW_LOAN_APP LA,
+             MW_DSBMT_VCHR_HDR DH,
+             MW_DSBMT_VCHR_DTL DD,
+             MW_PRD PRD,
+             MW_TYPS TY,
+             MW_CLNT MC
+       WHERE     R.REG_SEQ = A.REG_SEQ
+             AND A.AREA_SEQ = B.AREA_SEQ
+             AND B.BRNCH_SEQ = BRR.BRNCH_SEQ         
+             AND B.BRNCH_SEQ = P.BRNCH_SEQ
+             AND P.PORT_SEQ = LA.PORT_SEQ
+             AND LA.LOAN_APP_SEQ = DH.LOAN_APP_SEQ
+             AND DH.DSBMT_HDR_SEQ = DD.DSBMT_HDR_SEQ
+             AND LA.PRD_SEQ = PRD.PRD_SEQ                          
+             AND DD.PYMT_TYPS_SEQ = TY.TYP_SEQ
+             AND TY.TYP_SEQ in (select mt1.TYP_SEQ from mw_typs mt1 where mt1.CRNT_REC_FLG = 1 
+             AND mt1.TYP_CTGRY_KEY = 3 AND mt1.TYP_ID IN ('0007','0004') and mt1.BRNCH_SEQ = B.BRNCH_SEQ)      
+            -- AND B.BRNCH_SEQ = 116
+             AND B.CRNT_REC_FLG = 1
+             AND MC.CLNT_SEQ = LA.CLNT_SEQ
+             AND LA.PRD_SEQ in (33,34)
+             AND (select mjd.amt from mw_jv_hdr mjh, mw_jv_dtl mjd
+                where mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ and mjh.ENTY_SEQ = dd.DSBMT_HDR_SEQ 
+                and UPPER(mjh.ENTY_TYP) = 'DISBURSEMENT'
+                AND mjd.CRDT_DBT_FLG = 0 AND mjd.GL_ACCT_NUM = TY.GL_ACCT_NUM
+                ) > 0
+             --AND JH.ENTY_SEQ = 2058
+             and BRR.IBAN is not null
+             AND TO_DATE(DH.DSBMT_DT) BETWEEN :frmdt AND :todt
+             AND B.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = A.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = BRR.CRNT_REC_FLG         
+             AND R.CRNT_REC_FLG = MC.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = P.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = LA.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DH.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = DD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = PRD.CRNT_REC_FLG
+             AND R.CRNT_REC_FLG = TY.CRNT_REC_FLG
+             group by B.BRNCH_NM,  case when ty.TYP_ID = '0007' then TY.GL_ACCT_NUM else null end)
+             group by brnch_nm, BANK, tab
+             order by 1

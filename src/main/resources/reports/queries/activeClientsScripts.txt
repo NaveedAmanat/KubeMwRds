@@ -1,0 +1,11 @@
+select mr.REG_SEQ, mr.REG_NM, count(distinct cp.CUSTOMER_ID) clnts 
+from con_mon_asofdate_rschd@link_to_testmwc cp, mw_brnch mb, mw_area ma, mw_reg mr
+where cp.branch_id = mb.brnch_Seq and mb.CRNT_REC_FLG = 1
+and mb.AREA_SEQ = ma.AREA_SEQ and ma.CRNT_REC_FLG = 1
+and ma.REG_SEQ = mr.REG_SEQ and mr.CRNT_REC_FLG = 1
+and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+AND disbursed_date between to_date('01-may-2005') and to_date(sysdate)-1
+AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+and product_id <> 8
+group by mr.REG_SEQ, mr.REG_NM
+order by 3 desc

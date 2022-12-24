@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="FDARTA" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="3e74af4c-5fdf-44c2-97bb-9029f084f2c8">
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w1" value="263"/>
+    <property name="com.jaspersoft.studio.data.sql.SQLQueryDesigner.sash.w2" value="730"/>
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="151 DB"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="date" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[select trnr_nm,
+       p.prtcpnt_id clnt_id,
+       p.prtcpnt_nm clnt_nm,
+       (select min(dts.trng_dt) from MW_trng_dts dts where dts.crnt_rec_flg=1 and dts.trng_seq=trn.trng_SEQ) trn_dt  
+from MW_trng trn
+join MW_trng_prtcpnt p on p.trng_seq=trn.trng_SEQ and p.crnt_rec_flg=1
+where trn.crnt_rec_flg=1
+and trn.trng_SEQ=2]]>
+    </queryString>
+    <field name="TRNR_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TRNR_NM"/>
+    </field>
+    <field name="CLNT_ID" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_ID"/>
+    </field>
+    <field name="CLNT_NM" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="CLNT_NM"/>
+    </field>
+    <field name="TRN_DT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TRN_DT"/>
+    </field>
+    <title>
+        <band height="50" splitType="Stretch">
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="43" y="0" width="127" height="20"
+                               uuid="b7522512-407c-44f2-b773-6f8851b306ed"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="177" y="25" width="213" height="20" uuid="fa05b720-9246-426b-82dd-abcae6c6d5a9"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[GESA SFE]]></text>
+            </staticText>
+            <image>
+                <reportElement x="0" y="0" width="40" height="50" uuid="5c845a37-4417-4350-a6e6-cba300a1008e"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement x="457" y="13" width="73" height="12" uuid="11e182ad-4670-4f79-bf40-53bf82b4c434"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="398" y="13" width="58" height="12" uuid="4cc065fa-f058-4a6a-a69b-8a35a3c66e92"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date: ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="398" y="0" width="38" height="12" uuid="a5b43585-a642-4ca5-989e-a8fc199b2b16"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[User: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="457" y="1" width="74" height="12" uuid="d330e12e-af5f-4424-8393-5638a4f331ef"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+        </band>
+    </title>
+    <columnHeader>
+        <band height="36" splitType="Stretch">
+            <staticText>
+                <reportElement x="30" y="0" width="100" height="36" uuid="91e645d5-7123-4503-a2ac-aabb07794f84">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d6459cd8-33bf-4766-ab9d-ee9bb52fc841"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Trainer Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="130" y="0" width="104" height="36" uuid="efc1c7bd-bfe6-43e2-9e65-fba20374203b">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="828532c4-4684-4d3b-b6ac-694cfb648874"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Client Id]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="234" y="0" width="103" height="36" uuid="7b14b4de-a341-4232-8676-b68c379de813">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="9cf08dd0-6af5-4034-85ad-0e013cd4e730"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Client Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="337" y="0" width="110" height="36" uuid="a1d03f4d-5873-439f-ae96-06a69246c52d">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="d6459cd8-33bf-4766-ab9d-ee9bb52fc841"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Training Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="0" width="30" height="36" uuid="b1f89765-c856-4112-a08c-1a0933d2dade">
+                    <property name="com.jaspersoft.studio.spreadsheet.connectionID"
+                              value="0f3d2887-501d-42d7-93d7-444bb4316cda"/>
+                </reportElement>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="8"/>
+                </textElement>
+                <text><![CDATA[Sr.]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="12" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="0" width="30" height="12" uuid="2c61f9a7-e107-4e30-ae24-354bc97daac8"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="30" y="0" width="100" height="12" uuid="a52e26e7-0c37-451f-8ac6-9b032e2bc4f7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TRNR_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="130" y="0" width="104" height="12" uuid="1202c2ae-b3ae-4338-b915-e5ce202a26bf"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement>
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_ID}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="234" y="0" width="103" height="12" uuid="f3f8eeea-6a0d-4135-af9c-2c7fbb949c42"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Right">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{CLNT_NM}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="337" y="0" width="110" height="12" uuid="f2504135-1b14-4111-abee-4bf46a406eb7"/>
+                <box leftPadding="1" rightPadding="1">
+                    <pen lineWidth="0.25"/>
+                </box>
+                <textElement textAlignment="Center">
+                    <font size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$F{TRN_DT}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+    <pageFooter>
+        <band height="12">
+            <textField>
+                <reportElement x="413" y="0" width="52" height="12" uuid="9d470d51-75cd-4d99-98af-8798a0967582"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="457" y="0" width="45" height="12" uuid="603c07f6-95d8-424f-8b73-0751de3b5b7f"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+</jasperReport>

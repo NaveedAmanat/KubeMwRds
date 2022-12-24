@@ -1,0 +1,12 @@
+SELECT MJH.JV_HDR_SEQ,            MJH.ENTY_TYP,            MJH.JV_DSCR,            MJH.JV_DT,
+                         MRT.INSTR_NUM,            MC.CLNT_SEQ,            MC.FRST_NM || ' ' || MC.LAST_NM     Name,
+                         SUM (NVL (MJD.AMT, 0))              amt,T.TYP_ID   FROM MW_RCVRY_TRX MRT,            MW_JV_HDR   MJH,
+                         MW_JV_DTL   MJD,            MW_CLNT     MC,            MW_TYPS T
+                   WHERE     MRT.CRNT_REC_FLG = 1            AND MRT.POST_FLG = 1
+                         AND MRT.RCVRY_TRX_SEQ = :TRX_SEQ            AND MRT.RCVRY_TRX_SEQ = MJH.ENTY_SEQ
+                         AND MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ            AND MRT.PYMT_REF = MC.CLNT_SEQ
+                         AND MC.CRNT_REC_FLG = 1            AND MJD.CRDT_DBT_FLG = 0
+                         AND T.TYP_SEQ=MRT.RCVRY_TYP_SEQ AND T.TYP_ID IN ('0001','0751')
+                         AND UPPER (MJH.ENTY_TYP) IN ('RECOVERY', 'EXCESS RECOVERY')   GROUP BY MJH.ENTY_TYP,
+                         MJH.JV_DSCR,            MJH.JV_DT,            MRT.INSTR_NUM,            MC.CLNT_SEQ,
+                         MC.FRST_NM || ' ' || MC.LAST_NM,            MJH.JV_HDR_SEQ,T.TYP_ID

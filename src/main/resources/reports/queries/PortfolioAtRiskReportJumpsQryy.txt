@@ -1,0 +1,23 @@
+select c.frst_nm ||' '||c.last_nm name, c.clnt_id, loan_cycl_num,  
+                        prd.prd_cmnt, app.aprvd_loan_amt,  
+                        app.aprvd_loan_amt-lst_loan_aprvd_amt(app.loan_app_seq) loan_jump, emp.emp_nm,  
+                        get_od_info(app.loan_app_seq, to_date(:to_dt,'dd-mm-yyyy'),'i') od_inst  
+                        FROM mw_loan_app app   
+                        join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1
+                        join mw_jv_hdr jh on jh.enty_seq=dvh.dsbmt_hdr_seq and jh.enty_typ='Disbursement'   
+                        join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id  
+                        JOIN mw_clnt c ON c.clnt_seq = app.clnt_seq AND c.crnt_rec_flg = 1  
+                        JOIN mw_ref_cd_val val ON val.ref_cd_seq = app.loan_app_sts AND val.crnt_rec_flg = 1 AND val.del_flg = 0   
+                        join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1   
+                        join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1   
+                        join mw_emp emp on emp.emp_seq=per.emp_seq and val.ref_cd = '0005'   and app.loan_cycl_num>1  
+                        join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1
+                        join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+                        join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1                       
+                        where
+                        and nvl(:rpt_flg,0)=nvl(:rpt_flg,0)
+                        brnch.brnch_seq=case when to_number(:brnchSeq)=0 then brnch.brnch_seq else to_number(:brnchSeq) end
+                        and ar.area_seq=case when to_number(:areaSeq)=0 then brnch.Area_seq else to_number(:areaSeq) end
+                        and ar.reg_seq=case when to_number(:regSeq)=0 then ar.reg_seq else to_number(:regSeq) end                                         
+                        and app.aprvd_loan_amt-lst_loan_aprvd_amt(app.loan_app_seq) >30000  
+                        and TO_DATE(jh.jv_dt) between TO_DATE(:frm_dt,'dd-mm-yyyy') and TO_DATE(:to_dt,'dd-mm-yyyy') order by 1

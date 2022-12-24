@@ -1,0 +1,3 @@
+select op_blnc(to_date(:date,'MM-dd-yyyy')+1,:branch,(select t.GL_ACCT_NUM 
+                  from mw_typs t where t.CRNT_REC_FLG =  1 and t.TYP_ID ='0001' and t.TYP_CTGRY_KEY=3 and t.BRNCH_SEQ=0 )) cash, op_blnc(to_date(:date,'MM-dd-yyyy')+1,:branch,(select t.GL_ACCT_NUM 
+                  from mw_typs t where t.CRNT_REC_FLG =  1 and t.TYP_ID ='0008' and t.TYP_CTGRY_KEY=3 and t.BRNCH_SEQ=:branch)) bank from dual

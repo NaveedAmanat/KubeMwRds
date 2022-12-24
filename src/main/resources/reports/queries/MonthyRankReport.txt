@@ -1,0 +1,15 @@
+select rg.reg_nm,
+       brnch.brnch_nm,
+       (select count(distinct adt_vst_srvy_seq) from mw_adt_vst_srvy srvy where srvy.crnt_rec_flg=1 and srvy.adt_vst_seq=vst.adt_vst_seq and srvy.enty_typ_flg=1) vstd_clnts,
+       ct.ref_cd_dscr,
+       rnk.scr,
+       vst.rnkng
+from mw_adt_vst vst
+join MW_ADT_VST_RKNG rnk on rnk.vst_SEQ=vst.adt_vst_seq and rnk.crnt_rec_flg=1
+join mw_ref_cd_val ct on ct.ref_cd_seq=rnk.ctgry_typ_seq and ct.crnt_rec_flg=1
+join mw_brnch brnch on brnch.brnch_seq=vst.brnch_seq and brnch.crnt_rec_flg=1
+join mw_area ar on ar.area_seq=brnch.area_seq and ar.crnt_rec_flg=1
+join mw_reg rg on rg.reg_seq=ar.reg_seq and rg.crnt_rec_flg=1
+where vst.crnt_rec_flg=1
+and vst.adt_vst_seq=:vst_seq
+and vst.adt_vst_seq=(select max(adt_vst_seq) from mw_adt_vst vt where vt.crnt_rec_flg=1 and vt.brnch_seq=vst.brnch_seq)

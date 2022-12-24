@@ -1,0 +1,18 @@
+select distinct typ.ref_cd_dscr,ct.CTGRY_NM,ct.ctgry_cmnt,ct.ctgry_scr,vst.VST_SCR,
+       count(fnd.issue_key) over (partition by ctgry_id) as countkeys,
+       15 achvd,
+        --isu_id,
+        isu_nm,
+        'Yes' isu_sts,
+        fnd.cmnt isu_cmnt
+from mw_adt_fndng fnd
+join mw_adt_vst vst on vst.ADT_VST_SEQ=fnd.ADT_VST_SEQ and vst.crnt_rec_flg=1
+join mw_adt_isu isu on isu.adt_isu_seq=fnd.issue_key and isu.crnt_rec_flg=1
+join mw_adt_sb_ctgry sct on sct.sb_ctgry_seq=isu.sb_ctgry_seq and sct.crnt_rec_flg=1
+join mw_adt_ctgry ct on ct.adt_ctgry_seq=sct.adt_ctgry_seq and ct.crnt_rec_flg=1
+join mw_ref_cd_val typ on typ.ref_cd_seq=ct.ctgry_typ and typ.crnt_rec_flg=1
+join mw_loan_app ap on ap.loan_app_seq=fnd.enty_seq and  ap.crnt_rec_flg=1 and ap.loan_app_sts=703 and ap.prnt_loan_app_seq=ap.loan_app_seq
+where fnd.crnt_rec_flg=1
+and fnd.enty_typ_flg=1
+and fnd.adt_vst_seq=:vstseq
+order by 2

@@ -1,0 +1,375 @@
+--------------UPDATED BY AISHA KHAN 2/17/2022------
+
+SELECT grp,
+         perd_key,
+         TO_CHAR (frmDt)
+             frmDt,
+         TO_CHAR (todt)
+             todt,
+         typ_seq,
+         typ_str,
+         bdgt_amt,
+         SUM (
+             CASE
+                 WHEN CRDT_DBT_FLG = 1 AND acct = '000.000.401101.00000'
+                 THEN
+                     amt
+                 ELSE
+                     0
+             END)
+             cash_db_amt,
+         SUM (
+             CASE
+                 WHEN CRDT_DBT_FLG = 0 AND acct = '000.000.401101.00000'
+                 THEN
+                     amt
+                 ELSE
+                     0
+             END)
+             cash_cr_amt,
+         SUM (CASE WHEN CRDT_DBT_FLG = 1 AND acct IS NULL THEN amt ELSE 0 END)
+             bnk_db_amt,
+         SUM (CASE WHEN CRDT_DBT_FLG = 0 AND acct IS NULL THEN amt ELSE 0 END)
+             bnk_cr_amt
+    FROM (  SELECT '1.Monthly Expenses'
+                       grp,
+                   mper.perd_key,
+                   :frmDt
+                       frmdt,
+                   :toDt
+                       todt,
+                   ptyp.typ_seq,
+                   ptyp.typ_str,
+                   mjd.CRDT_DBT_FLG,
+                   MAX (mjh.JV_HDR_SEQ),
+                   NVL (MAX (NVL (bdgt_amt, 0)), 0)
+                       bdgt_amt,
+                   MAX (
+                       (SELECT MAX (mjd1.GL_ACCT_NUM)
+                          FROM mw_jv_dtl mjd1
+                         WHERE     mjd1.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+                               AND mjd1.GL_ACCT_NUM = '000.000.401101.00000'))
+                       ACCT,
+                   ((mjd.amt))
+                       amt
+              FROM mw_jv_hdr  mjh,
+                   mw_jv_dtl  mjd,
+                   mw_perd    mper,
+                   mw_typs    ptyp,
+                   mw_brnch_bdgt bdgt
+             WHERE     mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+                   AND mjh.BRNCH_SEQ = :brnch
+                   AND bdgt.brnch_seq = mjh.brnch_seq
+                   AND bdgt.bdgt_ctgry_key = ptyp.typ_seq
+                   AND bdgt.bdgt_perd = perd_key
+                   AND bdgt.del_flg = 0
+                   AND ptyp.typ_seq NOT IN (422)
+                   AND TO_DATE (mjh.jv_dt) BETWEEN :frmDt AND :toDt
+                   AND mjd.GL_ACCT_NUM = ptyp.GL_ACCT_NUM
+                   AND ptyp.typ_id NOT IN ('0005',
+                                           '0006',
+                                           '0007',
+                                           '0500',
+                                           '0299',
+                                           '0336',
+                                           '0338',
+                                           '0339',
+                                           '0343',
+                                           '0297',
+                                           '0345',
+                                           '0346',
+                                           '0347',
+                                           '0351',
+                                           '0354',
+                                           '0356',
+                                           '0357',
+                                           '0358',
+                                           '0359',
+                                           '0360',
+                                           '0361',
+                                           '0362',
+                                           '0363',
+                                           '0364',
+                                           '0365',
+                                           '0366',
+                                           '0342',
+                                           '0420',
+                                           '0421',
+                                           '0423',
+                                           '0424',
+                                           '0450',
+                                           '0451',
+                                           '0452',
+                                           '0454',
+                                           '0455',
+                                           '0456',
+                                           '0008',
+                                           '0331')
+                   AND ptyp.perd_flg = 1
+                   AND ptyp.typ_ctgry_key = 2
+                   AND mjh.BRNCH_SEQ = :brnch
+                   AND ptyp.CRNT_REC_FLG = 1
+                   AND mjh.ENTY_TYP = 'Expense'
+                   AND mper.perd_key = TO_CHAR (mjh.jv_dt, 'yyyymm')
+          GROUP BY mjh.JV_HDR_SEQ,
+                   bdgt.bdgt_ctgry_key,
+                   mper.perd_key,
+                   mper.perd_strt_dt,
+                   mper.perd_end_dt,
+                   ptyp.typ_seq,
+                   ptyp.typ_str,
+                   mjd.CRDT_DBT_FLG,
+                   mjd.amt,
+                   mjh.brnch_seq)
+GROUP BY grp,
+         perd_key,
+         todt,
+         frmDt,
+         typ_seq,
+         typ_str,
+         bdgt_amt
+union
+
+SELECT grp,
+       qtr_key,
+       frmDt,
+       toDt,
+       typ_seq,
+       typ_str,
+       bdgt_amt,
+       sum(CASE
+            WHEN CRDT_DBT_FLG = 1 AND acct = '000.000.401101.00000' THEN amt
+            ELSE 0
+        END)
+           cash_db_amt,
+       sum(CASE
+            WHEN CRDT_DBT_FLG = 0 AND acct = '000.000.401101.00000' THEN amt
+            ELSE 0
+        END)
+           cash_cr_amt,
+       sum(CASE WHEN CRDT_DBT_FLG = 1 AND acct IS NULL THEN amt ELSE 0 END)
+           bnk_db_amt,
+       sum(CASE WHEN CRDT_DBT_FLG = 0 AND acct IS NULL THEN amt ELSE 0 END)
+           bnk_cr_amt
+  FROM (  SELECT '2.Quarterly Expenses'
+                     grp,
+                 mper.qtr_key,
+                 TO_CHAR (mper.qtr_strt_dt, 'MON-yyyy')
+                     frmDt,
+                 TO_CHAR (mper.qtr_end_dt, 'MON-yyyy')
+                     toDt,
+                 ptyp.typ_seq,
+                 ptyp.typ_str,
+                 mjd.CRDT_DBT_FLG,
+                 MAX (
+                     (SELECT MAX (mjd1.GL_ACCT_NUM)
+                        FROM mw_jv_dtl mjd1
+                       WHERE     mjd1.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+                             AND mjd1.GL_ACCT_NUM = '000.000.401101.00000'))
+                     acct,
+                 NVL (
+                     MAX (
+                         (SELECT MAX (bdgt_amt)
+                            FROM mw_brnch_bdgt bdgt
+                           WHERE     bdgt.brnch_seq = mjh.brnch_seq
+                                 AND bdgt.bdgt_ctgry_key = ptyp.typ_seq
+                                 AND bdgt.bdgt_perd = qtr_key
+                                 AND bdgt.del_flg = 0)),
+                     0)
+                     bdgt_amt,
+                  (mjd.amt)
+                     amt,
+                     max(mjh.JV_HDR_SEQ)
+            FROM mw_jv_hdr mjh,
+                 mw_jv_dtl mjd,
+                 mw_perd  mper,
+                 mw_typs  ptyp
+           WHERE     mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+                 AND mjh.BRNCH_SEQ = :brnch
+                 AND mjd.GL_ACCT_NUM = ptyp.GL_ACCT_NUM
+                 AND ptyp.typ_id NOT IN ('0005',
+                                         '0006',
+                                         '0007',
+                                         '0500',
+                                         '0299',
+                                         '0336',
+                                         '0338',
+                                         '0339',
+                                         '0343',
+                                         '0297',
+                                         '0345',
+                                         '0346',
+                                         '0347',
+                                         '0351',
+                                         '0354',
+                                         '0356',
+                                         '0357',
+                                         '0358',
+                                         '0359',
+                                         '0360',
+                                         '0361',
+                                         '0362',
+                                         '0363',
+                                         '0364',
+                                         '0365',
+                                         '0366',
+                                         '0342',
+                                         '0420',
+                                         '0421',
+                                         '0423',
+                                         '0424',
+                                         '0450',
+                                         '0451',
+                                         '0452',
+                                         '0454',
+                                         '0455',
+                                         '0456',
+                                         '0008',
+                                         '0331')
+                 AND ptyp.perd_flg = 2
+                 AND ptyp.typ_ctgry_key = 2
+                 AND mjh.BRNCH_SEQ = :brnch
+                 AND ptyp.CRNT_REC_FLG = 1
+                 AND mjh.ENTY_TYP = 'Expense'
+                 AND mper.perd_key = TO_CHAR (mjh.jv_dt, 'yyyymm')
+                 AND mper.perd_key <= TO_CHAR (TO_DATE ( :toDt), 'yyyymm')
+                 AND mper.fin_yr =
+                     (SELECT fin_yr
+                        FROM mw_perd
+                       WHERE perd_key = TO_CHAR (TO_DATE ( :toDt), 'yyyymm'))
+        GROUP BY mper.qtr_key,
+                 TO_CHAR (mper.qtr_strt_dt, 'MON-yyyy'),
+                 TO_CHAR (mper.qtr_end_dt, 'MON-yyyy'),
+                 ptyp.typ_seq,
+                 ptyp.typ_str,
+                 mjd.CRDT_DBT_FLG,mjh.JV_HDR_SEQ,mjd.AMT)
+        group by grp,
+       qtr_key,
+       frmDt,
+       toDt,
+       typ_seq,
+       typ_str,
+       bdgt_amt
+
+ union 
+ 
+
+SELECT grp,
+       BI_ANL_KEY,
+       frmDt,
+       toDt,
+       typ_seq,
+       typ_str,
+       bdgt_amt,
+       sum(CASE
+            WHEN CRDT_DBT_FLG = 1 AND acct = '000.000.401101.00000' THEN amt
+            ELSE 0
+        END)
+           cash_db_amt,
+       sum(CASE
+            WHEN CRDT_DBT_FLG = 0 AND acct = '000.000.401101.00000' THEN amt
+            ELSE 0
+        END)
+           cash_cr_amt,
+       sum(CASE WHEN CRDT_DBT_FLG = 1 AND acct IS NULL THEN amt ELSE 0 END)
+           bnk_db_amt,
+       sum(CASE WHEN CRDT_DBT_FLG = 0 AND acct IS NULL THEN amt ELSE 0 END)
+           bnk_cr_amt
+  FROM (  SELECT '3.Bi-Annual Expenses'
+                     grp,
+                 mper.BI_ANL_KEY,
+                 TO_CHAR (mper.BI_ANL_STRT_DT, 'MON-yyyy')
+                     frmDt,
+                 TO_CHAR (mper.BI_ANL_end_DT, 'MON-yyyy')
+                     toDt,
+                 ptyp.typ_seq,
+                 ptyp.typ_str,
+                 mjd.CRDT_DBT_FLG,
+                 MAX (
+                     (SELECT MAX (mjd1.GL_ACCT_NUM)
+                        FROM mw_jv_dtl mjd1
+                       WHERE     mjd1.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+                             AND mjd1.GL_ACCT_NUM = '000.000.401101.00000'))
+                     acct,
+                 NVL (
+                     MAX (
+                         (SELECT MAX (bdgt_amt)
+                            FROM mw_brnch_bdgt bdgt
+                           WHERE     bdgt.brnch_seq = mjh.brnch_seq
+                                 AND bdgt.bdgt_ctgry_key = ptyp.typ_seq
+                                 AND bdgt.bdgt_perd = BI_ANL_KEY
+                                 AND bdgt.del_flg = 0)),
+                     0)
+                     bdgt_amt,
+                  (mjd.amt)
+                     amt,max(mjh.JV_HDR_SEQ)
+            FROM mw_jv_hdr mjh,
+                 mw_jv_dtl mjd,
+                 mw_perd  mper,
+                 mw_typs  ptyp
+           WHERE     mjh.JV_HDR_SEQ = mjd.JV_HDR_SEQ
+                 AND mjh.BRNCH_SEQ = :brnch
+                 AND mjd.GL_ACCT_NUM = ptyp.GL_ACCT_NUM
+                 AND ptyp.typ_id NOT IN ('0005',
+                                         '0006',
+                                         '0007',
+                                         '0500',
+                                         '0299',
+                                         '0336',
+                                         '0338',
+                                         '0339',
+                                         '0343',
+                                         '0297',
+                                         '0345',
+                                         '0346',
+                                         '0347',
+                                         '0351',
+                                         '0354',
+                                         '0356',
+                                         '0357',
+                                         '0358',
+                                         '0359',
+                                         '0360',
+                                         '0361',
+                                         '0362',
+                                         '0363',
+                                         '0364',
+                                         '0365',
+                                         '0366',
+                                         '0342',
+                                         '0420',
+                                         '0421',
+                                         '0423',
+                                         '0424',
+                                         '0450',
+                                         '0451',
+                                         '0452',
+                                         '0454',
+                                         '0455',
+                                         '0456',
+                                         '0008',
+                                         '0331')
+                 AND ptyp.perd_flg = 3
+                 AND ptyp.typ_ctgry_key = 2
+                 AND mjh.BRNCH_SEQ = :brnch
+                 AND ptyp.CRNT_REC_FLG = 1
+                 AND mjh.ENTY_TYP = 'Expense'
+                 AND mper.perd_key = TO_CHAR (mjh.jv_dt, 'yyyymm')
+                 AND mper.perd_key <= TO_CHAR (TO_DATE ( :toDt), 'yyyymm')
+                 AND mper.fin_yr =
+                     (SELECT fin_yr
+                        FROM mw_perd
+                       WHERE perd_key = TO_CHAR (TO_DATE ( :toDt), 'yyyymm'))
+        GROUP BY mper.BI_ANL_KEY,
+                 TO_CHAR (mper.BI_ANL_STRT_DT, 'MON-yyyy'),
+                 TO_CHAR (mper.BI_ANL_end_DT, 'MON-yyyy'),
+                 ptyp.typ_seq,
+                 ptyp.typ_str,
+                 mjd.CRDT_DBT_FLG,mjd.amt,mjh.JV_HDR_SEQ)
+        group by grp,
+       BI_ANL_KEY,
+       frmDt,
+       toDt,
+       typ_seq,
+       typ_str,
+       bdgt_amt

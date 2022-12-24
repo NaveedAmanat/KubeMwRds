@@ -1,0 +1,294 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="REPAYMENT_KSWK_INFO" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail"
+              columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              isIgnorePagination="true" uuid="5bfe0823-7e35-438b-83d0-3df4a530d774">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <property name="com.jaspersoft.studio.unit." value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageHeight" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.pageWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.topMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.bottomMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.leftMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.rightMargin" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnWidth" value="pixel"/>
+    <property name="com.jaspersoft.studio.unit.columnSpacing" value="pixel"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <summary>
+        <band height="485" splitType="Stretch">
+            <rectangle>
+                <reportElement x="38" y="81" width="477" height="299" uuid="0e457792-283c-409d-87d6-f387f6a16322"/>
+            </rectangle>
+            <staticText>
+                <reportElement x="62" y="171" width="444" height="30" uuid="dc860ff4-a93b-4fc0-932c-63b8828cb04e"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[The time period for the insurance will be from the date of submission of documents to the branch (copy of purchase invoice and sales certificate) till the duration of the loan. ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="351" width="14" height="20" uuid="c8ee3d6b-4145-4746-bafe-43aec8c86765"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[8.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="171" width="14" height="20" uuid="574fcebf-d8b7-4f5e-ab77-9e4d437a3d24"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[2.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="151" width="14" height="20" uuid="7a7871ea-a1a9-4148-b02b-792c5e701912"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[1.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="201" width="444" height="30" uuid="5b2aa300-7bd9-4209-af59-701e1bde1254"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[For the claim process, the client needs to have a valid learner’s license or driver’s license and should have the registration documents of the vehicle. ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="281" width="444" height="40" uuid="dd7b9e3f-b800-4d33-9b7e-21e2419432c3"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[In case of accident, the client will immediately contact the BDO/ BM and they informed to Head office Accounts personal and he will inform the insurance company of the accident. The insurance company will send their representative to assess the damage and refer the client to one of their designated workshops. The bill will be adjusted by the insurance company. ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="321" width="444" height="30" uuid="123219f5-29b7-4877-8c55-606bd6a83c25"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[Claim will be settled (by the insurance provider i.e., The United Insurance Company) within 25 working days after the submission and completion of all formalities/documents. ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="251" width="14" height="20" uuid="daf6639d-e434-40bd-adf2-b852411bfc68"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[5.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="121" width="458" height="30" uuid="44eff185-e339-4fc2-8d65-08fdcd9f0d1f"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[Vehicle insurance has been provided with the Kashf loan to protect the client against economic shock resulting from theft/snatching/accident of the vehicle. ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="91" width="182" height="30" uuid="e05023a1-dcef-49d7-93fd-95b380b1ee47"/>
+                <textElement verticalAlignment="Middle">
+                    <font size="10" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Important Information for KSWK:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="321" width="14" height="20" uuid="62e8d739-c425-40a1-908e-f7bad3eb6611"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[7.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="281" width="14" height="20" uuid="d54f3a35-fc16-46c9-b627-85e9588b5994"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[6.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="201" width="14" height="20" uuid="1eae159e-8cd5-43b4-93f8-b240fcc4df1b"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[3.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="251" width="444" height="30" uuid="e695e16c-516b-4327-8909-b29fb7ce1a23"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text>
+                    <![CDATA[In case of theft/snatching, the client will have to submit an FIR and attach the report with the insurance claim. The branch will adjust the loan from the claim amount received (adjustment of premium, service charges, and the principle). ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="48" y="231" width="14" height="20" uuid="619a107d-5d8a-447c-9b53-c357afd407cb"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[4.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="231" width="444" height="20" uuid="fbaa4573-57f5-4456-ae4e-c2718ff3843f"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[The vehicle should be registered in the client’s name.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="351" width="444" height="20" uuid="84a78322-9bec-444b-9b5d-ec0aefdb5aae"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[No claim will be paid against the premium payable.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="62" y="151" width="444" height="20" uuid="d06cc0f4-1e33-4a39-9226-09b2b616044c"/>
+                <box>
+                    <pen lineWidth="0.5"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Left" verticalAlignment="Middle">
+                    <font size="8" isBold="false"/>
+                </textElement>
+                <text><![CDATA[The insurance charges are based on the purchase value of the vehicle.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="127" y="30" width="300" height="24" uuid="047fa75a-4cf1-46e5-906a-80db133be23d">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Credit Repayment Schedule]]></text>
+            </staticText>
+        </band>
+    </summary>
+</jasperReport>

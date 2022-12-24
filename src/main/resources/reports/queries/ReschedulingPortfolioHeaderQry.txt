@@ -1,0 +1,206 @@
+select distinct mpg.PRD_GRP_seq, mpg.PRD_GRP_NM, mr.REG_NM,    mr.REG_NM as AREA_NM,
+    mr.REG_NM as BRNCH_NM,
+OUTS.LOANS, OUTS.DSB_AMT, OUTS.OUTS_CRNT,
+P_1.LOANS_p1, P_1.OD_AMT, P_1.OUTS_p1, case when P_1.OUTS_p1 > 0 then round(nvl(p_1.OUTS_p1,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p1_perc,
+P_2.LOANS_p2, P_2.OUTS_p2, case when P_2.OUTS_p2 > 0 then round(nvl(p_2.OUTS_p2,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p2_perc,
+P_3.LOANS_p3, P_3.OUTS_p3, case when P_3.OUTS_p3 > 0 then round(nvl(p_3.OUTS_p3,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p3_perc,
+P_4.LOANS_p4, P_4.OUTS_p4, case when P_4.OUTS_p4 > 0 then round(nvl(p_4.OUTS_p4,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p4_perc,
+P_5.LOANS_p5, P_5.OUTS_p5, case when P_5.OUTS_p5 > 0 then round(nvl(p_5.OUTS_p5,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p5_perc,
+P_6.LOANS_p6, P_6.OUTS_p6, case when P_6.OUTS_p6 > 0 then round(nvl(p_6.OUTS_p6,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p6_perc,
+P_7.LOANS_p7, P_7.OUTS_p7, case when P_7.OUTS_p7 > 0 then round(nvl(p_7.OUTS_p7,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p7_perc,
+P_8.LOANS_p8, P_8.OUTS_p8, case when P_8.OUTS_p8 > 0 then round(nvl(p_8.OUTS_p8,1) / nvl(OUTS.OUTS_CRNT,1) * 100 ,2) else 0 end par_p8_perc
+from con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr, mw_prd_grp mpg,
+              (         
+                SELECT mr.reg_seq, cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans, 
+                ROUND(SUM(NVL(cp.DISBURSED_AMOUNT,0))) DSB_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_SC,0))) outs_crnt
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                and (cp.GRACE_PERD is not null)
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID
+                )OUTS,     
+                (             
+              SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p1, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p1
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID                          
+                )P_1,
+               (
+                SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p2, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p2
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days between 0 and 3.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID
+               )P_2,
+               (
+               SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p3, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p3
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days between 3.51 and 14.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID                
+               )P_3,
+               (
+               SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p4, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p4
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days between 14.51 and 28.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID 
+               )P_4,
+               (
+               SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p5, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p5
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days between 28.51 and 88.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID  
+               )P_5,
+               (
+               SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p6, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p6
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days between 88.51 and 178.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID 
+               )P_6,
+               (
+               SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p7, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p7
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days between 178.51 and 363.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID
+               )P_7,
+               (
+               SELECT mr.reg_seq,cp.PRODUCT_ID PRD_GRP_SEQ,
+              COUNT(distinct cp.loan_cycle_id) loans_p8, 
+                ROUND(SUM(NVL(cp.OVERDUE_AMOUNT,0))) + ROUND(SUM(NVL(cp.OVERDUE_AMOUNT_SC,0))) OD_AMT,
+                ROUND(SUM(NVL(cp.OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(cp.OUTSTANDING_sc,0))) outs_p8
+                FROM con_mon_asofdate_rschd@LINK_TO_TESTMWC.KASHF.ORG.PK cp, mw_brnch mb, 
+                mw_area ma, mw_reg mr 
+                where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+                and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+                and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+                and (CP.LOAN_COMPLETION_DATE IS NULL OR CP.LOAN_COMPLETION_DATE > to_date(sysdate)-1)
+                AND disbursed_date between to_date('01-may-2005') AND '30-apr-2020'
+                AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+                AND (ROUND((NVL(cp.OVERDUE_AMOUNT,0))) + ROUND((NVL(cp.OVERDUE_AMOUNT_SC,0)))) > 0
+               and (cp.GRACE_PERD is not null)
+               and cp.overdue_days > 363.50
+                and product_id <> 8
+                group by mr.reg_seq, cp.PRODUCT_ID
+               )P_8
+         where cp.branch_ID = mb.brnch_seq and mb.crnt_rec_flg=1
+         and mb.area_seq=ma.area_seq and ma.crnt_rec_flg=1
+         and ma.reg_seq = mr.reg_seq and mr.crnt_rec_flg=1 
+         and cp.PRODUCT_ID = mpg.PRD_GRP_SEQ
+         and mr.reg_seq = OUTS.reg_seq(+)
+         and cp.PRODUCT_ID = OUTS.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_1.reg_seq(+)
+         and cp.PRODUCT_ID = P_1.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_2.reg_seq(+)
+         and cp.PRODUCT_ID = P_2.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_3.reg_seq(+)
+         and cp.PRODUCT_ID = P_3.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_4.reg_seq(+)
+         and cp.PRODUCT_ID = P_4.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_5.reg_seq(+)
+         and cp.PRODUCT_ID = P_5.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_6.reg_seq(+)
+         and cp.PRODUCT_ID = P_6.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_7.reg_seq(+)
+         and cp.PRODUCT_ID = P_7.PRD_GRP_SEQ(+)
+         and mr.reg_seq = P_8.reg_seq(+)
+         and cp.PRODUCT_ID = P_8.PRD_GRP_SEQ(+)
+         --and cp.reg_seq = 1
+         and OUTS.LOANS > 0
+         order by 1, 2,3

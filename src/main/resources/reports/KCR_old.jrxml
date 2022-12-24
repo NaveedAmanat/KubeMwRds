@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.8.0.final using JasperReports Library version 6.8.0-2ed8dfabb690ff337a5797129f2cd92902b0c87b  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="KCR" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555"
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20"
+              uuid="756b999b-6ffa-4496-8b7f-24a8c1210f48">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <parameter name="JV_HDR_SEQ" class="java.lang.String"/>
+    <parameter name="ENTY_TYP" class="java.lang.String"/>
+    <parameter name="JV_DSCR" class="java.lang.String"/>
+    <parameter name="JV_DT" class="java.lang.String"/>
+    <parameter name="INSTR_NUM" class="java.lang.String"/>
+    <parameter name="CLNT_SEQ" class="java.lang.String"/>
+    <parameter name="NAME" class="java.lang.String"/>
+    <parameter name="AMT" class="java.lang.Long"/>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="brnch_nm" class="java.lang.String"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <pageFooter>
+        <band splitType="Stretch"/>
+    </pageFooter>
+    <summary>
+        <band height="561" splitType="Stretch">
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="214" y="0" width="127" height="20"
+                               uuid="4a385624-18e8-4f76-84e1-279a5eed0724"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="214" y="20" width="127" height="20"
+                               uuid="d501f9ef-d841-4e61-85a7-f9061678c8fe"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Client Recipt]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="180" y="72" width="100" height="20"
+                               uuid="d0bb7ceb-4770-409e-8e24-bc0974f4f5a6"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Receipt No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="180" y="92" width="100" height="20"
+                               uuid="258de97f-93d5-4917-bb4c-1b2ad88bd05a"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="180" y="112" width="100" height="20"
+                               uuid="a44727cd-4b40-4a90-8ddd-0a3a4191ea07"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Client ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="180" y="132" width="100" height="20"
+                               uuid="0e74063e-26fd-4351-a75e-c37d4eebff69"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="180" y="180" width="100" height="20"
+                               uuid="52be9350-82d7-44c4-b8ca-e6d680b974bf"/>
+                <textElement textAlignment="Left">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <text><![CDATA[Prepared By:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="180" y="210" width="200" height="20"
+                               uuid="7bd510b6-1de1-46d6-9dca-83d1c4945d56"/>
+                <textElement textAlignment="Left">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <text><![CDATA[BM Signature]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="181" y="240" width="279" height="30" uuid="f9ac5638-f2a8-42b0-b5c3-a7d77f0478c0"/>
+                <textFieldExpression>
+                    <![CDATA["Client Copy [Printed Date: "+new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())+"]"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="72" width="100" height="20" uuid="0ef2e5b8-bec9-4337-a5fe-69a090de2f71"/>
+                <textFieldExpression><![CDATA[$P{JV_HDR_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="92" width="100" height="20" uuid="e7214bdf-358c-4f3f-b1fc-1df004638455"/>
+                <textFieldExpression><![CDATA[$P{JV_DT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="112" width="100" height="20" uuid="9239a9fe-f501-4466-b34c-6eaa24cf1817"/>
+                <textFieldExpression><![CDATA[$P{CLNT_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="132" width="100" height="20" uuid="631c0112-0f43-4f76-b3fd-82d1acbfc2e7"/>
+                <textFieldExpression><![CDATA[$P{NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="152" width="100" height="20" uuid="d4572d7d-d03c-49a6-9d81-8372feca2472"/>
+                <textFieldExpression><![CDATA[$P{AMT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="280" y="180" width="100" height="20" uuid="945980c7-ae80-45dd-b0f0-d65e242756e8"/>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <line>
+                <reportElement x="80" y="280" width="399" height="1" uuid="bf3d4059-cdeb-46a8-a0f8-9119ef0068f7"/>
+                <graphicElement>
+                    <pen lineStyle="Dotted"/>
+                </graphicElement>
+            </line>
+            <textField>
+                <reportElement x="180" y="152" width="100" height="20" uuid="d0fe0287-67fb-4485-b0fe-d98fce587e05"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{ENTY_TYP}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="230" y="40" width="100" height="20" uuid="7581d7a8-2608-46f4-b719-69f6006c70b4"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="213" y="290" width="127" height="20"
+                               uuid="8dfa35cd-4c8e-46d6-a0a7-3b84c17a03f2"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="213" y="310" width="127" height="20"
+                               uuid="de52a361-0ac1-474f-a145-42728d6a11b9"/>
+                <textElement textAlignment="Center">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Client Recipt]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="179" y="362" width="100" height="20"
+                               uuid="1aea21b4-37ff-4f6c-bf8d-76c16ee7893a"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Receipt No.]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="179" y="382" width="100" height="20"
+                               uuid="2b7b2ebb-5537-481b-a599-23facdeb2f2e"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Date]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="179" y="402" width="100" height="20"
+                               uuid="ccece98c-2a14-494f-9917-21b87cd11436"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Client ID]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="179" y="422" width="100" height="20"
+                               uuid="19f39aa2-271c-48a1-b57f-8cb169f083ec"/>
+                <textElement textAlignment="Left">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Name]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="179" y="470" width="100" height="20"
+                               uuid="649c1d69-b96c-4ecd-936f-a6f25adcba7b"/>
+                <textElement textAlignment="Left">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <text><![CDATA[Prepared By:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="179" y="500" width="200" height="20"
+                               uuid="64d810fc-d493-4b41-a95f-a68f3fba4e1a"/>
+                <textElement textAlignment="Left">
+                    <font size="10" isBold="false"/>
+                </textElement>
+                <text><![CDATA[Client Signature/Thumb Impression]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="180" y="530" width="279" height="30" uuid="c9b687c4-661d-4f1c-a38c-b71c1afb41d3"/>
+                <textFieldExpression>
+                    <![CDATA["Kashf Copy [Printed Date: "+new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())+"]"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="362" width="100" height="20" uuid="e8eecde3-1bb5-459b-8202-7f1383926a27"/>
+                <textFieldExpression><![CDATA[$P{JV_HDR_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="382" width="100" height="20" uuid="166e3ee4-cfee-4b28-ba83-0649c6e50181"/>
+                <textFieldExpression><![CDATA[$P{JV_DT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="402" width="100" height="20" uuid="10fa4180-ed75-497c-aa40-3a4ea7aa0c3a"/>
+                <textFieldExpression><![CDATA[$P{CLNT_SEQ}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="422" width="100" height="20" uuid="eaeec016-58dd-4269-a274-49fb10d99dda"/>
+                <textFieldExpression><![CDATA[$P{NAME}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="442" width="100" height="20" uuid="a245bc6c-1b9a-49fd-849f-e73be4fce5f5"/>
+                <textFieldExpression><![CDATA[$P{AMT}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="279" y="470" width="100" height="20" uuid="cec67568-5d1f-498b-b13a-a36b8ca49a29"/>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="179" y="442" width="100" height="20" uuid="85c55cd5-a362-411e-b6d7-d971208c5020"/>
+                <textElement>
+                    <font isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{ENTY_TYP}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="229" y="330" width="100" height="20" uuid="c02765b7-02a0-4bc7-92e8-7839d1c8c10d"/>
+                <textElement textAlignment="Center">
+                    <font isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{brnch_nm}]]></textFieldExpression>
+            </textField>
+        </band>
+    </summary>
+</jasperReport>

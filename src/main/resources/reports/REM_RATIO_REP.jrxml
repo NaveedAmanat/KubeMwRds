@@ -1,0 +1,929 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.6.0.final using JasperReports Library version 6.6.0  -->
+<jasperReport xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd"
+              name="FDARTA" pageWidth="842" pageHeight="595" orientation="Landscape"
+              whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20"
+              bottomMargin="20" uuid="3e74af4c-5fdf-44c2-97bb-9029f084f2c8">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NWMW1.xml"/>
+    <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+    <style name="Crosstab_CH" mode="Opaque" backcolor="#F0F8FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CG" mode="Opaque" backcolor="#BFE1FF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CT" mode="Opaque" backcolor="#005FB3">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <style name="Crosstab_CD" mode="Opaque" backcolor="#FFFFFF">
+        <box>
+            <pen lineWidth="0.5" lineColor="#000000"/>
+            <topPen lineWidth="0.5" lineColor="#000000"/>
+            <leftPen lineWidth="0.5" lineColor="#000000"/>
+            <bottomPen lineWidth="0.5" lineColor="#000000"/>
+            <rightPen lineWidth="0.5" lineColor="#000000"/>
+        </box>
+    </style>
+    <subDataset name="cashless" uuid="47a1d117-77e5-4017-9188-bfb55ce1e0e1">
+        <property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+        <property name="com.jaspersoft.studio.data.defaultdataadapter" value="NWMW1.xml"/>
+        <queryString language="SQL">
+            <![CDATA[  SELECT TO_CHAR (dvh.DSBMT_DT, 'yyyymm')               DSBMT_DT,
+         (CASE WHEN mt.TYP_ID = '0008' THEN 'BANK' ELSE MT.TYP_STR END)               TYP_STR, 
+         TO_CHAR (TO_DATE (dvh.DSBMT_DT), 'Mon-YYYY')               mon, 
+         COUNT (DISTINCT ap.loan_app_seq)               no_of_loans, 
+         COUNT (DISTINCT ap.clnt_seq)               no_of_clnts,           SUM (ap.aprvd_loan_amt) 
+             disb_amt      FROM mw_loan_app      ap,           MW_DSBMT_VCHR_HDR dvh, 
+         MW_DSBMT_VCHR_DTL dvd,           mw_port          mp,           mw_acl           ma, 
+         mw_typs          mt     WHERE     ap.crnt_rec_flg = 1 
+         AND ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ           AND dvh.DSBMT_HDR_SEQ = dvd.DSBMT_HDR_SEQ 
+         AND dvd.PYMT_TYPS_SEQ = mt.TYP_SEQ           AND mt.TYP_CTGRY_KEY = 3 
+         AND dvd.CRNT_REC_FLG = 1           AND dvh.crnt_rec_flg = 1 
+         AND dvh.crnt_rec_flg = 1           AND ap.PORT_SEQ = mp.PORT_SEQ 
+         AND ap.PORT_SEQ = ma.PORT_SEQ           AND dvh.DSBMT_DT BETWEEN TO_DATE ( '01-03-2019', 'dd-mm-yyyy') 
+                              AND TO_DATE ( '01-08-2019', 'dd-mm-yyyy') 
+        AND mt.TYP_ID NOT IN ('0001','0009','0010','0011')                    
+GROUP BY TO_CHAR (dvh.DSBMT_DT, 'yyyymm'),           mt.TYP_STR, 
+         TO_CHAR (TO_DATE (dvh.DSBMT_DT), 'Mon-YYYY'),           mt.TYP_ID  ORDER BY 1]]>
+        </queryString>
+        <field name="DSBMT_DT" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="DSBMT_DT"/>
+        </field>
+        <field name="TYP_STR" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="TYP_STR"/>
+        </field>
+        <field name="MON" class="java.lang.String">
+            <property name="com.jaspersoft.studio.field.label" value="MON"/>
+        </field>
+        <field name="NO_OF_LOANS" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="NO_OF_LOANS"/>
+        </field>
+        <field name="NO_OF_CLNTS" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="NO_OF_CLNTS"/>
+        </field>
+        <field name="DISB_AMT" class="java.lang.Long">
+            <property name="com.jaspersoft.studio.field.label" value="DISB_AMT"/>
+        </field>
+        <variable name="TTL_CLNT" class="java.lang.Long" calculation="Sum">
+            <variableExpression><![CDATA[$F{NO_OF_CLNTS}]]></variableExpression>
+        </variable>
+    </subDataset>
+    <parameter name="curr_user" class="java.lang.String"/>
+    <parameter name="LOGO_IMG" class="java.lang.String"/>
+    <parameter name="from_dt" class="java.lang.String"/>
+    <parameter name="to_dt" class="java.lang.String"/>
+    <parameter name="CASH_LESS" class="net.sf.jasperreports.engine.data.JRBeanCollectionDataSource"/>
+    <queryString>
+        <![CDATA[select
+     to_char(dvh.DSBMT_DT,'yyyymm') DSBMT_DT,
+          (case when mt.TYP_ID = '0008' THEN 'BANK'  ELSE MT.TYP_STR END) TYP_STR, 
+     to_char(to_date(dvh.DSBMT_DT),'Mon-YYYY') mon, count(distinct ap.loan_app_seq) no_of_loans, 
+                    count(distinct ap.clnt_seq) no_of_clnts,
+                    sum(ap.aprvd_loan_amt) disb_amt 
+                    from mw_loan_app ap, MW_DSBMT_VCHR_HDR dvh, MW_DSBMT_VCHR_DTL dvd, mw_port mp, mw_acl ma, mw_typs mt
+                    where ap.crnt_rec_flg=1 
+                    and ap.LOAN_APP_SEQ = dvh.LOAN_APP_SEQ
+                    and dvh.DSBMT_HDR_SEQ = dvd.DSBMT_HDR_SEQ
+                    and dvd.PYMT_TYPS_SEQ = mt.TYP_SEQ
+                    and mt.TYP_CTGRY_KEY = 3 
+                    and dvd.CRNT_REC_FLG = 1 
+                    and dvh.crnt_rec_flg=1 
+                    and dvh.crnt_rec_flg=1 
+                    and ap.PORT_SEQ = mp.PORT_SEQ
+                    and ap.PORT_SEQ = ma.PORT_SEQ
+                    and dvh.DSBMT_DT between to_date('03-2019','mm-yyyy') and to_date('07-2019','mm-yyyy') 
+                    group by to_char(dvh.DSBMT_DT,'yyyymm'), mt.TYP_STR,to_char(to_date(dvh.DSBMT_DT),'Mon-YYYY'),mt.TYP_ID order by 1]]>
+    </queryString>
+    <field name="DSBMT_DT" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="DSBMT_DT"/>
+    </field>
+    <field name="TYP_STR" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="TYP_STR"/>
+    </field>
+    <field name="MON" class="java.lang.String">
+        <property name="com.jaspersoft.studio.field.label" value="MON"/>
+    </field>
+    <field name="NO_OF_LOANS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="NO_OF_LOANS"/>
+    </field>
+    <field name="NO_OF_CLNTS" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="NO_OF_CLNTS"/>
+    </field>
+    <field name="DISB_AMT" class="java.lang.Long">
+        <property name="com.jaspersoft.studio.field.label" value="DISB_AMT"/>
+    </field>
+    <variable name="TTL_CLNT" class="java.lang.Long" calculation="Sum">
+        <variableExpression><![CDATA[$F{NO_OF_CLNTS}]]></variableExpression>
+    </variable>
+    <pageHeader>
+        <band height="74">
+            <textField pattern="MMMMM dd, yyyy">
+                <reportElement x="710" y="13" width="90" height="12" uuid="3c2e7c47-5a5a-48ca-8836-909b40b81caa"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression>
+                    <![CDATA[new SimpleDateFormat("dd-MM-yy h:mm a").format(new Date())]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="180" y="25" width="399" height="20" uuid="00f9a5db-fbc6-43ac-9e8b-ccbc1c27a32d"/>
+                <box>
+                    <pen lineWidth="2.0" lineStyle="Solid" lineColor="#D9D4D4"/>
+                    <topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                    <rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+                </box>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[EP& Remittance ratio report ]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="651" y="0" width="38" height="12" uuid="00108dfe-bc7d-4261-8236-d8731db403cd"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[User: ]]></text>
+            </staticText>
+            <image>
+                <reportElement x="0" y="0" width="40" height="50" uuid="8eeb77ce-ebc8-414e-a350-ba72f3e665c2"/>
+                <imageExpression><![CDATA[$P{LOGO_IMG}]]></imageExpression>
+            </image>
+            <staticText>
+                <reportElement x="651" y="13" width="58" height="12" uuid="2fb12c9e-1c2e-4f71-822e-72bbaa77a6cf"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <text><![CDATA[Printing Date: ]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="710" y="1" width="74" height="12" uuid="9305160b-e726-4c26-aa3e-c2a4eefa805a"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{curr_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement stretchType="ElementGroupHeight" x="43" y="0" width="127" height="20"
+                               uuid="6a646272-3457-4540-9684-4fdf136b5d58"/>
+                <textElement>
+                    <font size="12" isBold="true"/>
+                </textElement>
+                <text><![CDATA[Kashf Foundation]]></text>
+            </staticText>
+            <line>
+                <reportElement x="-1" y="73" width="800" height="1" uuid="86934999-cc9e-477a-ac63-4535e42b5182"/>
+            </line>
+            <staticText>
+                <reportElement x="630" y="60" width="27" height="12" uuid="78187af6-0822-4eef-af44-c73359dac048"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[From:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="730" y="60" width="54" height="12" uuid="da5cb750-62ad-4865-9a65-ffa389f65eb6"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{to_dt}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="710" y="60" width="20" height="12" uuid="24677df5-6116-43d8-b69b-883be98e61b8"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isBold="true"/>
+                </textElement>
+                <text><![CDATA[To:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="657" y="60" width="52" height="12" uuid="6274c5c5-202c-42bb-9ee3-d46baffc6bd7"/>
+                <box>
+                    <pen lineWidth="0.0"/>
+                </box>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8" isUnderline="false"/>
+                </textElement>
+                <textFieldExpression><![CDATA[$P{from_dt}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageHeader>
+    <pageFooter>
+        <band height="12">
+            <textField>
+                <reportElement x="459" y="0" width="52" height="12" uuid="9d470d51-75cd-4d99-98af-8798a0967582"/>
+                <textElement textAlignment="Right">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <textField evaluationTime="Report">
+                <reportElement x="511" y="0" width="45" height="12" uuid="603c07f6-95d8-424f-8b73-0751de3b5b7f"/>
+                <textElement textAlignment="Left">
+                    <font fontName="SansSerif" size="8"/>
+                </textElement>
+                <textFieldExpression><![CDATA[" of " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
+    </pageFooter>
+    <summary>
+        <band height="110">
+            <crosstab>
+                <reportElement positionType="Float" x="0" y="10" width="800" height="36"
+                               uuid="c6a96b72-266d-4e1d-9085-4ebf0c038af6">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+                </reportElement>
+                <rowGroup name="MON" width="60" totalPosition="End">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{MON}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement mode="Opaque" x="0" y="0" width="60" height="12"
+                                               uuid="c0b00571-59a4-42be-a9fc-018eb1aecd8f"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement>
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{MON}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CT">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="60" height="12" forecolor="#000000"
+                                               uuid="99f84636-06a7-4784-ab39-a05b956827c5"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement>
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Total]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <columnGroup name="TYP_STR" height="24" totalPosition="End">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{TYP_STR}]]></bucketExpression>
+                    </bucket>
+                    <crosstabColumnHeader>
+                        <cellContents mode="Transparent" style="Crosstab_CH">
+                            <textField>
+                                <reportElement positionType="FixRelativeToBottom" x="0" y="0" width="150" height="12"
+                                               uuid="50ccbcdb-f933-4f2b-af1b-6e32bd325e97"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{TYP_STR}]]></textFieldExpression>
+                            </textField>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="12" width="30" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Loans]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="30" y="12" width="30" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Clients]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="60" y="12" width="70" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Amount]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="130" y="12" width="20" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[%]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabColumnHeader>
+                    <crosstabTotalColumnHeader>
+                        <cellContents mode="Transparent" style="Crosstab_CT">
+                            <staticText>
+                                <reportElement x="0" y="0" width="150" height="12" forecolor="#000000"
+                                               uuid="49f6373c-f80e-45df-bc2b-f1ff5921995a"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <text><![CDATA[Total]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="12" width="36" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Loans]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="36" y="12" width="36" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Clients]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="72" y="12" width="78" height="12"
+                                               uuid="217c4fcf-ae71-4f23-bffb-072992eefd04"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Amount]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalColumnHeader>
+                </columnGroup>
+                <measure name="NO_OF_LOANS_MEASURE" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{NO_OF_LOANS}]]></measureExpression>
+                </measure>
+                <measure name="NO_OF_CLNTS_MEASURE" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{NO_OF_CLNTS}]]></measureExpression>
+                </measure>
+                <measure name="DISB_AMT_MEASURE" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{DISB_AMT}]]></measureExpression>
+                </measure>
+                <measure name="RATIO" class="java.lang.Long">
+                    <measureExpression><![CDATA[$V{TTL_CLNT}]]></measureExpression>
+                </measure>
+                <crosstabCell width="150" height="12">
+                    <cellContents mode="Opaque" style="Crosstab_CD">
+                        <textField>
+                            <reportElement x="0" y="0" width="30" height="12"
+                                           uuid="ac734f9a-5c77-4cd7-b4d6-35d51424be4c"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="30" y="0" width="30" height="12"
+                                           uuid="be4699cd-c57e-4289-bdf0-20e7757eea2c"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="60" y="0" width="70" height="12"
+                                           uuid="9fe4e339-19e9-419b-8f88-37c438412c88"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="130" y="0" width="20" height="12"
+                                           uuid="9fe4e339-19e9-419b-8f88-37c438412c88"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{NO_OF_CLNTS_MEASURE}.doubleValue()/ $V{NO_OF_CLNTS_MEASURE_TYP_STR_ALL}.doubleValue()*100]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="150" height="12" columnTotalGroup="TYP_STR">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="1a7fc203-06e4-43e3-b893-6ce3250fafe1"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="36" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="a2297df2-42c0-42a7-b2df-37e3abce4ba8"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="72" y="0" width="78" height="12" forecolor="#000000"
+                                           uuid="fb956922-09e4-402d-a93a-e08987cd7443"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="150" height="12" rowTotalGroup="MON">
+                    <cellContents mode="Transparent" style="Crosstab_CT">
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="30" height="12" forecolor="#000000"
+                                           uuid="efecdd79-b41f-4b65-9bf7-8a94783b445d"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="30" y="0" width="30" height="12" forecolor="#000000"
+                                           uuid="c25de8b2-3016-43db-962d-2fd194472cd5"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="60" y="0" width="70" height="12" forecolor="#000000"
+                                           uuid="58271143-62b4-4403-9306-bdd9f1ad3ebb"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="150" height="12" rowTotalGroup="MON" columnTotalGroup="TYP_STR">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="fb24be9f-8505-49ef-8348-89987ae5a4c4"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="36" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="b170355d-ba9f-4adc-92ab-e3e25b338df6"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="72" y="0" width="78" height="12" forecolor="#000000"
+                                           uuid="0af97411-20e1-4bb1-9fcf-dcd6b91606f5"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+            </crosstab>
+            <crosstab>
+                <reportElement positionType="Float" stretchType="ElementGroupBottom" x="1" y="74" width="800"
+                               height="36" uuid="619edc19-4d55-42da-a3a5-d85c1ed1647a">
+                    <property name="com.jaspersoft.studio.layout"
+                              value="com.jaspersoft.studio.editor.layout.VerticalRowLayout"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.header" value="Crosstab_CH"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.group" value="Crosstab_CG"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.total" value="Crosstab_CT"/>
+                    <property name="com.jaspersoft.studio.crosstab.style.detail" value="Crosstab_CD"/>
+                </reportElement>
+                <crosstabDataset>
+                    <dataset>
+                        <datasetRun subDataset="cashless" uuid="7f7ee3c2-ff1a-4311-b228-c9286a6d42cf">
+                            <dataSourceExpression><![CDATA[$P{CASH_LESS}]]></dataSourceExpression>
+                        </datasetRun>
+                    </dataset>
+                </crosstabDataset>
+                <rowGroup name="MON" width="60" totalPosition="End">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{MON}]]></bucketExpression>
+                    </bucket>
+                    <crosstabRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CH">
+                            <textField>
+                                <reportElement mode="Opaque" x="0" y="0" width="60" height="12"
+                                               uuid="2de59f01-b57f-46c8-afd2-c12a45733f3e"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement>
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{MON}]]></textFieldExpression>
+                            </textField>
+                        </cellContents>
+                    </crosstabRowHeader>
+                    <crosstabTotalRowHeader>
+                        <cellContents mode="Opaque" style="Crosstab_CT">
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="0" width="60" height="12" forecolor="#000000"
+                                               uuid="07b71e63-2423-4ce7-8a3c-da176f4451ec"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement>
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Total]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalRowHeader>
+                </rowGroup>
+                <columnGroup name="TYP_STR" height="24" totalPosition="End">
+                    <bucket class="java.lang.String">
+                        <bucketExpression><![CDATA[$F{TYP_STR}]]></bucketExpression>
+                    </bucket>
+                    <crosstabColumnHeader>
+                        <cellContents mode="Transparent" style="Crosstab_CH">
+                            <textField>
+                                <reportElement positionType="FixRelativeToBottom" x="0" y="0" width="150" height="12"
+                                               uuid="45b1a20f-1b02-4f6c-94ce-5e3082a0f672"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <textFieldExpression><![CDATA[$V{TYP_STR}]]></textFieldExpression>
+                            </textField>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="12" width="30" height="12"
+                                               uuid="ebd33b47-3aca-41b1-abdf-17e0f80cf953"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Loans]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="30" y="12" width="30" height="12"
+                                               uuid="6c00d2e0-0344-405c-a020-aeab27dac6e2"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Clients]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="60" y="12" width="70" height="12"
+                                               uuid="c5a8219d-511f-419f-b025-ad5f8afcdad3"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Amount]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="130" y="12" width="20" height="12"
+                                               uuid="71017cbf-4d79-46bd-8945-4b1dbb6e5d72"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[%]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabColumnHeader>
+                    <crosstabTotalColumnHeader>
+                        <cellContents mode="Transparent" style="Crosstab_CT">
+                            <staticText>
+                                <reportElement x="0" y="0" width="150" height="12" forecolor="#000000"
+                                               uuid="c0dfc6f4-662f-4abd-9a39-5add07552d03"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8" isBold="false"/>
+                                </textElement>
+                                <text><![CDATA[Total]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="0" y="12" width="36" height="12"
+                                               uuid="8a37fe2f-063f-4b5d-b110-977bc2ebd21c"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Loans]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="36" y="12" width="36" height="12"
+                                               uuid="0aed6949-9896-42be-9037-89bfa54b4e4f"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Clients]]></text>
+                            </staticText>
+                            <staticText>
+                                <reportElement mode="Opaque" x="72" y="12" width="78" height="12"
+                                               uuid="d2de1b27-1cdd-46f8-b8e7-1b6852e0e9fe"/>
+                                <box leftPadding="1" rightPadding="1">
+                                    <pen lineWidth="0.25"/>
+                                </box>
+                                <textElement textAlignment="Center">
+                                    <font size="8"/>
+                                </textElement>
+                                <text><![CDATA[Amount]]></text>
+                            </staticText>
+                        </cellContents>
+                    </crosstabTotalColumnHeader>
+                </columnGroup>
+                <measure name="NO_OF_LOANS_MEASURE" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{NO_OF_LOANS}]]></measureExpression>
+                </measure>
+                <measure name="NO_OF_CLNTS_MEASURE" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{NO_OF_CLNTS}]]></measureExpression>
+                </measure>
+                <measure name="DISB_AMT_MEASURE" class="java.lang.Long" calculation="Sum">
+                    <measureExpression><![CDATA[$F{DISB_AMT}]]></measureExpression>
+                </measure>
+                <measure name="RATIO" class="java.lang.Long">
+                    <measureExpression><![CDATA[$V{TTL_CLNT}]]></measureExpression>
+                </measure>
+                <crosstabCell width="150" height="12">
+                    <cellContents mode="Opaque" style="Crosstab_CD">
+                        <textField>
+                            <reportElement x="0" y="0" width="30" height="12"
+                                           uuid="46d153d1-1e4b-4f1a-b785-73ea9dd36a2d"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="30" y="0" width="30" height="12"
+                                           uuid="02d139b0-cd75-4ffa-8167-2fe2e18b7746"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="60" y="0" width="70" height="12"
+                                           uuid="78793184-82df-40d3-abb7-d3c0c3964820"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement x="130" y="0" width="20" height="12"
+                                           uuid="89b62467-f0a1-4674-9723-b8ae2f23e15a"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression>
+                                <![CDATA[$V{NO_OF_CLNTS_MEASURE}.doubleValue()/ $V{NO_OF_CLNTS_MEASURE_TYP_STR_ALL}.doubleValue()*100]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="150" height="12" columnTotalGroup="TYP_STR">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="7ca813e8-f4c7-44a4-98a9-94926abf592d"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="36" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="b87ae695-984b-44c0-b656-dba7598277b5"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="72" y="0" width="78" height="12" forecolor="#000000"
+                                           uuid="c6d32b4d-1628-4e1a-a860-d72adc5564a7"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="150" height="12" rowTotalGroup="MON">
+                    <cellContents mode="Transparent" style="Crosstab_CT">
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="30" height="12" forecolor="#000000"
+                                           uuid="d0600281-6758-4c26-9286-abdd5511eb88"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="30" y="0" width="30" height="12" forecolor="#000000"
+                                           uuid="cd3dd49b-6d45-4510-92e2-7f4984f25072"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="60" y="0" width="70" height="12" forecolor="#000000"
+                                           uuid="85c121dc-a38a-4ea9-93a4-d64c85eeeb81"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+                <crosstabCell width="150" height="12" rowTotalGroup="MON" columnTotalGroup="TYP_STR">
+                    <cellContents mode="Opaque" style="Crosstab_CT">
+                        <textField>
+                            <reportElement mode="Opaque" x="0" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="2ee795e9-cfc9-46fe-86c5-939d688d5311"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_LOANS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="36" y="0" width="36" height="12" forecolor="#000000"
+                                           uuid="0c4d4159-6b65-479c-9efe-e5e4f06a61da"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement>
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{NO_OF_CLNTS_MEASURE}]]></textFieldExpression>
+                        </textField>
+                        <textField>
+                            <reportElement mode="Opaque" x="72" y="0" width="78" height="12" forecolor="#000000"
+                                           uuid="c4c39532-a77e-439f-b0c2-edfd667bcbdc"/>
+                            <box leftPadding="1" rightPadding="1">
+                                <pen lineWidth="0.25"/>
+                            </box>
+                            <textElement textAlignment="Right">
+                                <font size="8"/>
+                            </textElement>
+                            <textFieldExpression><![CDATA[$V{DISB_AMT_MEASURE}]]></textFieldExpression>
+                        </textField>
+                    </cellContents>
+                </crosstabCell>
+            </crosstab>
+        </band>
+    </summary>
+</jasperReport>

@@ -1,0 +1,77 @@
+create or replace function get_KZSB_maturity_dt(p_loan_App_seq number) return date
+as
+
+v_count number := 0;
+v_Mtrty_dt date;
+
+begin
+----------------  branch reschedule --------------
+    select count(rsd.loan_app_seq) into v_count
+    from MW_LOAN_RSCHD rsd
+    where rsd.LOAN_APP_SEQ = p_loan_App_seq --2300038832
+    and rsd.CRNT_REC_FLG = 1
+    and rsd.RVSL_INST is null
+    and rsd.RSCHD_MTHD_SEQ in (1,2,3);
+    
+    if v_count > 0
+    then
+        begin
+            select max(psd.DUE_DT) into v_Mtrty_dt
+            from MW_PYMT_SCHED_HDR psh, MW_PYMT_SCHED_dtl psd
+            where psh.PYMT_SCHED_HDR_SEQ = psd.PYMT_SCHED_HDR_SEQ and psh.CRNT_REC_FLG = 1
+            and psd.CRNT_REC_FLG = 1
+            and psh.LOAN_APP_SEQ = p_loan_App_seq; --2300038832;
+        exception when others
+        then
+            v_Mtrty_dt := null;
+        end;
+    else
+ -------------------  backend reschedule ------------------ 70k     
+        select count(rsd.loan_app_seq) into v_count
+        from MW_LOAN_RSCHD rsd
+        where rsd.LOAN_APP_SEQ = p_loan_App_seq--14400023383
+        and rsd.CRNT_REC_FLG = 1
+        and rsd.RVSL_INST is not null;      
+        
+        if v_count > 0
+        then
+            begin
+                select max(to_date(to_date(dsh.DSBMT_DT)+365)) into v_Mtrty_dt
+                from MW_DSBMT_VCHR_HDR dsh,MW_PYMT_SCHED_HDR psh, MW_PYMT_SCHED_dtl psd
+                where dsh.LOAN_APP_SEQ = psh.LOAN_APP_SEQ and dsh.CRNT_REC_FLG = 1
+                and psh.PYMT_SCHED_HDR_SEQ = psd.PYMT_SCHED_HDR_SEQ and psh.CRNT_REC_FLG = 1
+                and psd.CRNT_REC_FLG = 1
+                and psh.LOAN_APP_SEQ = p_loan_App_seq; --14400023383;
+            exception when others
+            then
+                v_Mtrty_dt := null;
+            end;
+        else
+            -------------------  backend reschedule -----------------  APR20
+            begin
+                select max(psd.DUE_DT) into v_Mtrty_dt
+                from MW_PYMT_SCHED_HDR psh, MW_PYMT_SCHED_dtl psd
+                where psh.PYMT_SCHED_HDR_SEQ = psd.PYMT_SCHED_HDR_SEQ and psh.CRNT_REC_FLG = 1
+                and psd.CRNT_REC_FLG = 1
+                and psh.LOAN_APP_SEQ = p_loan_App_seq; --2300038832;
+            exception when others
+            then
+                v_Mtrty_dt := null;
+            end;
+        end if;
+          
+    end if;   
+
+    return(v_Mtrty_dt);
+
+end;
+
+
+update MW_CLNT_HLTH_INSR_CARD cc
+    set cc.CARD_EXPIRY_DT = get_KZSB_maturity_dt(cc.LOAN_APP_SEQ),
+    cc.LAST_UPD_BY = 'yousaf',
+    cc.LAST_UPD_DT = sysdate
+where cc.CRNT_REC_FLG = 1;
+
+
+commit;

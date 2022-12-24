@@ -1,0 +1,58 @@
+select 'Tagged_Portfolio' emp_nm,            AP.CLNT_SEQ clsng_clnt,  
+                     get_clnt_SPZ_NM(ap.loan_app_seq) clsng_clnt_NAME, 
+                     (select distinct CTL.TAG_FROM_DT from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4  
+                     and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:aDt,'dd-MM-yyyy')) TAG_DT, 
+                     C.PH_NUM,           get_clnt_addr(ap.loan_app_seq) ADDRESS,           DSBH.DSBMT_DT, 
+                     DSBD.AMT DISB_AMT,           loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ri') clsng_rem_inst, 
+                     loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ps') clsng_OST_AMT, 
+                     loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ri') clsng_od_rem_inst, 
+                     loan_app_ost_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'ps') clsng_od_AMT, 
+                     get_od_info_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'d') od_days,        
+                     ((select distinct CTL.TAG_FROM_DT from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(:aDt,'dd-MM-yyyy')) - (to_date(:aDt,'dd-MM-yyyy') - get_od_info_trn(ap.loan_app_seq,to_date(:aDt,'dd-MM-yyyy'),'d'))) od_days_when_taged 
+               FROM MW_LOAN_APP ap,          MW_CLNT C,          MW_PRD MP,          MW_PORT MP1, 
+                    MW_PRD_GRP MPG,          MW_DSBMT_VCHR_HDR DSBH,          MW_DSBMT_VCHR_DTL DSBD 
+                where ap.PRD_SEQ = MP.PRD_SEQ   AND MP.PRD_GRP_SEQ = MPG.PRD_GRP_SEQ    and MPG.PRD_GRP_SEQ = :prdSeq 
+             AND MPG.CRNT_REC_FLG = 1   AND MP.CRNT_REC_FLG = 1   AND ap.CRNT_REC_FLG = 1 
+             AND ap.CLNT_SEQ = C.CLNT_SEQ   AND C.CRNT_REC_FLG = 1   AND ap.LOAN_APP_SEQ = DSBH.LOAN_APP_SEQ 
+             AND DSBH.CRNT_REC_FLG = 1   AND DSBH.DSBMT_HDR_SEQ = DSBD.DSBMT_HDR_SEQ  AND DSBD.CRNT_REC_FLG = 1 
+             AND ap.PORT_SEQ = MP1.PORT_SEQ   AND MP1.CRNT_REC_FLG = 1   and mp1.brnch_seq = :brnchSeq 
+             and not exists (select wrt.loan_app_seq from MW_WRT_OF_CLNT wrt where wrt.CRNT_REC_FLG = 1 and wrt.LOAN_APP_SEQ = ap.clnt_seq and wrt.BRNCH_SEQ = mp1.brnch_seq) 
+             and exists (select distinct ctl.LOAN_APP_SEQ from MW_CLNT_TAG_LIST ctl where ctl.tags_seq = 4 and ctl.loan_app_seq = ap.LOAN_APP_SEQ and to_date(ctl.EFF_START_DT) <= to_date(to_date(:aDt,'dd-MM-yyyy'))) 
+             and loan_app_ost_trn(ap.loan_app_seq,to_date(to_date(:aDt,'dd-MM-yyyy'))) > 0
+             union all
+            SELECT 'Bad_Debt_Portfolio ' EMP_NM, WRT.CLNT_SEQ CLSNG_CLNT, WRT.CLNT_NM CLSNG_CLNT_NAME, TO_DATE(WRT.CRTD_DT)  TAG_DT,
+            WRT.PHONE_NO PH_NUM, WRT.ADDRESS ADDRESS, WRT.DSBMT_DT DSBMT_DT, 
+            WRT.DSBMT_PPAL_AMT DISB_AMT, round(nvl(WRT.OUTSD_PPAL_AMT,1) / (NVL(WRT.DSBMT_PPAL_AMT,1)/12)) CLSNG_REM_INST,
+            (
+                        (nvl(WRT.OUTSD_PPAL_AMT,0)+ nvl(WRT.OUTSD_SRVC_CHRG_AMT,0)) -
+                        (        
+                        select nvl(sum(nvl(dtl.PYMT_AMT,0)),0) 
+                        from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl
+                        where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                        and dtl.CHRG_TYP_KEY IN (-1,50)
+                        and dtl.CRNT_REC_FLG = 1
+                        and trx.CRNT_REC_FLG = 1
+                        and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                        and trx.PYMT_DT <= to_date(:aDt,'dd-MM-yyyy')
+                        and trx.CLNT_SEQ = wrt.CLNT_SEQ            
+                        )) CLSNG_OST_AMT, 
+                        round(nvl(WRT.OUTSD_PPAL_AMT,1) / (NVL(WRT.DSBMT_PPAL_AMT,1)/12)) CLSNG_OD_REM_INST,                        
+                        (
+                        (NVL(WRT.OD_PPAL_AMT,0) + NVL(WRT.OD_SRVC_CHRG_AMT,0)) -
+                        (        
+                        select nvl(sum(nvl(dtl.PYMT_AMT,0)),0)
+                        from MW_WRT_OF_RCVRY_TRX trx, MW_WRT_OF_RCVRY_DTL dtl
+                        where trx.WRT_OF_RCVRY_TRX_SEQ = dtl.WRT_OF_RCVRY_TRX_SEQ
+                        and dtl.CHRG_TYP_KEY IN (-1,50)
+                        and dtl.CRNT_REC_FLG = 1
+                        and trx.CRNT_REC_FLG = 1
+                        and dtl.LOAN_APP_SEQ = wrt.LOAN_APP_SEQ
+                        and trx.PYMT_DT <= to_date(:aDt,'dd-MM-yyyy')
+                        and trx.CLNT_SEQ = wrt.CLNT_SEQ            
+                        )) CLSNG_OD_AMT,
+             WRT.OD_DYS OD_DAYS, wrt.OD_DYS OD_DAYS_WHEN_TAGED
+             FROM MW_WRT_OF_CLNT WRT
+             WHERE (WRT.OUTSD_PPAL_AMT > 0 OR OUTSD_SRVC_CHRG_AMT > 0)
+            and to_date(WRT.CRTD_DT) <= to_date(:aDt,'dd-MM-yyyy')
+            and wrt.PRD_GRP_SEQ = :prdSeq
+            AND WRT.BRNCH_SEQ = :brnchSeq

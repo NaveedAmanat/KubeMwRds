@@ -1,0 +1,36 @@
+select p.prd_cmnt,c.clnt_id,c.frst_nm||' '|| c.last_nm as name,c.spz_frst_nm,c.spz_last_nm as spz, sum(dtl.amt),  
+                         emp.emp_nm,dsmode.typ_str,dvh.dsbmt_hdr_seq,to_char(dvh.dsbmt_dt,'HH12:MI:SSAM') dsbmt_dt,  
+                         listagg( dtl.instr_num,',') within group (order by dsmode.typ_str) instr_num   from mw_loan_app app  
+                         join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1  
+                         join mw_dsbmt_vchr_dtl dtl on dtl.dsbmt_hdr_seq=dvh.dsbmt_hdr_seq and dtl.crnt_rec_flg=1 
+                         join mw_jv_hdr jh on jh.enty_seq=dvh.dsbmt_hdr_seq and jh.enty_typ='Disbursement' and PRNT_VCHR_REF is null 
+                         join mw_typs dsmode on dsmode.typ_seq=dtl.pymt_typs_seq and dsmode.crnt_rec_flg=1  
+                         join mw_prd p on p.prd_seq=app.prd_seq and p.crnt_rec_flg=1  
+                         join mw_clnt c on c.clnt_seq=app.clnt_seq and c.crnt_rec_flg=1  
+                         join mw_port prt on prt.port_seq = app.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq=:brnch  
+                         join mw_port_emp_rel per on per.port_seq = prt.PORT_SEQ and per.crnt_rec_flg = 1  
+                         join mw_emp emp on emp.emp_seq = per.emp_seq where app.crnt_rec_flg=1  
+                         and trunc(jh.jv_dt) = to_date(:reportdate,'MM-dd-yyyy') and dvh.dsbmt_dt is not null
+                         and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.LOAN_APP_SEQ = app.LOAN_APP_SEQ)
+                         group by p.prd_cmnt,c.clnt_id,c.frst_nm,c.last_nm,c.spz_frst_nm,c.spz_last_nm,  
+                         emp.emp_nm, app.loan_app_sts_dt,dsmode.typ_str,dvh.dsbmt_hdr_seq,dvh.dsbmt_dt union 
+                         select nvl(chrg.typ_str,'KSZB'), c.clnt_id,c.frst_nm||' '|| c.last_nm as name, 
+                         c.spz_frst_nm,c.spz_last_nm as spz, sum(chrg.amt), emp.emp_nm, 
+                         'JV', app.LOAN_APP_SEQ, to_char(dvh.DSBMT_DT,'HH12:MI:SSAM') dsbmt_dt, 
+                         null instr_num from mw_loan_app app 
+                         join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1 
+                         join mw_dsbmt_vchr_dtl dtl on dtl.dsbmt_hdr_seq=dvh.dsbmt_hdr_seq and dtl.crnt_rec_flg=1 
+                         join mw_jv_hdr jh on jh.enty_seq=dvh.loan_app_seq and jh.enty_typ='Disbursement' 
+                         join mw_pymt_sched_hdr psh on psh.loan_app_seq=app.loan_app_seq and psh.crnt_rec_flg=1 
+                         join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                         join mw_pymt_sched_chrg chrg on chrg.pymt_sched_dtl_seq=psd.pymt_sched_dtl_seq and chrg.crnt_rec_flg=1 
+                         left outer join mw_typs chrg on chrg.typ_seq=chrg.chrg_typs_seq and chrg.crnt_rec_flg=1 
+                         join mw_prd p on p.prd_seq=app.prd_seq and p.crnt_rec_flg=1 
+                         join mw_clnt c on c.clnt_seq=app.clnt_seq and c.crnt_rec_flg=1 
+                         join mw_port prt on prt.PORT_SEQ = app.PORT_SEQ and prt.CRNT_REC_FLG=1 and prt.BRNCH_SEQ=:brnch 
+                         join mw_port_emp_rel prt on prt.port_seq = c.port_key and prt.crnt_rec_flg = 1 
+                         join mw_emp emp on emp.emp_seq = prt.emp_seq where app.crnt_rec_flg=1 
+                         and trunc(jh.jv_dt) = to_date(:reportdate,'MM-dd-yyyy') and dvh.dsbmt_dt is not null 
+                         and not exists  (select 1 from RPTB_PORT_TRF_DETAIL trf where trf.LOAN_APP_SEQ = app.LOAN_APP_SEQ)
+                         group by nvl(chrg.typ_str,'KSZB'),c.clnt_id,c.frst_nm,c.last_nm,c.spz_frst_nm,c.spz_last_nm, 
+                         emp.emp_nm, app.loan_app_sts_dt,'JV',app.LOAN_APP_SEQ,dvh.DSBMT_DT,null order by 8

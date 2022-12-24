@@ -1,0 +1,66 @@
+select  r.REGION_NAME,
+       count((CASE WHEN 
+                (case when nvl(p_4.REGULAR_PAR_AMOUNT, 1) > 0 then round((NVL (p_4.REGULAR_PAR_AMOUNT, 1) / nvl(OUTS.OUTSTANDING,0)) * 100,2) end) between 0 and 0.50
+             THEN
+                outs.BRANCHES
+        END)) P_1,
+        count((CASE WHEN 
+                (case when p_4.REGULAR_PAR_AMOUNT > 0 then round((NVL (p_4.REGULAR_PAR_AMOUNT, 1) / nvl(OUTS.OUTSTANDING,0)) * 100,2) else 0 end) BETWEEN 0.51 AND 1.0
+             THEN
+                outs.BRANCHES
+        END)) P_2,
+        count((CASE WHEN 
+                (case when p_4.REGULAR_PAR_AMOUNT > 0 then round((NVL (p_4.REGULAR_PAR_AMOUNT, 1) / nvl(OUTS.OUTSTANDING,0)) * 100,2) else 0 end) BETWEEN 1.01 AND 1.50
+             THEN
+                outs.BRANCHES
+        END)) P_3,        
+        count((CASE WHEN 
+                (case when p_4.REGULAR_PAR_AMOUNT > 0 then round((NVL (p_4.REGULAR_PAR_AMOUNT, 1) / nvl(OUTS.OUTSTANDING,0)) * 100,2) else 0 end) > 1.5
+             THEN
+                outs.BRANCHES
+        END)) P_4
+       from branch@link_to_testmwc b, location@link_to_testmwc l, region@link_to_testmwc r,
+(
+SELECT cpm.branch_id, 
+       COUNT(DISTINCT B.BRANCH_CD) BRANCHES, 
+       COUNT(LOAN_CYCLE_ID) ACTIVE_CLIENTS, 
+       ROUND(SUM(NVL(OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(OUTSTANDING_SC,0))) OUTSTANDING
+FROM con_mon_asofdate_rschd@link_to_testmwc CPM,product@link_to_testmwc pr,
+location@link_to_testmwc l,branch@link_to_testmwc b,area@link_to_testmwc aa,region@link_to_testmwc r        
+WHERE (CPM.LOAN_COMPLETION_DATE IS NULL OR CPM.LOAN_COMPLETION_DATE > to_date(:to_dt,'dd-mm-yyyy' )) 
+AND disbursed_date between'01-may-2005' and to_date(:to_dt,'dd-mm-yyyy')
+AND  (NVL(OUTSTANDING_PRINCIPAL,0) + NVL(OUTSTANDING_SC,0)) > 0
+AND CPM.PRODUCT_ID = pr.PRODUCT_CODE
+and CPM.BRANCH_ID = b.BRANCH_CD
+and l.LOCATION_ID = b.LOCATION_ID
+and l.REGION_CD = r.REGION_CD
+and l.AREA_ID = aa.AREA_ID
+and pr.PRODUCT_CODE not in (8)
+GROUP BY cpm.branch_id
+)outs,
+(
+SELECT cpm2.branch_id,
+       COUNT(LOAN_CYCLE_ID) REGULAR_OD_CLIENTS, 
+       COUNT(DISTINCT B2.BRANCH_CD) BRANCHES, 
+       ROUND(SUM(nvl(OVERDUE_AMOUNT,0))+SUM(nvl(OVERDUE_AMOUNT_sc,0))) REGULAR_OD_AMOUNT,
+       ROUND(SUM(NVL(OUTSTANDING_PRINCIPAL,0))) + ROUND(SUM(NVL(OUTSTANDING_SC,0))) REGULAR_PAR_AMOUNT 
+FROM con_mon_asofdate_rschd@link_to_testmwc cpm2,product@link_to_testmwc pr2,
+location@link_to_testmwc l2,branch@link_to_testmwc b2,area@link_to_testmwc aa2,region@link_to_testmwc r2 
+WHERE ( OVERDUE_AMOUNT>0 OR OVERDUE_AMOUNT_SC>0) 
+AND disbursed_date between'01-may-2005' and to_date(:to_dt,'dd-mm-yyyy')
+AND OVERDUE_DAYS > 28.50
+AND (LOAN_COMPLETION_DATE IS NULL OR LOAN_COMPLETION_DATE >to_date(:to_dt,'dd-mm-yyyy' )) 
+AND CPM2.PRODUCT_ID = pr2.PRODUCT_CODE 
+and CPM2.BRANCH_ID = b2.BRANCH_CD 
+and l2.LOCATION_ID = b2.LOCATION_ID 
+and l2.REGION_CD = r2.REGION_CD 
+and l2.AREA_ID = aa2.AREA_ID
+and pr2.PRODUCT_CODE not in (8)
+GROUP BY cpm2.branch_id
+)p_4
+where outs.branch_id = p_4.branch_id(+)   
+and outs.branch_id = b.BRANCH_CD
+and b.LOCATION_ID = l.LOCATION_ID
+and l.REGION_CD = r.REGION_CD
+group by r.REGION_NAME
+order by 1

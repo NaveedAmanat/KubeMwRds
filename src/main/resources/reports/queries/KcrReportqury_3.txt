@@ -1,0 +1,33 @@
+  SELECT MJH.JV_HDR_SEQ,
+         MJH.ENTY_TYP,
+         MJH.JV_DSCR,
+         MJH.JV_DT,
+         MRT.INSTR_NUM,
+         MC.CLNT_SEQ,
+         MC.CLNT_NM Name,
+         SUM (NVL (MJD.AMT, 0)) amt,
+         T.TYP_ID
+    FROM MW_WRT_OF_RCVRY_TRX MRT,
+         MW_JV_HDR   MJH,
+         MW_JV_DTL   MJD,
+         MW_WRT_OF_CLNT     MC,
+         MW_TYPS     T
+   WHERE     MRT.CRNT_REC_FLG = 1
+         AND MRT.WRT_OF_RCVRY_TRX_SEQ = :TRX_SEQ
+         AND MRT.WRT_OF_RCVRY_TRX_SEQ = MJH.ENTY_SEQ
+         AND MJH.JV_HDR_SEQ = MJD.JV_HDR_SEQ
+         AND MRT.CLNT_SEQ = MC.CLNT_SEQ
+         AND MC.CRNT_REC_FLG = 1
+         AND MJD.CRDT_DBT_FLG = 0
+         AND T.TYP_SEQ = MRT.RCVRY_TYP_SEQ
+       --  AND T.TYP_ID = '0001'
+         AND UPPER (MJH.ENTY_TYP) IN ('WO RECOVERY')
+GROUP BY MJH.ENTY_TYP,
+         MJH.JV_DSCR,
+         MJH.JV_DT,
+         MRT.INSTR_NUM,
+         MC.CLNT_SEQ,
+         MC.CLNT_NM,
+         MJH.JV_HDR_SEQ,
+         T.TYP_ID
+ORDER BY MJH.JV_DT DESC FETCH FIRST 1 ROW ONLY

@@ -1,0 +1,42 @@
+SELECT dsbmt.prd_nm, dsbmt.dsbmt_dt, dsbmt.dsbmt_amt,
+ag.ag_dt, ag.ag_amt, rc.svc_chg, rc.paid_amt,dsbmt.prd_id
+FROM ( SELECT app.loan_app_seq, p.prd_nm,
+dvh.DSBMT_DT dsbmt_dt,
+SUM (amt) dsbmt_amt,p.prd_id
+FROM mw_loan_app app
+JOIN mw_ref_cd_val sts ON sts.ref_cd_seq = app.loan_app_sts AND sts.crnt_rec_flg = 1
+JOIN mw_prd p ON p.PRD_SEQ = app.PRD_SEQ AND p.CRNT_REC_FLG = 1
+JOIN MW_DSBMT_VCHR_HDR dvh ON dvh.LOAN_APP_SEQ = app.LOAN_APP_SEQ AND dvh.CRNT_REC_FLG = 1
+JOIN MW_DSBMT_VCHR_DTL dvd ON dvd.DSBMT_HDR_SEQ = dvh.DSBMT_HDR_SEQ AND dvd.CRNT_REC_FLG = 1
+WHERE app.crnt_rec_flg = 1
+AND dvh.dsbmt_vchr_typ = 0 AND sts.ref_cd = '0005'
+AND app.clnt_seq = :clntSeq
+GROUP BY app.loan_app_seq, p.prd_nm, dvh.DSBMT_DT ,p.prd_id) dsbmt
+LEFT OUTER JOIN
+(SELECT app.loan_app_seq, exp.crtd_dt ag_dt, SUM (amt) ag_amt
+FROM mw_loan_app app
+JOIN mw_ref_cd_val sts ON sts.ref_cd_seq = app.loan_app_sts AND sts.crnt_rec_flg = 1
+JOIN mw_prd p ON p.PRD_SEQ = app.PRD_SEQ AND p.CRNT_REC_FLG = 1
+JOIN MW_DSBMT_VCHR_HDR dvh ON dvh.LOAN_APP_SEQ = app.LOAN_APP_SEQ AND dvh.CRNT_REC_FLG = 1
+JOIN MW_DSBMT_VCHR_DTL dvd ON dvd.DSBMT_HDR_SEQ = dvh.DSBMT_HDR_SEQ AND dvd.CRNT_REC_FLG = 1
+join mw_exp exp on exp.exp_ref=app.loan_app_seq and exp.crnt_rec_flg=1 and exp.expns_typ_seq=12595
+WHERE app.crnt_rec_flg = 1
+AND sts.ref_cd = '0005'
+GROUP BY app.loan_app_seq, p.prd_nm, exp.crtd_dt) ag ON ag.loan_app_seq = dsbmt.loan_app_seq
+JOIN ( SELECT app.loan_app_seq,
+SUM (psd.TOT_CHRG_DUE) svc_chg, SUM (ramt) paid_amt
+FROM mw_loan_app app JOIN mw_ref_cd_val sts
+ON sts.ref_cd_seq = app.loan_app_sts
+AND sts.crnt_rec_flg = 1 JOIN MW_PYMT_SCHED_HDR psh
+ON psh.LOAN_APP_SEQ = app.LOAN_APP_SEQ
+AND psh.CRNT_REC_FLG = 1 JOIN MW_PYMT_SCHED_DTL psd
+ON psd.PYMT_SCHED_HDR_SEQ = psh.PYMT_SCHED_HDR_SEQ
+AND psd.CRNT_REC_FLG = 1
+LEFT OUTER JOIN
+( SELECT PYMT_SCHED_DTL_SEQ, SUM (r.PYMT_AMT) ramt
+FROM mw_rcvry_dtl r
+WHERE (r.CHRG_TYP_KEY IN (select typ_seq from mw_typs where typ_id='0017' and TYP_CTGRY_KEY=1 and CRNT_REC_FLG=1) OR r.CHRG_TYP_KEY = -1)
+AND r.crnt_rec_flg = 1 GROUP BY PYMT_SCHED_DTL_SEQ) rc
+ON rc.pymt_sched_dtl_seq = psd.pymt_sched_dtl_seq
+WHERE app.crnt_rec_flg = 1 AND sts.ref_cd = '0005'
+AND app.clnt_seq =:clntSeq GROUP BY app.loan_app_seq, app.loan_app_sts_dt) rc ON rc.loan_app_seq = dsbmt.loan_app_seq order by dsbmt.PRD_NM

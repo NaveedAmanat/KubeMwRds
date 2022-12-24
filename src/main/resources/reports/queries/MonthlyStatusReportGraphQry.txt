@@ -1,0 +1,88 @@
+select grp_nm,
+       count(loan_app_seq) ach_clnt,
+       sum(ach_amt) ach_amt,
+       sum(trgt_clnts) trgt_clnts,
+       sum(trgt_amt) trgt_amt,
+       max(ror) ror,
+       max(fp) fp,
+       max(ads) ads,
+       max(adv_mat) adv_amt
+from(
+select case when :rpt_flg = 1 then emp.emp_nm when :rpt_flg = 2 then bm.emp_nm else am.emp_nm end grp_nm,  
+       app.loan_app_seq,          
+       app.aprvd_loan_amt ach_amt, 
+       tgt.trgt_clnt trgt_clnts, 
+       tgt.trgt_amt trgt_amt, 
+       (select (count(distinct la.clnt_seq) / max((select count(distinct ap.clnt_seq)   
+       from mw_loan_app ap 
+       join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:user_id 
+       where ap.crnt_rec_flg=1  and loan_app_sts=704 
+         and to_char(loan_app_sts_dt,'YYYYMM')=to_char(la.loan_app_sts_dt,'YYYYMM'))))*100 ror          
+         from mw_loan_app la  where la.crnt_rec_flg=1  and la.port_seq=app.port_seq 
+                 and to_char(loan_app_sts_dt,'YYYYMM')=to_char(lst_loan_cmpltn_dt(la.loan_app_seq),'YYYYMM') 
+                 and la.loan_app_sts_dt between to_date(:frm_dt,'dd-mm-yyyy') and to_date(:to_dt,'dd-mm-yyyy')  ) ror, 
+
+        (  select (count(ap.clnt_seq) / max(tot_cnt))*100 fp_rt  
+                 from mw_loan_app ap 
+                 join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=ap.loan_app_seq and dvh.crnt_rec_flg=1
+                 join mw_port_emp_rel erl on erl.port_seq=ap.port_seq and erl.crnt_rec_flg=1 
+                 join mw_emp emp on emp.emp_seq=erl.emp_seq 
+                 join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:user_id 
+                 join mw_port prt on prt.port_seq=ap.port_seq 
+                 join mw_jv_hdr jh on jh.enty_seq=dvh.dsbmt_hdr_seq and enty_typ='Disbursement'
+                 join mw_prd prd on prd.prd_seq=ap.prd_seq and prd.crnt_rec_flg=1 
+                 join mw_biz_aprsl aprsl on aprsl.loan_app_seq=ap.loan_app_seq and aprsl.crnt_rec_flg=1 
+                 join mw_ref_cd_val wp on wp.ref_cd_seq=aprsl.prsn_run_the_biz and wp.crnt_rec_flg=1    
+                 join (  
+                    select ap.port_seq,count(distinct prnt_loan_app_seq) tot_cnt    
+                    from mw_loan_app ap  
+                    join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=ap.loan_app_seq and dvh.crnt_rec_flg=1
+                    join mw_jv_hdr jh on jh.enty_seq=dvh.dsbmt_hdr_seq and enty_typ='Disbursement'
+                    join mw_biz_aprsl aprsl on aprsl.loan_app_seq=ap.loan_app_seq and aprsl.crnt_rec_flg=1  
+                    join mw_ref_cd_val wp on wp.ref_cd_seq=aprsl.prsn_run_the_biz and wp.crnt_rec_flg=1 
+                    join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:user_id 
+                    where ap.crnt_rec_flg=1 and loan_app_sts=703 
+                    and to_date(jv_dt) between add_months(to_date(:frm_dt,'dd-MM-yyyy'),-5) and to_date(:to_dt,'dd-MM-yyyy') 
+                 group by ap.port_seq  ) ttls on ttls.port_seq=ap.port_seq 
+                 where ap.crnt_rec_flg=1  and ap.loan_app_sts=703  and wp.ref_cd_dscr='SELF' 
+                 and to_date(jv_dt) between add_months(to_date(:frm_dt,'dd-MM-yyyy'),-5) and to_date(:to_dt,'dd-MM-yyyy') 
+                 and ap.port_seq=app.port_seq  ) fp, 
+                 ( 
+                 select sum(ap.aprvd_loan_amt)/count(distinct clnt_seq)  from mw_loan_app ap 
+                 join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:user_id 
+                 join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=ap.loan_app_seq and hdr.crnt_rec_flg=1 
+                 join mw_port_emp_rel erl on erl.port_seq=ap.port_seq and erl.crnt_rec_flg=1 
+                 join mw_emp emp on emp.emp_seq=erl.emp_seq  where ap.crnt_rec_flg=1    and ap.port_seq=app.port_seq 
+                 and to_date(hdr.dsbmt_dt) between to_date(:frm_dt,'dd-MM-yyyy') and to_date(:to_dt,'dd-MM-yyyy') )ads, 
+                 (  select count(distinct clnt_seq) adv_mat 
+                 from mw_loan_app ap join mw_acl acl on acl.port_seq=ap.port_seq and acl.user_id=:user_id where ap.crnt_rec_flg=1 and ap.loan_app_sts=704 
+                 and ( select max(psd.due_dt)  from mw_pymt_sched_hdr psh 
+                 join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1 
+                 where psh.crnt_rec_flg=1  and psh.loan_app_seq=ap.loan_app_seq   and ap.port_seq=app.port_seq 
+                 and to_date(ap.loan_app_sts_dt) between to_date(:frm_dt,'dd-MM-yyyy') and to_date(:to_dt,'dd-MM-yyyy'))> lst_loan_cmpltn_dt(ap.loan_app_seq) 
+                 ) adv_mat     
+                 from mw_loan_app app
+                   join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1
+                   join mw_dsbmt_vchr_hdr hdr on hdr.loan_app_seq=app.loan_app_seq and hdr.crnt_rec_flg=1 
+                   join mw_acl acl on acl.port_seq=app.port_seq and acl.user_id=:user_id 
+                   join mw_port prt on prt.port_seq=app.port_seq and prt.crnt_rec_flg=1
+                   join mw_port_emp_rel per on per.port_seq=app.port_seq and per.crnt_rec_flg=1  
+                   join mw_emp emp on emp.emp_seq=per.emp_seq 
+                   join mw_brnch brnch on brnch.brnch_seq=prt.brnch_seq and brnch.crnt_rec_flg=1
+                   join mw_brnch_emp_rel berl on berl.brnch_seq=brnch.brnch_seq and berl.crnt_rec_flg=1
+                   join mw_emp bm on bm.emp_seq=berl.emp_seq
+                   join mw_area_emp_rel aerl on aerl.area_seq=brnch.area_seq and aerl.crnt_rec_flg=1
+                   join mw_emp am on am.emp_seq=aerl.emp_seq
+                   left outer join (
+                        select ptg.port_seq,tgt.prd_seq,sum(ptg.trgt_clnts) trgt_clnt, sum(ptg.trgt_amt) trgt_amt
+                            from mw_brnch_trgt tgt
+                            join mw_port_trgt ptg on ptg.brnch_trgts_seq=tgt.brnch_targets_seq and ptg.del_flg=0
+                            join mw_acl acl on acl.port_seq=ptg.port_seq and acl.user_id=:user_id 
+                            where tgt.del_flg=0 
+                            and tgt.trgt_perd=to_char(to_date(:to_dt,'dd-MM-yyyy'),'YYYYMM')  
+                            group by ptg.port_seq,tgt.prd_seq
+                   ) tgt on tgt.prd_seq=prd.prd_grp_seq and tgt.port_seq=app.port_seq
+            where app.crnt_rec_flg=1 
+                   and to_date(hdr.dsbmt_dt) between to_date(:frm_dt,'dd-MM-yyyy') and to_date(:to_dt,'dd-MM-yyyy') 
+)
+group by grp_nm

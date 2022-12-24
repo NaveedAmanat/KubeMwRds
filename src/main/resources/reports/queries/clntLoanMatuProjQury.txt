@@ -1,0 +1,32 @@
+select  bdo_name,PRD_GRP_NM,      sum(case when seq=1 then loans else 0 end) day_1_7,  
+                            sum(case when seq=2 then loans else 0 end) day_8_15,  
+                            sum(case when seq=3 then loans else 0 end) day_16_30,  
+                            sum(case when seq=4 then loans else 0 end) day_31_60  + "from (  + "select PRD_GRP_NM, 
+                              bdo_name,        count(loans) loans,        (case when mat_dys <= 7 then 'between 1-7' 
+                                       when mat_dys between 8 and 15 then 'between 8-15' 
+                                       when mat_dys between 16 and 30 then 'between 16-30' 
+                                       when mat_dys > 30 then 'between 31-60'           end) maturity, 
+                                 (case when mat_dys <= 7 then 1                 when mat_dys between 8 and 15 then 2 
+                                       when mat_dys between 16 and 30 then 3                 when mat_dys > 30 then 4 
+                                 end) seq                        from           ( 
+                                select mpg.PRD_GRP_NM,           get_port_bdo(la.port_seq) bdo_name, 
+                                 la.LOAN_APP_SEQ    loans, 
+                                 max(psd.DUE_DT) - to_date(:toDt,'dd-MM-yyyy') mat_dys          
+                                 from mw_loan_app      la,           MW_PORT          MP,           mw_prd  mprd, 
+                                 mw_prd_grp mpg,           MW_PYMT_SCHED_HDR psh,           MW_PYMT_SCHED_DTL psd      
+                           WHERE     LA.PORT_SEQ = MP.PORT_SEQ           AND MP.CRNT_REC_FLG = 1 
+                                 AND MP.BRNCH_SEQ = :branch           AND la.CRNT_REC_FLG = 1          
+                                 and la.PRD_SEQ = mprd.PRD_SEQ           and mprd.CRNT_REC_FLG = 1 
+                                 and mprd.PRD_GRP_SEQ = mpg.PRD_GRP_SEQ           and mpg.CRNT_REC_FLG = 1  
+                                and la.LOAN_APP_STS = 703               and la.LOAN_APP_SEQ = psh.LOAN_APP_SEQ  
+                                and psh.PYMT_SCHED_HDR_SEQ = psd.PYMT_SCHED_HDR_SEQ          and psh.CRNT_REC_FLG = 1 
+                                and psd.CRNT_REC_FLG = 1             group by mpg.PRD_GRP_NM, 
+                                 get_port_bdo(la.port_seq) ,           la.LOAN_APP_SEQ   
+                         having TO_DATE (max(psd.DUE_DT)) BETWEEN TO_DATE(:toDt,'dd-MM-yyyy') and TO_DATE (:toDt,'dd-MM-yyyy') + 60  
+                         )   group by PRD_GRP_NM, bdo_name, (case when mat_dys <= 7 then 'between 1-7' 
+                                       when mat_dys between 8 and 15 then 'between 8-15' 
+                                       when mat_dys between 16 and 30 then 'between 16-30' 
+                                       when mat_dys > 30 then 'between 31-60'           end), 
+                                 (case when mat_dys <= 7 then 1                 when mat_dys between 8 and 15 then 2 
+                                       when mat_dys between 16 and 30 then 3                 when mat_dys > 30 then 4 
+                                 end)  + ")  + "group by PRD_GRP_NM,bdo_name  + "order by 2,1

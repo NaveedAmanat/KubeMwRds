@@ -1,0 +1,10 @@
+select emp_nm,sum(ptg.trgt_clnts) trgt_clnt, sum(ptg.trgt_amt) trgt_amt
+    from mw_brnch_trgt tgt
+    join mw_port_trgt ptg on ptg.brnch_trgts_seq=tgt.brnch_targets_seq and ptg.del_flg=0
+    join mw_acl acl on acl.port_seq=ptg.port_seq and acl.user_id=:user_id
+    join mw_port_emp_rel per on per.port_seq=ptg.port_seq and per.crnt_rec_flg=1  
+    join mw_emp emp on emp.emp_seq=per.emp_seq   
+ where tgt.del_flg=0 
+ and tgt.trgt_perd=to_char(to_date(:as_dt,'dd-MM-yyyy'),'YYYYMM')  
+ group by emp_nm
+ 

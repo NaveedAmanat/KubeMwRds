@@ -1,0 +1,56 @@
+select
+    sum(nvl(male_new,0)) male_new, sum(nvl(female_new,0)) female_new, sum(nvl(joint_user_new,0)) joint_user_new, 
+    sum(nvl(male_rep,0)) male_rep, sum(nvl(female_rep,0)) female_rep, sum(nvl(joint_user_rep,0)) joint_user_rep
+    from( 
+     select loan_cycle_num, 
+        case when loan_cycle_num = 'Repeat' then    
+            case when bus_runner = 'MALE' then ost_clnt end         
+        end male_rep,
+         case when loan_cycle_num = 'Repeat' then    
+            case when bus_runner = 'FEMALE' then ost_clnt end         
+        end female_rep,
+        case when loan_cycle_num = 'Repeat' then    
+            case when bus_runner = 'JOINT USER' then ost_clnt end         
+        end joint_user_rep,
+        
+        case when loan_cycle_num = 'New' then    
+            case when bus_runner = 'MALE' then ost_clnt end         
+        end male_new,
+         case when loan_cycle_num = 'New' then    
+            case when bus_runner = 'FEMALE' then ost_clnt end         
+        end female_new,
+        case when loan_cycle_num = 'New' then    
+            case when bus_runner = 'JOINT USER' then ost_clnt end         
+        end joint_user_new
+
+FROM(
+
+    select case when ap.LOAN_CYCL_NUM = 1 then 'New' else 'Repeat' end loan_cycle_num, 
+            case when vl.ref_cd_Seq in (190,1058,1056,1057,1059,191,1055) then 'FEMALE'
+                when vl.ref_cd_Seq in (193) then 'JOINT USER'
+                else 'MALE'
+           end bus_runner,            
+    count(ap.loan_app_seq) ost_clnt                 
+    from mw_loan_app ap     
+    join mw_prd prd on ap.PRD_SEQ = prd.PRD_SEQ and prd.CRNT_REC_FLG = 1       
+    join mw_ref_cd_val asts on asts.ref_cd_seq=ap.loan_app_sts and asts.crnt_rec_flg=1 
+    join mw_port prt on prt.port_seq=ap.port_seq and prt.crnt_rec_flg=1 and prt.brnch_seq = :brnch_seq
+    join mw_port_emp_rel erl on erl.port_seq=prt.port_seq and erl.crnt_rec_flg=1 
+    join mw_emp emp on emp.emp_seq=erl.emp_seq,
+    mw_dsbmt_vchr_hdr dvh, mw_biz_aprsl apr, MW_REF_CD_VAL vl
+    where ap.LOAN_APP_SEQ = apr.LOAN_APP_SEQ and apr.CRNT_REC_FLG = 1
+    and apr.PRSN_RUN_THE_BIZ = vl.REF_CD_SEQ and vl.CRNT_REC_FLG = 1 and vl.REF_CD_GRP_KEY = 14 
+    and ( (asts.ref_cd='0005' and trunc(ap.loan_app_sts_dt) <= to_date(:todt, 'dd-MM-yyyy') and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='0006' and trunc(ap.loan_app_sts_dt) > to_date(:todt, 'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:todt, 'dd-MM-yyyy')
+    and ap.crnt_rec_flg=1) 
+    or (asts.ref_cd='1245' and trunc(ap.loan_app_sts_dt) > to_date(:todt, 'dd-MM-yyyy'))) and dvh.loan_app_seq = ap.loan_app_seq 
+    and dvh.crnt_rec_flg = 1
+    and loan_app_ost(ap.loan_app_seq,to_date(:todt, 'dd-MM-yyyy'),'psc') > 0
+    and not exists (select distinct ctl.loan_app_seq from mw_clnt_tag_list ctl where ctl.loan_app_seq = ap.loan_app_seq 
+    and trunc(ctl.eff_start_dt) <= to_date(:todt, 'dd-MM-yyyy') and ctl.tags_seq = 4 and ctl.crnt_rec_flg=1)            
+    group by case when ap.LOAN_CYCL_NUM = 1 then 'New' else 'Repeat' end,case when vl.ref_cd_Seq in (190,1058,1056,1057,1059,191,1055) then 'FEMALE'
+                when vl.ref_cd_Seq in (193) then 'JOINT USER'
+                else 'MALE'
+           end
+           
+     ))

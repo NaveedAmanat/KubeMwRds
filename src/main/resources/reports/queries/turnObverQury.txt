@@ -1,0 +1,27 @@
+SELECT bdo_name,         prd, 
+                          SUM (CASE WHEN seq1 > 0 THEN seq1 ELSE 0 END)     SameDay, 
+                          SUM (CASE WHEN seq2 > 0 THEN seq2 ELSE 0 END)     days_1_4, 
+                          SUM (CASE WHEN seq3 > 0 THEN seq3 ELSE 0 END)     days_5_15, 
+                          SUM (CASE WHEN seq4 > 0 THEN seq4 ELSE 0 END)     days_16_30, 
+                          SUM (CASE WHEN seq5 > 0 THEN seq5 ELSE 0 END)     abv_30            FROM            ( 
+                         SELECT get_port_bdo (la.port_seq)bdo_name,mpg.PRD_GRP_NM prd, 
+                               count(CASE WHEN  TO_DATE (dsbh.DSBMT_DT) - NVL (lst_loan_cmpltn_dt (la.loan_app_seq), TO_DATE ( :asDt, 'dd-MM-yyyy') - 365) = 0 then 1 end) seq1, 
+                               count(CASE WHEN  TO_DATE (dsbh.DSBMT_DT) - NVL (lst_loan_cmpltn_dt (la.loan_app_seq), TO_DATE ( :asDt, 'dd-MM-yyyy') - 365) between 1 and 4 then 2 end) seq2, 
+                               count(CASE WHEN  TO_DATE (dsbh.DSBMT_DT) - NVL (lst_loan_cmpltn_dt (la.loan_app_seq), TO_DATE ( :asDt, 'dd-MM-yyyy') - 365) between 5 and 15 then 3 end) seq3, 
+                               count(CASE WHEN  TO_DATE (dsbh.DSBMT_DT) - NVL (lst_loan_cmpltn_dt (la.loan_app_seq), TO_DATE ( :asDt, 'dd-MM-yyyy') - 365) between 16 and 30 then 4 end) seq4, 
+                               count(CASE WHEN  TO_DATE (dsbh.DSBMT_DT) - NVL (lst_loan_cmpltn_dt (la.loan_app_seq), TO_DATE ( :asDt, 'dd-MM-yyyy') - 365) > 30 then 5 end) seq5                         
+                               FROM MW_DSBMT_VCHR_HDR dsbh,MW_DSBMT_VCHR_DTL dsbd,mw_loan_app la,MW_PORT MP,mw_prd mprd,mw_prd_grp mpg 
+                              WHERE dsbh.DSBMT_HDR_SEQ = dsbd.DSBMT_HDR_SEQ                    
+                                    AND dsbh.CRNT_REC_FLG = 1                      AND dsbd.CRNT_REC_FLG = 1                    
+                                    AND la.LOAN_APP_SEQ = dsbh.LOAN_APP_SEQ 
+                                    AND LA.PORT_SEQ = MP.PORT_SEQ                    
+                                    AND MP.CRNT_REC_FLG = 1                      AND MP.BRNCH_SEQ = :branch                    
+                                    AND la.CRNT_REC_FLG = 1                      AND la.LOAN_CYCL_NUM > 1                    
+                                    AND la.PRD_SEQ = mprd.PRD_SEQ 
+                                    AND mprd.CRNT_REC_FLG = 1                    
+                                    AND mprd.PRD_GRP_SEQ = mpg.PRD_GRP_SEQ 
+                                    AND mpg.CRNT_REC_FLG = 1         
+                                    AND la.prd_seq not in (2,3,5,13,14,29) 
+                                    AND TO_DATE (dsbh.DSBMT_DT) BETWEEN TRUNC (TO_DATE ( TO_DATE (:asDt,'dd-MM-yyyy')),'month') AND TO_DATE ( TO_DATE ( :asDt,'dd-MM-yyyy')) 
+                             GROUP BY mpg.PRD_GRP_NM,get_port_bdo (la.port_seq)           ) 
+                                     GROUP BY bdo_name, prd                       ORDER BY prd,bdo_name

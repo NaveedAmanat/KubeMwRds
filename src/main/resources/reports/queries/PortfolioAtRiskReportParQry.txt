@@ -1,0 +1,36 @@
+select emp.emp_nm bdo_nm,  c.frst_nm ||' '||c.last_nm name,   
+           c.clnt_id,    
+           c.ph_num,     'St. '||ad.strt||' H. '||ad.hse_num||' '||ad.oth_dtl||', '||city.city_nm addr,   
+           loan_cycl_num,  grp.PRD_GRP_NM,  app.APRVD_LOAN_AMT dis_amt,   
+           get_od_info(app.loan_app_seq, to_date(:todt,'dd-MM-yyyy' ),'psc') od_amt,     
+           get_od_info(app.loan_app_seq, to_date(:todt,'dd-MM-yyyy'),'d') od_days,     
+           get_od_info(app.loan_app_seq, to_date(:todt,'dd-MM-yyyy'),'i') od_inst,     
+           loan_app_ost(app.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'psc') ost_bal,   
+            (select max(frst_nm||' '||last_nm) nom_nm    
+               from mw_clnt_rel cr where cr.crnt_rec_flg=1 and rel_typ_flg=1 and loan_app_seq=app.loan_app_seq) nom_nm,   
+            (select to_char(max(psd.due_dt),'dd-mm,yyyy') from mw_pymt_sched_hdr psh join mw_pymt_sched_dtl psd on psd.pymt_sched_hdr_seq=psh.pymt_sched_hdr_seq and psd.crnt_rec_flg=1   
+               where psh.crnt_rec_flg=1 and psh.loan_app_seq=app.loan_app_seq) cmp_dt,   
+            loan_app_ost(app.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'i') paid_inst
+            FROM mw_loan_app app    
+               join mw_ref_cd_val asts on asts.ref_cd_seq=app.loan_app_sts and asts.crnt_rec_flg=1 
+               join mw_dsbmt_vchr_hdr dvh on dvh.loan_app_seq=app.loan_app_seq and dvh.crnt_rec_flg=1                  
+               JOIN mw_clnt c ON c.clnt_seq = app.clnt_seq AND c.crnt_rec_flg = 1   
+               JOIN mw_ref_cd_val val ON val.ref_cd_seq = app.loan_app_sts AND val.crnt_rec_flg = 1 AND val.del_flg = 0    
+               join mw_prd prd on prd.prd_seq=app.prd_seq and prd.crnt_rec_flg=1 
+               join mw_prd_grp grp on grp.PRD_GRP_SEQ = prd.PRD_GRP_SEQ and grp.CRNT_REC_FLG = 1   
+               join mw_port p on p.port_seq = app.port_seq and p.crnt_rec_flg = 1 and p.brnch_seq = :brnch_seq  
+               join mw_port_emp_rel per on per.port_seq=p.port_seq and per.crnt_rec_flg=1    
+               join mw_emp emp on emp.emp_seq=per.emp_seq   
+               join mw_addr_rel ar on ar.enty_key=c.clnt_seq and ar.crnt_rec_flg = 1 and ar.enty_typ='Client'    
+               join mw_addr ad on ad.addr_seq = ar.addr_seq and ad.crnt_rec_flg = 1    
+               join mw_city_uc_rel cur on cur.city_uc_rel_seq = ad.city_seq    
+               join mw_city city on city.city_seq = cur.city_seq and city.crnt_rec_flg = 1 
+               join mw_brnch brnch on brnch.brnch_seq=p.brnch_seq and brnch.crnt_rec_flg=1
+            where ( (asts.ref_cd='0005' and trunc(app.loan_app_sts_dt) <= to_date(:todt,'dd-MM-yyyy') and app.crnt_rec_flg=1) 
+            or (asts.ref_cd='0006' and trunc(app.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy') and trunc(dvh.dsbmt_dt) <= to_date(:todt,'dd-MM-yyyy')
+            and app.crnt_rec_flg=1) 
+            or (asts.ref_cd='1245' and trunc(app.loan_app_sts_dt) > to_date(:todt,'dd-MM-yyyy'))) and dvh.loan_app_seq = app.loan_app_seq 
+            and dvh.crnt_rec_flg = 1
+            and GET_OD_INFO(app.loan_app_seq,to_date(:todt,'dd-MM-yyyy'),'d') > 28.5
+            and not exists (select distinct ctl.loan_app_seq from mw_clnt_tag_list ctl where ctl.loan_app_seq = app.loan_app_seq 
+            and trunc(ctl.eff_start_dt) <= to_date(:todt,'dd-MM-yyyy') and ctl.tags_seq = 4 and ctl.crnt_rec_flg=1)

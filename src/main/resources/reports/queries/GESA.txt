@@ -1,0 +1,8 @@
+select trnr_nm,
+       p.prtcpnt_id clnt_id,
+       p.prtcpnt_nm clnt_nm,
+       (select min(dts.trng_dt) from MW_trng_dts dts where dts.crnt_rec_flg=1 and dts.trng_seq=trn.trng_SEQ) trn_dt  
+from MW_trng trn
+join MW_trng_prtcpnt p on p.trng_seq=trn.trng_SEQ and p.crnt_rec_flg=1
+where trn.crnt_rec_flg=1
+and trn.trng_SEQ=:trng_seq

@@ -1,0 +1,8 @@
+select (CASE WHEN mjh.PRNT_VCHR_REF IS NOT NULL THEN 'Reversal' else 'Actual' end) ledger_type,   
+nvl(sum(nvl((case when mjd.crdt_dbt_flg = 1 then nvl(mjd.amt,0) end),0)),0) debit,  
+    nvl(sum(nvl((case when mjd.crdt_dbt_flg = 0 then nvl(mjd.amt,0) end),0)),0) credit
+    from mw_jv_hdr mjh, mw_jv_dtl mjd  where mjh.jv_hdr_seq = mjd.jv_hdr_seq  
+    and brnch_seq = :brnchseq  and mjd.gl_acct_num =:gl_acc_num  
+    and to_date(mjh.jv_dt)  between to_date(:frmdt,'MM/dd/yyyy') and to_date(:todt,'MM/dd/yyyy')
+    group by mjh.PRNT_VCHR_REF            
+    order by 1
